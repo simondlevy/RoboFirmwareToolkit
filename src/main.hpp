@@ -25,8 +25,6 @@ namespace rft {
 
         private:
 
-            static constexpr float MAX_ARMING_ANGLE_DEGREES = 25.0f;
-
             // Supports periodic ad-hoc debugging
             Debugger _debugger;
 
@@ -54,23 +52,11 @@ namespace rft {
 
             void checkSensors(void)
             {
-                static uint32_t counts[2];
-                /*
-                static uint32_t start;
-                uint32_t time = millis();
-                if (time-start > 1000) {
-                    Debugger::printf("q=%d  g=%d\n", counts[0], counts[1]);
-                    counts[0] = 0;
-                    counts[1] = 0;
-                    start = time;
-                }*/
-
                 for (uint8_t k=0; k<_sensor_count; ++k) {
                     Sensor * sensor = _sensors[k];
                     float time = _board->getTime();
                     if (sensor->ready(time)) {
                         sensor->modifyState(&_state, time);
-                        if (k<2) counts[k]++;
                     }
                 }
             }
