@@ -14,7 +14,7 @@ namespace rft {
 
     class Sensor {
 
-        friend class Hackflight;
+        friend class Main;
 
         protected:
 

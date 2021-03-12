@@ -1,5 +1,5 @@
 /*
-   TinyPICO implementation of Hackflight Board routines, with IMU mounted on bottom of board
+   TinyPICO implementation of Board routines, with IMU mounted on bottom of board
 
    Copyright (c) 2021 Simon D. Levy
 

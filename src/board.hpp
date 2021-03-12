@@ -15,7 +15,7 @@ namespace rft {
 
     class Board {
 
-        friend class Hackflight;
+        friend class Main;
         friend class Debugger;
         friend class TimerTask;
         friend class SerialTask;

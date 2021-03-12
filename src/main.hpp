@@ -1,5 +1,5 @@
 /*
-   Hackflight core algorithm
+   Main class for RoboFirmwareToolkit
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -21,7 +21,7 @@
 
 namespace rft {
 
-    class Hackflight {
+    class Main {
 
         private:
 
@@ -40,7 +40,7 @@ namespace rft {
             // Timer task for PID controllers
             ClosedLoopTask _closedLoopTask;
 
-            // Passed to Hackflight::begin() for a particular build
+            // Passed to Main::begin() for a particular build
             Actuator * _actuator = NULL;
 
             // Serial timer task for GCS
@@ -129,7 +129,7 @@ namespace rft {
 
          public:
 
-            Hackflight(Board * board, OpenLoopController * olc, Actuator * actuator)
+            Main(Board * board, OpenLoopController * olc, Actuator * actuator)
             {
                 // Store the essentials
                 _board    = board;
@@ -200,6 +200,6 @@ namespace rft {
                 _serialTask.update();
             }
 
-    }; // class Hackflight
+    }; // class Main
 
 } // namespace

@@ -1,5 +1,5 @@
 /*
-   Ladybug Brushed Flight Controller implementation of Hackflight Board routines
+   Ladybug Brushed Flight Controller implementation of Main Board routines
 
    Uses EM7180 SENtral Sensor Hub in master mode mode
 

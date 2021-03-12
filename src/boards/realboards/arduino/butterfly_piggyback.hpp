@@ -1,5 +1,5 @@
 /*
-   Butterfly implementation of Hackflight Board routines
+   Butterfly implementation of Board routines
 
    Copyright (c) 2021 Simon D. Levy
 

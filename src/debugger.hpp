@@ -1,5 +1,5 @@
 /*
-    Cross-platform serial debugging support for Hackflight
+    Cross-platform serial debugging support for Main
        
     Provides printf() and related static methods for formatted printing of
     debug messages.  Your Board implementation should provide and outbuf(char
@@ -21,7 +21,7 @@ namespace rft {
 
     class Debugger {
 
-        friend class Hackflight;
+        friend class Main;
 
         private:
 

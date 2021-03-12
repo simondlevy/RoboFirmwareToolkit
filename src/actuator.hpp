@@ -12,7 +12,7 @@ namespace rft {
 
     class Actuator {
 
-        friend class Hackflight;
+        friend class Main;
         friend class SerialTask;
 
         protected:

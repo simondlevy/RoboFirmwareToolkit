@@ -16,7 +16,7 @@ namespace rft {
 
     class ClosedLoopTask : public TimerTask {
 
-        friend class Hackflight;
+        friend class Main;
 
         private:
 

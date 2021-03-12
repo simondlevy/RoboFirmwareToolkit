@@ -1,5 +1,5 @@
 /*
-   Ladybug dev board implementation of Hackflight Board routines
+   Ladybug dev board implementation of Board routines
 
    Copyright (c) 2021 Simon D. Levy
 

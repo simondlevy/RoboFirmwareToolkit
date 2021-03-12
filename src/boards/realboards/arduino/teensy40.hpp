@@ -1,5 +1,5 @@
 /*
-   Teensy 4.0 implementation of Hackflight Board routines
+   Teensy 4.0 implementation of Board routines
 
    Copyright (c) 2021 Simon D. Levy
 

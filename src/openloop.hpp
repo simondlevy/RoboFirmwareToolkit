@@ -15,7 +15,7 @@ namespace rft {
 
     class OpenLoopController {
 
-        friend class Hackflight;
+        friend class Main;
         friend class SerialTask;
         friend class ClosedLoopTask;
 
