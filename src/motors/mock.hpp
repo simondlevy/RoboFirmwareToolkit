@@ -3,14 +3,14 @@
 
    Copyright (c) 2021 Simon D. Levy
 
-   MIT Press
+   MIT License
  */
 
 #pragma once
 
 #include "motor.hpp"
 
-namespace rft {
+namespace hf {
 
     class MockMotor : public Motor {
 
@@ -33,4 +33,4 @@ namespace rft {
 
     }; // class MockMotor
 
-} // namespace rft
+} // namespace hf

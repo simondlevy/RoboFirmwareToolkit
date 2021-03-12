@@ -1,5 +1,5 @@
 /*
-   Board-specific routines
+   Class header for board-specific routines
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -11,15 +11,15 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-namespace rft {
+namespace hf {
 
     class Board {
 
-        friend class Toolkit;
+        friend class Hackflight;
         friend class Debugger;
         friend class TimerTask;
         friend class SerialTask;
-        friend class PidTask;
+        friend class ClosedLoopTask;
 
         protected:
 

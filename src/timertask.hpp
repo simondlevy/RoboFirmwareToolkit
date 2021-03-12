@@ -11,7 +11,7 @@
 #include "board.hpp"
 #include "debugger.hpp"
 
-namespace rft {
+namespace hf {
 
     class TimerTask {
 
@@ -52,4 +52,4 @@ namespace rft {
 
     };  // TimerTask
 
-} // namespace rft
+} // namespace hf

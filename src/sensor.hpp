@@ -10,11 +10,11 @@
 
 #include "state.hpp"
 
-namespace rft {
+namespace hf {
 
     class Sensor {
 
-        friend class Toolkit;
+        friend class Hackflight;
 
         protected:
 
@@ -26,4 +26,4 @@ namespace rft {
 
     };  // class Sensor
 
-} // namespace rft
+} // namespace hf

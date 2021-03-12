@@ -12,7 +12,7 @@
 #include <analogWrite.h>
 #endif
 
-namespace rft {
+namespace hf {
 
     class Motor {
 
@@ -44,4 +44,4 @@ namespace rft {
 
     }; // class Motor
 
-} // namespace rft
+} // namespace hf

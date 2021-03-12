@@ -1,5 +1,5 @@
 /*
-   Ladybug dev board implementation of Hackflight Board routines
+   Teensy 4.0 implementation of Hackflight Board routines
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -13,20 +13,20 @@
 
 namespace hf {
 
-    class Ladybug : public ArduinoBoard {
+    class Teensy40 : public ArduinoBoard {
 
-        public:
+         public:
 
-            Ladybug(void) 
+            Teensy40(void) 
                 : ArduinoBoard(13)
             {
                 // Start I^2C
-                Wire.begin();
+                //Wire.begin(TWI_PINS_6_7);
 
                 // Hang a bit
                 delay(100);
             }
 
-    }; // class Ladybug
+    }; // class Teensy40
 
 } // namespace hf

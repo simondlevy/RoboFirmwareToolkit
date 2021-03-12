@@ -1,16 +1,16 @@
 /*
-   Mock Motor subclass for prototyping
+   Board subclass for Arduino prototyping without IMU or motors
 
    Copyright (c) 2021 Simon D. Levy
 
    MIT License
-   */
+*/
 
 #pragma once
 
 #include "boards/realdboards/arduino.hpp"
 
-namespace rft {
+namespace hf {
 
     class MockBoard : public ArduinoBoard {
 
@@ -45,4 +45,4 @@ namespace rft {
 
     }; // class MockBoard
 
-} // namespace rft
+} // namespace hf

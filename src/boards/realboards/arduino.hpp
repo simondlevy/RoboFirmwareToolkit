@@ -3,14 +3,14 @@
 
    Copyright (c) 2021 Simon D. Levy
 
-   MIT Press
-   */
+   MIT License
+*/
 
 #pragma once
 
 #include "boards/realboard.hpp"
 
-namespace rft {
+namespace hf {
 
     class ArduinoBoard : public RealBoard {
 
@@ -78,4 +78,4 @@ namespace rft {
         Serial.print(buf);
     }
 
-} // namespace rft
+} // namespace hf

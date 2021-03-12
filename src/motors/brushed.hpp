@@ -10,7 +10,7 @@
 
 #include "motor.hpp"
 
-namespace rft {
+namespace hf {
 
     class BrushedMotor : public Motor {
 
@@ -36,4 +36,4 @@ namespace rft {
 
     }; // class BrushedMotor
 
-} // namespace rft
+} // namespace hf

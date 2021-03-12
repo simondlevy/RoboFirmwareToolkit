@@ -10,31 +10,17 @@
 
 #include "filters.hpp"
 #include "state.hpp"
-#include "demands.hpp"
+#include "closedloop.hpp"
 
-namespace rft {
+namespace hf {
 
-    class PidController {
+    class PidController : public ClosedLoopController {
 
         friend class PidTask;
 
         protected:
 
-            uint8_t modeIndex = 0;
-
             static constexpr float STICK_DEADBAND = 0.10;
-
-            virtual void modifyDemands(State * state, demands_t & demands) = 0;
-
-            virtual bool shouldFlashLed(void)
-            {
-                return false;
-            }
-
-            virtual void resetOnInactivity(bool inactive)
-            { 
-                (void)inactive; 
-            }
 
     };  // class PidController
 
@@ -119,4 +105,4 @@ namespace rft {
 
     };  // class Pid
 
-} // namespace rft
+} // namespace hf

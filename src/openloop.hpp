@@ -11,19 +11,19 @@
 #include <stdint.h>
 #include <math.h>
 
-#include "demands.hpp"
-
-namespace rft {
+namespace hf {
 
     class OpenLoopController {
 
-        friend class Toolkit;
+        friend class Hackflight;
         friend class SerialTask;
-        friend class PidTask;
+        friend class ClosedLoopTask;
 
         protected: 
 
-            virtual void getDemands(demands_t & demands) = 0;
+            static const uint8_t MAX_DEMANDS = 10; // arbitrary
+
+            virtual void getDemands(float * demands) = 0;
 
             virtual void begin(void) 
             { 
@@ -61,4 +61,4 @@ namespace rft {
 
     }; // class OpenLoopController
 
-} // namespace rft
+} // namespace

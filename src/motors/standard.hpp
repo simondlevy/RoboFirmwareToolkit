@@ -3,14 +3,14 @@
 
    Copyright (c) 2021 Juan Gallostra Acin, Simon D. Levy, Pep Martí Saumell
 
-   MIT License
- */
+   Simon D. Levy
+*/
 
 #pragma once
 
 #include "motor.hpp"
 
-namespace rft {
+namespace hf {
 
     class StandardMotor : public Motor {
 
@@ -51,4 +51,4 @@ namespace rft {
 
     }; // class StandardMotor
 
-} // namespace rft
+} // namespace hf

@@ -1,14 +1,14 @@
 /*
-   State class
+   State datatype
 
    Copyright (c) 2021 Simon D. Levy
 
    MIT License
-*/
+   */
 
 #pragma once
 
-namespace rft {
+namespace hf {
 
     class State {
 
@@ -24,4 +24,4 @@ namespace rft {
 
     }; // class State
 
-} // namespace rft
+} // namespace hf

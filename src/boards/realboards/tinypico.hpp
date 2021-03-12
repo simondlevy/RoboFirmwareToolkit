@@ -1,7 +1,9 @@
 /*
-   TinyPICO implementation of RoboFirmwareToolkit Board routines
+   TinyPICO implementation of Hackflight Board routines, with IMU mounted on bottom of board
 
    Copyright (c) 2021 Simon D. Levy
+
+   MIT License
  */
 
 #pragma once
@@ -11,7 +13,7 @@
 
 #include <TinyPICO.h>
 
-namespace rft {
+namespace hf {
 
     class TinyPico : public RealBoard {
 
@@ -63,4 +65,4 @@ namespace rft {
 
     }; // class TinyPico
 
-} // namespace rft
+} // namespace hf
