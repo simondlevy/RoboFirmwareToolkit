@@ -8,12 +8,11 @@
 
 #pragma once
 
-#include "timertask.hpp"
-#include "board.hpp"
-#include "mspparser.hpp"
-#include "debugger.hpp"
-#include "actuator.hpp"
-#include "states/mavstate.hpp"
+#include "RFT_timertask.hpp"
+#include "RFT_board.hpp"
+#include "RFT_mspparser.hpp"
+#include "RFT_debugger.hpp"
+#include "RFT_actuator.hpp"
 
 namespace rft {
 

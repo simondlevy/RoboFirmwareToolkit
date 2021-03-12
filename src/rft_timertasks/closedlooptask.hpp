@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "timertask.hpp"
-#include "state.hpp"
-#include "openloop.hpp"
+#include "RFT_timertask.hpp"
+#include "RFT_state.hpp"
+#include "RFT_openloop.hpp"
 
 namespace rft {
 
