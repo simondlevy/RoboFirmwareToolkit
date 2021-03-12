@@ -9,9 +9,9 @@
 #pragma once
 
 #include <Wire.h>
-#include "boards/realboards/arduino.hpp"
-
 #include <TinyPICO.h>
+
+#include "rft_boards/realboards/arduino.hpp"
 
 namespace rft {
 

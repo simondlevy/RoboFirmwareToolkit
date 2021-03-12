@@ -15,7 +15,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include "board.hpp"
+#include "RFT_board.hpp"
 
 namespace rft {
 

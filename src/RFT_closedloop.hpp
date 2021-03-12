@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "state.hpp"
+#include "RFT_state.hpp"
 
 namespace rft {
 

@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include "debugger.hpp"
-#include "mspparser.hpp"
-#include "board.hpp"
-#include "openloop.hpp"
-#include "states/mavstate.hpp"
-#include "closedloop.hpp"
-#include "sensor.hpp"
-#include "actuator.hpp"
-#include "timertasks/closedlooptask.hpp"
-#include "timertasks/serialtask.hpp"
+#include "RFT_debugger.hpp"
+#include "RFT_mspparser.hpp"
+#include "RFT_board.hpp"
+#include "RFT_openloop.hpp"
+#include "rft_states/mavstate.hpp"
+#include "RFT_closedloop.hpp"
+#include "RFT_sensor.hpp"
+#include "RFT_actuator.hpp"
+#include "rft_timertasks/closedlooptask.hpp"
+#include "rft_timertasks/serialtask.hpp"
 
 namespace rft {
 

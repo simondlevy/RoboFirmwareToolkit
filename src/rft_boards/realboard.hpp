@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "board.hpp"
-#include "debugger.hpp"
+#include "RFT_board.hpp"
+#include "RFT_debugger.hpp"
 
 namespace rft {
 

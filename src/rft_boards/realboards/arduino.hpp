@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "boards/realboard.hpp"
+#include "rft_boards/realboard.hpp"
 
 namespace rft {
 
