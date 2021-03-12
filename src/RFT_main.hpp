@@ -9,20 +9,21 @@
 #pragma once
 
 #include "RFT_debugger.hpp"
-#include "RFT_mspparser.hpp"
+//#include "RFT_mspparser.hpp"
 #include "RFT_board.hpp"
 #include "RFT_openloop.hpp"
-#include "rft_states/mavstate.hpp"
+//#include "rft_states/mavstate.hpp"
 #include "RFT_closedloop.hpp"
 #include "RFT_sensor.hpp"
 #include "RFT_actuator.hpp"
 #include "rft_timertasks/closedlooptask.hpp"
-#include "rft_timertasks/serialtask.hpp"
+//#include "rft_timertasks/serialtask.hpp"
 
 namespace rft {
 
     class Main {
 
+        /*
         private:
 
             // Supports periodic ad-hoc debugging
@@ -185,6 +186,7 @@ namespace rft {
                 // Update serial comms task
                 _serialTask.update();
             }
+            */
 
     }; // class Main
 

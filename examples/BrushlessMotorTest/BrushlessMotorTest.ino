@@ -8,20 +8,20 @@
    MIT License
  */
 
-#include "hackflight.hpp"
-#include "motors/standard.hpp"
+#include "RFT_main.hpp"
+#include "rft_motors/standard.hpp"
 
-static uint8_t MOTOR_PIN[1] = {15};
+static uint8_t MOTOR_PIN[1] = {5};
 
 static float  val;
 static int8_t dir;
 
-hf::StandardMotor motors = hf::StandardMotor(MOTOR_PIN, 1);
+rft::StandardMotor motors = rft::StandardMotor(MOTOR_PIN, 1);
 
 void setup(void)
 {
     // Initialize the motor
-    motors.init();
+    motors.begin();
 
     // Start with motor off, increasing
     val = 0;
