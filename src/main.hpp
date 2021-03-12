@@ -19,7 +19,7 @@
 #include "timertasks/closedlooptask.hpp"
 #include "timertasks/serialtask.hpp"
 
-namespace hf {
+namespace rft {
 
     class Hackflight {
 

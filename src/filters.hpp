@@ -15,7 +15,7 @@
 static const float M_PI = 3.141593;
 #endif
 
-namespace hf {
+namespace rft {
 
     class Filter {
 
@@ -448,4 +448,4 @@ namespace hf {
 
     }; // class MahonyQuaternionFilter
 
-} // namespace hf
+} // namespace rft

@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace hf {
+namespace rft {
 
     class Actuator {
 
@@ -31,4 +31,4 @@ namespace hf {
 
     }; // class Actuator
 
-} // namespace hf
+} // namespace rft

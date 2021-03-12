@@ -13,7 +13,7 @@
 
 #include <TinyPICO.h>
 
-namespace hf {
+namespace rft {
 
     class TinyPico : public RealBoard {
 
@@ -65,4 +65,4 @@ namespace hf {
 
     }; // class TinyPico
 
-} // namespace hf
+} // namespace rft

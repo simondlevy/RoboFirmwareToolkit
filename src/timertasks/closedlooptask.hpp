@@ -12,7 +12,7 @@
 #include "state.hpp"
 #include "openloop.hpp"
 
-namespace hf {
+namespace rft {
 
     class ClosedLoopTask : public TimerTask {
 
@@ -99,4 +99,4 @@ namespace hf {
 
     };  // ClosedLoopTask
 
-} // namespace hf
+} // namespace rft

@@ -15,7 +15,7 @@
 #include "actuator.hpp"
 #include "states/mavstate.hpp"
 
-namespace hf {
+namespace rft {
 
     class SerialTask : public TimerTask, public MspParser {
 
@@ -115,4 +115,4 @@ namespace hf {
 
     };  // SerialTask
 
-} // namespace hf
+} // namespace rft

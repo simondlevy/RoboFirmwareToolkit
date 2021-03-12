@@ -10,7 +10,7 @@
 
 #include "state.hpp"
 
-namespace hf {
+namespace rft {
 
     class ClosedLoopController {
 
@@ -34,4 +34,4 @@ namespace hf {
 
     };  // class ClosedLoopController
 
-} // namespace hf
+} // namespace rft

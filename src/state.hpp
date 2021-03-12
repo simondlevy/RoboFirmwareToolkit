@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace hf {
+namespace rft {
 
     class State {
 
@@ -24,4 +24,4 @@ namespace hf {
 
     }; // class State
 
-} // namespace hf
+} // namespace rft

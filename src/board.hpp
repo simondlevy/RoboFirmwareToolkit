@@ -11,7 +11,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-namespace hf {
+namespace rft {
 
     class Board {
 

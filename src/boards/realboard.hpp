@@ -11,7 +11,7 @@
 #include "board.hpp"
 #include "debugger.hpp"
 
-namespace hf {
+namespace rft {
 
     class RealBoard : public Board {
 
@@ -160,4 +160,4 @@ namespace hf {
 
     }; // class RealBoard
 
-} // namespace hf
+} // namespace rft

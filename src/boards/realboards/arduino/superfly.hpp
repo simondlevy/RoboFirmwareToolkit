@@ -14,7 +14,7 @@
 #include "boards/realboards/arduino.hpp"
 #include "imus/usfs.hpp"
 
-namespace hf {
+namespace rft {
 
     USFS superflyIMU;
 
@@ -70,4 +70,4 @@ namespace hf {
 
     }; // class SuperFly
 
-} // namespace hf
+} // namespace rft

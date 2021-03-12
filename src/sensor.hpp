@@ -10,7 +10,7 @@
 
 #include "state.hpp"
 
-namespace hf {
+namespace rft {
 
     class Sensor {
 
@@ -26,4 +26,4 @@ namespace hf {
 
     };  // class Sensor
 
-} // namespace hf
+} // namespace rft

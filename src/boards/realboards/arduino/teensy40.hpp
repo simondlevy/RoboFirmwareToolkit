@@ -11,7 +11,7 @@
 #include <Wire.h>
 #include "boards/realboards/arduino.hpp"
 
-namespace hf {
+namespace rft {
 
     class Teensy40 : public ArduinoBoard {
 
@@ -29,4 +29,4 @@ namespace hf {
 
     }; // class Teensy40
 
-} // namespace hf
+} // namespace rft

@@ -12,7 +12,7 @@
 #include "state.hpp"
 #include "closedloop.hpp"
 
-namespace hf {
+namespace rft {
 
     class PidController : public ClosedLoopController {
 
@@ -105,4 +105,4 @@ namespace hf {
 
     };  // class Pid
 
-} // namespace hf
+} // namespace rft

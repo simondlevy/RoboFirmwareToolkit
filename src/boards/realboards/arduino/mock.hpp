@@ -10,7 +10,7 @@
 
 #include "boards/realdboards/arduino.hpp"
 
-namespace hf {
+namespace rft {
 
     class MockBoard : public ArduinoBoard {
 
@@ -45,4 +45,4 @@ namespace hf {
 
     }; // class MockBoard
 
-} // namespace hf
+} // namespace rft

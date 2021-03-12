@@ -11,7 +11,7 @@
 #include <Wire.h>
 #include "boards/realboards/arduino.hpp"
 
-namespace hf {
+namespace rft {
 
     class Butterfly : public ArduinoBoard {
 
@@ -41,4 +41,4 @@ namespace hf {
 
     }; // class Butterfly
 
-} // namespace hf
+} // namespace rft

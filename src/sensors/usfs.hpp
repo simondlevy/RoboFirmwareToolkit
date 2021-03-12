@@ -13,7 +13,7 @@
 #include "sensor.hpp"
 #include "states/mavstate.hpp"
 
-namespace hf {
+namespace rft {
 
     // Singleton class
     class _USFS {
@@ -164,4 +164,4 @@ namespace hf {
 
     }; // class UsfsGyro
 
-} // namespace hf
+} // namespace rft

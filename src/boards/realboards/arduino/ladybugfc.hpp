@@ -15,7 +15,7 @@
 #include "imus/usfs.hpp"
 #include "motors/brushed.hpp"
 
-namespace hf {
+namespace rft {
 
     USFS ladybugIMU;
 
@@ -40,4 +40,4 @@ namespace hf {
 
     }; // class LadybugFC
 
-} // namespace hf
+} // namespace rft

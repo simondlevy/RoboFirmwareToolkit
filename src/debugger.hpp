@@ -17,7 +17,7 @@
 
 #include "board.hpp"
 
-namespace hf {
+namespace rft {
 
     class Debugger {
 
@@ -76,4 +76,4 @@ namespace hf {
 
         }; // class Debugger
 
-} // namespace hf
+} // namespace rft

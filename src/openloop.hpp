@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <math.h>
 
-namespace hf {
+namespace rft {
 
     class OpenLoopController {
 

@@ -10,7 +10,7 @@
 
 #include "boards/realboard.hpp"
 
-namespace hf {
+namespace rft {
 
     class ArduinoBoard : public RealBoard {
 
@@ -78,4 +78,4 @@ namespace hf {
         Serial.print(buf);
     }
 
-} // namespace hf
+} // namespace rft
