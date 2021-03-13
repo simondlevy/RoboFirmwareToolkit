@@ -88,7 +88,53 @@ namespace rft {
                 }
             }
 
-private:
+            void checkOpenLoopController(void)
+            {
+                State * state = getState();
+
+                // Sync failsafe to open-loop-controller
+                if (_olc->lostSignal() && state->armed) {
+                    _actuator->cut();
+                    state->armed = false;
+                    state->failsafe = true;
+                    _board->showArmedStatus(false);
+                    return;
+                }
+
+                // Check whether open-loop controller data is available
+                if (!_olc->ready()) return;
+
+                // Disarm
+                if (state->armed && !_olc->inArmedState()) {
+                    state->armed = false;
+                } 
+
+                // Avoid arming if aux1 switch down on startup
+                if (!_safeToArm) {
+                    _safeToArm = !_olc->inArmedState();
+                }
+
+                // Arm (after lots of safety checks!)
+                if (
+                        _safeToArm &&
+                        !state->armed && 
+                        _olc->inactive() && 
+                        _olc->inArmedState() && 
+                        !state->failsafe && 
+                        state->safeToArm()) {
+                    state->armed = true;
+                }
+
+                // Cut motors on throttle-down
+                if (state->armed && _olc->inactive()) {
+                    _actuator->cut();
+                }
+
+                // Set LED based on arming status
+                _board->showArmedStatus(state->armed);
+
+            } // checkOpenLoopController
+ private:
 
             void startSensors(void) 
             {
