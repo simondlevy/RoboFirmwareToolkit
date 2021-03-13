@@ -1,5 +1,5 @@
 /*
-   Main class for RoboFirmwareToolkit
+   RFT class for RoboFirmwareToolkit
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -21,7 +21,7 @@
 
 namespace rft {
 
-    class Main {
+    class RFT {
 
         /*
         private:
@@ -39,7 +39,7 @@ namespace rft {
             // Timer task for PID controllers
             ClosedLoopTask _closedLoopTask;
 
-            // Passed to Main::begin() for a particular build
+            // Passed to RFT::begin() for a particular build
             Actuator * _actuator = NULL;
 
             // Serial timer task for GCS
@@ -116,7 +116,7 @@ namespace rft {
 
          public:
 
-            Main(Board * board, OpenLoopController * olc, Actuator * actuator)
+            RFT(Board * board, OpenLoopController * olc, Actuator * actuator)
             {
                 // Store the essentials
                 _board    = board;
@@ -188,6 +188,6 @@ namespace rft {
             }
             */
 
-    }; // class Main
+    }; // class RFT
 
 } // namespace

@@ -8,7 +8,7 @@
    MIT License
  */
 
-#include "RFT_main.hpp"
+#include "RoboFirmwareToolkit.hpp"
 #include "rft_motors/standard.hpp"
 
 static uint8_t MOTOR_PIN[1] = {5};
