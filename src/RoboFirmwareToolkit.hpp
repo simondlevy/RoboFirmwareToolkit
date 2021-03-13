@@ -23,16 +23,16 @@ namespace rft {
 
     class RFT {
 
-        /*
-        private:
+        protected:
 
-            // Supports periodic ad-hoc debugging
             Debugger _debugger;
 
             // Sensors 
             Sensor * _sensors[256] = {NULL};
             uint8_t _sensor_count = 0;
 
+        /*
+            // Supports periodic ad-hoc debugging
             // Safety
             bool _safeToArm = false;
 
@@ -162,11 +162,6 @@ namespace rft {
 
             } // begin
 
-            void addSensor(Sensor * sensor) 
-            {
-                _sensors[_sensor_count++] = sensor;
-            }
-
             void addClosedLoopController(ClosedLoopController * controller, uint8_t modeIndex=0) 
             {
                 _closedLoopTask.addClosedLoopController(controller, modeIndex);
@@ -187,6 +182,14 @@ namespace rft {
                 _serialTask.update();
             }
             */
+
+        public:
+
+            void addSensor(Sensor * sensor) 
+            {
+                _sensors[_sensor_count++] = sensor;
+            }
+
 
     }; // class RFT
 
