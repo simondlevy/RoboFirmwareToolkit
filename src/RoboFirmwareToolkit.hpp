@@ -73,8 +73,22 @@ namespace rft {
 
             } // begin
 
+            virtual State * getState(void) = 0;
 
-        private:
+            void checkSensors(void)
+            {
+                State * state = getState();
+
+                for (uint8_t k=0; k<_sensor_count; ++k) {
+                    rft::Sensor * sensor = _sensors[k];
+                    float time = _board->getTime();
+                    if (sensor->ready(time)) {
+                        sensor->modifyState(state, time);
+                    }
+                }
+            }
+
+private:
 
             void startSensors(void) 
             {

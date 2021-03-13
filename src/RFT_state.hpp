@@ -17,10 +17,7 @@ namespace rft {
             bool armed;
             bool failsafe;
 
-            virtual bool safeToArm(void) 
-            {
-                return true;
-            }
+            virtual bool safeToArm(void) = 0;
 
     }; // class State
 
