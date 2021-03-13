@@ -15,7 +15,8 @@ namespace rft {
         friend class Main;
         friend class SerialTask;
 
-        protected:
+        // protected: XXX
+        public:
 
             virtual void begin(void) { }
 

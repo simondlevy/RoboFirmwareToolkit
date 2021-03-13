@@ -20,7 +20,8 @@ namespace rft {
             float _period = 0;
             float _time = 0;
 
-        protected:
+        // protected: XXX
+        public:
 
             Board * _board = NULL;
 

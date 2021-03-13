@@ -15,13 +15,14 @@ namespace rft {
 
     class Board {
 
-        friend class Main;
+        friend class RFT;
         friend class Debugger;
         friend class TimerTask;
         friend class SerialTask;
         friend class ClosedLoopTask;
 
-        protected:
+        // protected: XXX
+        public:
 
             //------------------------------------ Core functionality ----------------------------------------------------
             virtual float getTime(void) = 0;
