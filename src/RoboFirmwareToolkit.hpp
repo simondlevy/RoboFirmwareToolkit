@@ -37,6 +37,9 @@ namespace rft {
             Sensor * _sensors[256] = {NULL};
             uint8_t _sensor_count = 0;
 
+            // Timer task for PID controllers
+            ClosedLoopTask _closedLoopTask;
+
             RFT(Board * board, OpenLoopController * olc, Actuator * actuator)
             {
                 // Store the essentials
@@ -52,9 +55,6 @@ namespace rft {
             // Supports periodic ad-hoc debugging
             // Safety
             bool _safeToArm = false;
-
-            // Timer task for PID controllers
-            ClosedLoopTask _closedLoopTask;
 
             // Passed to RFT::begin() for a particular build
             Actuator * _actuator = NULL;
@@ -191,6 +191,11 @@ namespace rft {
             void addSensor(Sensor * sensor) 
             {
                 _sensors[_sensor_count++] = sensor;
+            }
+
+            void addClosedLoopController(rft::ClosedLoopController * controller, uint8_t modeIndex=0) 
+            {
+                _closedLoopTask.addClosedLoopController(controller, modeIndex);
             }
 
 
