@@ -25,11 +25,28 @@ namespace rft {
 
         protected:
 
+            Board * _board = NULL;
+
+            OpenLoopController * _olc = NULL;
+
+            rft::Actuator * _actuator = NULL;
+
             Debugger _debugger;
 
             // Sensors 
             Sensor * _sensors[256] = {NULL};
             uint8_t _sensor_count = 0;
+
+            RFT(Board * board, OpenLoopController * olc, Actuator * actuator)
+            {
+                // Store the essentials
+                _board    = board;
+                _olc = olc;
+                _actuator = actuator;
+
+                // Support adding new sensors
+                _sensor_count = 0;
+            }
 
         /*
             // Supports periodic ad-hoc debugging
@@ -44,9 +61,6 @@ namespace rft {
 
             // Serial timer task for GCS
             SerialTask _serialTask;
-
-            Board * _board = NULL;
-            OpenLoopController * _olc = NULL;
 
             // Vehicle state
             MavState _state;
@@ -115,17 +129,6 @@ namespace rft {
             }
 
          public:
-
-            RFT(Board * board, OpenLoopController * olc, Actuator * actuator)
-            {
-                // Store the essentials
-                _board    = board;
-                _olc = olc;
-                _actuator = actuator;
-
-                // Support adding new sensors
-                _sensor_count = 0;
-            }
 
             void begin(bool armed=false)
             {  
