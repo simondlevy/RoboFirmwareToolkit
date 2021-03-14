@@ -12,15 +12,20 @@ it to teach students about ideas like
 [open-loop / closed loop control](https://circuitglobe.com/difference-between-open-loop-and-closed-loop-system.html),
 [sensor fusion](https://en.wikipedia.org/wiki/Sensor_fusion),
 and related important ideas in robotics.  People will typically learn about such important ideas from a textbook,
-and then implement them a &ldquo;bottom-up&rdquo; (ad-hoc) way on Arduino, RaspberryPi, and
-other hardware. This approach is useful for rapid prototyping but makes it
+and then implement them a &ldquo;bottom-up&rdquo; (ad-hoc) way on Arduino, ESP32, and
+other micrcontrollers. This approach is useful for rapid prototyping but makes it
 difficult to extend the project beyond the prototyping stage.  RFT aims to fill
 this gap by taking a top-down approach, in which controllers, sensors, and actuators can be
 plugged into a pre-existing framework in a way that is easily extended for more advanced work.
+(If you're familiar with [ROS](https://www.ros.org/), this approach will already make sense, but
+whereas ROS is a massive package providing an entire operating system
+supporting multiple robots and programming languages, RFT is focused
+entirely on simple C++ firmware for a single robot.)
 
 RFT grew out my experience developing a simple [toolkit](https://github.com/simondlevy/Hackflight)
 for flight-control firmware of multi-rotor vehicles.  At some point I realized that most of this
-code would work just as well with other kinds of robotic vehicles.  
+code would work just as well with other kinds of robotic vehicles.  The object-oriented approach 
+of C++ made it straightforward to support other robot types through sub-classing.
 
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/board.hpp">Board</a>
 class specifies an abstract (pure virtual) <tt>getTime()</tt> method that you must
