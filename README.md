@@ -7,10 +7,10 @@ for building robot firmware with Arduino and other microcontrollers.  Because
 of its platform-indepdence it can also be used as the control code in a
 C++-based robot [simualtor](https://github.com/simondlevy/MulticopterSim).
 
-RFT is geared toward people like me who want to tinker with firmware, and use
+RFT is geared toward people like me who want to tinker with firmware and use
 it to teach students about ideas like
 [open-loop / closed loop control](https://circuitglobe.com/difference-between-open-loop-and-closed-loop-system.html)
-[sensor fusion](https://en.wikipedia.org/wiki/Sensor_fusion),
+[sensor fusion](https://en.wikipedia.org/wiki/Sensor_fusion)
 and related important ideas in robotics.  People will typically learn about such important ideas from a textbook,
 and then implement in a ``bottom-up'' (ad-hoc) way on Arduino, RaspberryPi, and
 other hardware. This approach is useful for rapid prototyping but makes it
