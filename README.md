@@ -2,7 +2,7 @@
 <img src="extras/media/logo.png" width=450>
 </p>
 
-RoboFirmwareToolkit (RFT) is a simple, platform-independent, header-only C++ toolkit
+**RoboFirmwareToolkit** (RFT) is a simple, platform-independent, header-only C++ toolkit
 for building robot firmware to run on Arduino and other microcontrollers.  Because
 of its platform-indepdence it can also be used as the control code in a
 C++-based robot [simualtor](https://github.com/simondlevy/MulticopterSim).  As with 
