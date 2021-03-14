@@ -41,6 +41,10 @@ has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's s
 class performs basic functions associated with open-loop control, and specifies a set of abstract methods that you
 implement for a particular controller like an R/C receiver.
 
+<hr>
+NEED TO FIX BELOW
+<hr>
+
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/actuators/mixer.hpp">Mixer</a>
 class is an abstract class that can be subclassed for various motor
 configurations (QuadX, Hexacopter, Tricopter, etc.).  The 
