@@ -14,7 +14,7 @@ it to teach students about ideas like
 and related important ideas in robotics.  People will typically learn about such important ideas from a textbook,
 and then implement them a &ldquo;bottom-up&rdquo; (ad-hoc) way on Arduino, RaspberryPi, and
 other hardware. This approach is useful for rapid prototyping but makes it
-difficult to extend the project beyond the prototyping state.  RFT aims to fill
+difficult to extend the project beyond the prototyping stage.  RFT aims to fill
 this gap by taking a top-down approach, in which controllers, sensors, and actuators can be
 plugged into a pre-existing framework in a way that is easily extended for more advanced work.
 
