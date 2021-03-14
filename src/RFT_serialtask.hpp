@@ -12,12 +12,11 @@
 #include <RFT_board.hpp>
 #include <RFT_debugger.hpp>
 #include <RFT_actuator.hpp>
-
-#include "parser.hpp"
+#include <RFT_parser.hpp>
 
 namespace rft {
 
-    class SerialTask {
+    class SerialTask : public TimerTask, public Parser {
 
         protected:
 
@@ -27,8 +26,19 @@ namespace rft {
             OpenLoopController * _olc = NULL;
             State * _state = NULL;
 
-            /*
-            // TimerTask overrides -------------------------------------------------------
+
+            SerialTask(void)
+                : TimerTask(FREQ)
+            {
+            }
+
+            void begin(rft::Board * board, rft::State * state, rft::OpenLoopController * olc, rft::Actuator * actuator) 
+            {
+                TimerTask::begin(board);
+                _state = state;
+                _olc = olc;
+                _actuator = actuator;
+            }
 
             virtual void doTask(void) override
             {
@@ -46,7 +56,6 @@ namespace rft {
                     _actuator->runDisarmed();
                 }
             }
-            */
 
     };  // SerialTask
 
