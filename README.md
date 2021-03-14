@@ -37,10 +37,9 @@ implement for a particular microcontroller or simulator.
 class specifies abstract (pure virtual) methods <tt>ready()</tt> state for checking whether the sensor
 has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's state based on that data.
 
-* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/receiver.hpp">Receiver</a>
-class performs basic functions associated with R/C control (tracking stick
-positions, checking switches) and specifies a set of abstract methods that you
-implement for a particular receiver (reading channels values).  
+* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_openloop.hpp">OpenLoopController</a>
+class performs basic functions associated with open-loop control, and specifies a set of abstract methods that you
+implement for a particular controller like an R/C receiver.
 
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/actuators/mixer.hpp">Mixer</a>
 class is an abstract class that can be subclassed for various motor
