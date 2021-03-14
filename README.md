@@ -46,8 +46,14 @@ With these three classes (Board, OpenLoopController, Actuator) you can implement
 an R/C car, that involves no closed-loop control.  For most projects, of course, you'll want to add closed-loop
 control via sensors.  Hence RFT also provides the following abstract classes:
 
+* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_closedloop.hpp">ClosedLoopController</a>
+class specifies an abstract method <tt>modifyDemands()</tt> that inputs the robot's current state and
+outputs an array of floating-point values representing how that controller affects the demands. (For example,
+an altitude-hold controller for a quadcopter would use the 'copter's altitude and vertical velocity to 
+adjust the throttle demand.)
+
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_sensor.hpp">Sensor</a>
-class specifies abstract (pure virtual) methods <tt>ready()</tt> state for checking whether the sensor
+class specifies abstract methods <tt>ready()</tt> state for checking whether the sensor
 has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's state based on that data.
 
 
