@@ -26,7 +26,6 @@ namespace rft {
             OpenLoopController * _olc = NULL;
             State * _state = NULL;
 
-
             SerialTask(void)
                 : TimerTask(FREQ)
             {
