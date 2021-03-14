@@ -21,24 +21,27 @@ this gap by taking a top-down approach in which controllers, sensors, and actuat
 plugged into a pre-existing framework in a way that is easily extended for more advanced work.
 (If you're familiar with [ROS](https://www.ros.org/), this approach will already make sense, but
 whereas ROS is a massive package providing an entire operating system
-supporting multiple robots and programming languages, RFT is focused
-entirely on simple C++ firmware for a single robot.)
+supporting multiple robots and programming languages, RFT is focused entirely
+on simple C++ firmware for a single robot.)
 
 RFT grew out my experience developing a simple [toolkit](https://github.com/simondlevy/Hackflight)
 for flight-control firmware of multi-rotor vehicles.  At some point I realized that most of this
 code would work just as well with other kinds of robotic vehicles.  The object-oriented approach 
-of C++ made it straightforward to support other robot types through sub-classing:
+of C++ made it straightforward to support other robot types through abstract classes:
 
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_board.hpp">Board</a>
 class specifies an abstract (pure virtual) <tt>getTime()</tt> method that you must
 implement for a particular microcontroller or simulator.
-* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/imu.hpp">IMU</a>
-class specifies an abstract (pure virtual) <tt>getQuaternion()</tt> and
-<tt>getGyrometer()</tt> method that you must implement for a particular IMU.
+
+* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_sensor.hpp">Sensor</a>
+class specifies abstract (pure virtual) methods <tt>ready()</tt> state for checking whether the sensor
+has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's state based on that data.
+
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/receiver.hpp">Receiver</a>
 class performs basic functions associated with R/C control (tracking stick
 positions, checking switches) and specifies a set of abstract methods that you
 implement for a particular receiver (reading channels values).  
+
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/actuators/mixer.hpp">Mixer</a>
 class is an abstract class that can be subclassed for various motor
 configurations (QuadX, Hexacopter, Tricopter, etc.).  The 
@@ -46,8 +49,10 @@ configurations (QuadX, Hexacopter, Tricopter, etc.).  The
 (quad-X using Cleanflight numbering conventions)  and
 <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/actuators/mixers/quadxap.hpp">QuadXAP</a>
 (quad-X using ArduPilot numbering conventions) subclasses are already implemented.  
+
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/motor.hpp">Motor</a> class
 supports different kinds of motors (brushed, brushless).
+
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/pidcontroller.hpp">PidController</a>
 class provides a constructor where you specify the PID values appropriate for your model (see
 <b>PID Controllers</b> discussion below).
