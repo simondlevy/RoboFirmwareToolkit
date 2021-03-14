@@ -14,7 +14,7 @@ namespace rft {
 
     class Sensor {
 
-        friend class Main;
+        friend class RFT;
 
         // protected: XXX
         public:

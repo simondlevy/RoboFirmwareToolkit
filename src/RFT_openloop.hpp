@@ -15,12 +15,11 @@ namespace rft {
 
     class OpenLoopController {
 
-        friend class Main;
+        friend class RFT;
         friend class SerialTask;
         friend class ClosedLoopTask;
 
-        // protected:  XXX
-        public: 
+        protected:
 
             static const uint8_t MAX_DEMANDS = 10; // arbitrary
 
@@ -28,11 +27,6 @@ namespace rft {
 
             virtual void begin(void) 
             { 
-            }
-
-            virtual float getRawval(uint8_t chan)
-            {
-                return 0;
             }
 
             virtual bool lostSignal(void) 

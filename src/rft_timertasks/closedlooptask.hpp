@@ -16,7 +16,7 @@ namespace rft {
 
     class ClosedLoopTask : public TimerTask {
 
-        friend class Main;
+        friend class RFT;
 
         private:
 
@@ -34,8 +34,7 @@ namespace rft {
             Actuator * _actuator = NULL;
             State  * _state    = NULL;
 
-        // protected: XXX
-        public:
+        protected:
 
             ClosedLoopTask(void)
                 : TimerTask(FREQ)
