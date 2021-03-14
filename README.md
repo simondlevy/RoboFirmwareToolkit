@@ -29,7 +29,7 @@ for flight-control firmware of multi-rotor vehicles.  At some point I realized t
 code would work just as well with other kinds of robotic vehicles.  The object-oriented approach 
 of C++ made it straightforward to support other robot types through sub-classing:
 
-* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/board.hpp">Board</a>
+* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_board.hpp">Board</a>
 class specifies an abstract (pure virtual) <tt>getTime()</tt> method that you must
 implement for a particular microcontroller or simulator.
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/imu.hpp">IMU</a>
