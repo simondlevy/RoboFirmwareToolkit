@@ -15,16 +15,13 @@ namespace rft {
         friend class RFT;
         friend class SerialTask;
 
-        // protected: XXX
-        public:
+        protected:
 
             virtual void begin(void) { }
 
             virtual void runDisarmed(void) { }
 
             virtual void cut(void) { }
-
-            virtual void setMotorDisarmed(uint8_t index, float value) { }
 
         public:
 

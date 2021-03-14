@@ -16,8 +16,7 @@ namespace rft {
 
         friend class RFT;
 
-        // protected: XXX
-        public:
+        protected:
 
             virtual void begin(void) { }
 

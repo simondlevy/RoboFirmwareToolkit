@@ -16,8 +16,7 @@ namespace rft {
 
     class Motor {
 
-        // protected: XXX
-        public:
+        protected:
 
             static const uint8_t MAX_COUNT = 20; // arbitrary
 

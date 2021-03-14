@@ -23,8 +23,7 @@ namespace rft {
 
         friend class RFT;
 
-        // private: XXX
-        public:
+        private:
 
             static constexpr float ADHOC_RATE = 100.f; // Hz
 
@@ -34,7 +33,7 @@ namespace rft {
 
             float _prevTime;
 
-        // protected: XXX
+        protected:
 
             void begin(Board * board)
             {
