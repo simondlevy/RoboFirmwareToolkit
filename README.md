@@ -33,25 +33,27 @@ of C++ made it straightforward to support other robot types through abstract cla
 class specifies an abstract (pure virtual) <tt>getTime()</tt> method that you must
 implement for a particular microcontroller or simulator.
 
-* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_sensor.hpp">Sensor</a>
-class specifies abstract (pure virtual) methods <tt>ready()</tt> state for checking whether the sensor
-has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's state based on that data.
-
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_openloop.hpp">OpenLoopController</a>
 class performs basic functions associated with open-loop control, and specifies a set of abstract methods that you
 implement for a particular controller like an R/C receiver.
 
+* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_actuator.hpp">Actuator</a>
+class is an abstract class that can be subclassed for various kinds of actuators; for example, a multirotor
+mixer controlling a number of motors.  In principle, you need only one Actuator object for each project,
+since it can be subclassed to control any number of motors, arms, grippers, etc.
+
+With these three classes (Board, OpenLoopController, Actuator) you can implement a traditional vehicle like
+an R/C car, that involves no closed-loop control.  For most projects, of course, you'll want to add closed-loop
+control via sensors.  Hence RFT also provides the following abstract classes:
+
+* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_sensor.hpp">Sensor</a>
+class specifies abstract (pure virtual) methods <tt>ready()</tt> state for checking whether the sensor
+has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's state based on that data.
+
+
 <hr>
 NEED TO FIX BELOW
 <hr>
-
-* The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/actuators/mixer.hpp">Mixer</a>
-class is an abstract class that can be subclassed for various motor
-configurations (QuadX, Hexacopter, Tricopter, etc.).  The 
-<a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/actuators/mixers/quadxcf.hpp">QuadXCF</a>
-(quad-X using Cleanflight numbering conventions)  and
-<a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/actuators/mixers/quadxap.hpp">QuadXAP</a>
-(quad-X using ArduPilot numbering conventions) subclasses are already implemented.  
 
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/motor.hpp">Motor</a> class
 supports different kinds of motors (brushed, brushless).
