@@ -9,8 +9,8 @@ C++-based robot [simualtor](https://github.com/simondlevy/MulticopterSim).
 
 RFT is geared toward people like me who want to tinker with firmware and use
 it to teach students about ideas like
-[open-loop / closed loop control](https://circuitglobe.com/difference-between-open-loop-and-closed-loop-system.html)
-[sensor fusion](https://en.wikipedia.org/wiki/Sensor_fusion)
+[open-loop / closed loop control](https://circuitglobe.com/difference-between-open-loop-and-closed-loop-system.html),
+[sensor fusion](https://en.wikipedia.org/wiki/Sensor_fusion),
 and related important ideas in robotics.  People will typically learn about such important ideas from a textbook,
 and then implement them a &ldquo;bottom-up&rdquo; (ad-hoc) way on Arduino, RaspberryPi, and
 other hardware. This approach is useful for rapid prototyping but makes it
