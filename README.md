@@ -27,7 +27,7 @@ entirely on simple C++ firmware for a single robot.)
 RFT grew out my experience developing a simple [toolkit](https://github.com/simondlevy/Hackflight)
 for flight-control firmware of multi-rotor vehicles.  At some point I realized that most of this
 code would work just as well with other kinds of robotic vehicles.  The object-oriented approach 
-of C++ made it straightforward to support other robot types through sub-classing.
+of C++ made it straightforward to support other robot types through sub-classing:
 
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/board.hpp">Board</a>
 class specifies an abstract (pure virtual) <tt>getTime()</tt> method that you must
