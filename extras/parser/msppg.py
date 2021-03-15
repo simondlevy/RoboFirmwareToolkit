@@ -110,12 +110,51 @@ def main():
 
     indent = '    '
 
-    # Open file for appending
+    # Open output file
     output = open(args.outfile, 'w')
+
+    # Write header
+    output.write('/*\n')
+    output.write(indent + 'Timer task for serial comms\n\n')
+    output.write(indent + 'MIT License\n')
+    output.write('*/\n\n')
+    output.write('#pragma once\n\n')
+    output.write('#include <RFT_timertask.hpp>\n')
+    output.write('#include <RFT_board.hpp>\n')
+    output.write('#include <RFT_debugger.hpp>\n')
+    output.write('#include <RFT_actuator.hpp>\n')
+    output.write('#include <RFT_serialtask.hpp>\n')
+    output.write('#include <RFT_parser.hpp>\n\n')
+
+    # Add optional namespace
+    if args.namespace is not None:
+        output.write('namespace %s\n' % args.namespace)
+
+    # Add classname
+    output.write('class %s {\n\n' % args.classname)
+    
+    # Add stubbed declarations for handler methods
+
+    for msgtype in msgdict.keys():
+
+        msgstuff = msgdict[msgtype]
+        msgid = msgstuff[0]
+
+        argnames = getargnames(msgstuff)
+        argtypes = getargtypes(msgstuff)
+
+        output.write(3*indent + 'private: void handle_%s%s' %
+                     (msgtype, '_Request' if msgid < 200 else ''))
+        write_params(output, argtypes, argnames,
+                     ampersand=('&' if msgid < 200 else ''))
+        output.write('\n' + 3*indent + '{\n')
+        for argname in argnames:
+            output.write(4*indent + '(void)%s;\n' % argname)
+        output.write(3*indent + '}\n\n')
 
     # Add dispatchMessage() method
 
-    output.write(3*indent + 'void dispatchMessage(void)\n')
+    output.write(3*indent + 'protected: void dispatchMessage(void) override\n')
     output.write(3*indent + '{\n')
     output.write(4*indent + 'switch (_command) {\n\n')
 
@@ -160,81 +199,9 @@ def main():
     output.write(4*indent + '}\n')
     output.write(3*indent + '}\n\n')
 
-    # Add virtual declarations for handler methods
-
-    for msgtype in msgdict.keys():
-
-        msgstuff = msgdict[msgtype]
-        msgid = msgstuff[0]
-
-        argnames = getargnames(msgstuff)
-        argtypes = getargtypes(msgstuff)
-
-        output.write(3*indent + 'virtual void handle_%s%s' %
-                     (msgtype, '_Request' if msgid < 200 else ''))
-        write_params(output, argtypes, argnames,
-                     ampersand=('&' if msgid < 200 else ''))
-        output.write('\n' + 3*indent + '{\n')
-        for argname in argnames:
-            output.write(4*indent + '(void)%s;\n' % argname)
-        output.write(3*indent + '}\n\n')
-
-    # Add message-serialization declarations to header
-
-    output.write(indent*2 + 'public:\n\n')
-
-    for msgtype in msgdict.keys():
-
-        msgstuff = msgdict[msgtype]
-        msgid = msgstuff[0]
-
-        argnames = getargnames(msgstuff)
-        argtypes = getargtypes(msgstuff)
-
-        # Incoming messages
-        if msgid < 200:
-
-            # Write request method
-            fmt = 'static uint8_t serialize_%s_Request(uint8_t bytes[])\n'
-            output.write(3*indent + fmt % msgtype)
-            output.write(3*indent + '{\n')
-            output.write(4*indent + 'bytes[0] = 36;\n')
-            output.write(4*indent + 'bytes[1] = 77;\n')
-            output.write(4*indent + 'bytes[2] = %d;\n' %
-                         60 if msgid < 200 else 62)
-            output.write(4*indent + 'bytes[3] = 0;\n')
-            output.write(4*indent + 'bytes[4] = %d;\n' % msgid)
-            output.write(4*indent + 'bytes[5] = %d;\n\n' % msgid)
-            output.write(4*indent + 'return 6;\n')
-            output.write(3*indent + '}\n\n')
-
-        # Add parser method for serializing message
-        output.write(3*indent + 'static uint8_t serialize_%s' % msgtype)
-        write_params(output, argtypes, argnames, '(uint8_t bytes[], ')
-        output.write('\n' + 3*indent + '{\n')
-        msgsize = paysize(argtypes)
-        output.write(4*indent + 'bytes[0] = 36;\n')
-        output.write(4*indent + 'bytes[1] = 77;\n')
-        output.write(4*indent + 'bytes[2] = 62;\n')
-        output.write(4*indent + 'bytes[3] = %d;\n' % msgsize)
-        output.write(4*indent + 'bytes[4] = %d;\n\n' % msgid)
-        nargs = len(argnames)
-        offset = 5
-        for k in range(nargs):
-            argname = argnames[k]
-            argtype = argtypes[k]
-            decl = type2decl[argtype]
-            output.write(4*indent + 'memcpy(&bytes[%d], &%s, sizeof(%s));\n' %
-                         (offset, argname, decl))
-            offset += type2size[argtype]
-        output.write('\n')
-        output.write(4*indent + 'bytes[%d] = CRC8(&bytes[3], %d);\n\n' %
-                     (msgsize+5, msgsize+2))
-        output.write(4*indent + 'return %d;\n' % (msgsize+6))
-        output.write(3*indent + '}\n\n')
-
     output.write(indent + '}; // class %s\n\n' % args.classname)
-    output.write('} // namespace hf\n')
+    if args.namespace is not None:
+        output.write('} // namespace hf\n')
     output.close()
 
 
