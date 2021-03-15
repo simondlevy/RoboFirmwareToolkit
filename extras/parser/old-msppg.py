@@ -127,14 +127,12 @@ class Python_Emitter(LocalCodeEmitter):
         for msgtype in msgdict.keys():
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
-            self._write(2*self.indent +
-                        ('if self.message_id == %d:\n\n' % msgstuff[0]))
-            self._write(3*self.indent +
-                        ('if self.message_direction == 0:\n\n'))
-            self._write(4*self.indent + 'self.handle_%s_Request()\n\n' %
+            self._write('        if self.message_id == %d:\n\n' % msgstuff[0])
+            self._write('            if self.message_direction == 0:\n\n')
+            self._write('                self.handle_%s_Request()\n\n' %
                         msgtype)
-            self._write(3*self.indent + 'else:\n\n')
-            self._write(4*self.indent + 'self.handle_%s(*struct.unpack(\'=' %
+            self._write('         else:\n\n')
+            self._write('            self.handle_%s(*struct.unpack(\'=' %
                         msgtype)
             for argtype in self._getargtypes(msgstuff):
                 self._write('%s' % self.type2pack[argtype])
@@ -224,9 +222,7 @@ class Java_Emitter(CompileableCodeEmitter):
                         'float': 'Float',
                         'int': 'Int'}
 
-        self.output = _openw('output/java/edu/wlu/cs/msppg/Parser.java')
-
-        self._write(self._getsrc('parser-top-java'))
+        self.output = _openw('output/java/edu/wlu/cs/msppg/MyParser.java')
 
         # Write handler cases for incoming messages
         for msgtype in msgdict.keys():
