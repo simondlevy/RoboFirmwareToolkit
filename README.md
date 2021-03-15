@@ -76,6 +76,6 @@ providing a C-like <tt>printf</tt> method that works with the Board class to dir
 * A <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_filters.hpp">Filters</a> class
 providing static methods for simple filters
 ([complementary](https://www.quora.com/What-is-a-complimentary-filter-How-does-it-differ-from-a-Kalman-filter)),
-a class for [Low-Pass-Filters](https://en.wikipedia.org/wiki/Low-pass_filter), and two classes for Quaternionr-filtering
-algorithms ([Madgwick](https://courses.cs.washington.edu/courses/cse474/17wi/labs/l4/madgwick_internal_report.pdf)
-and [Mahony](https://nitinjsanket.github.io/tutorials/attitudeest/mahony#mahonyfilt)).
+a class for [Low-Pass-Filters](https://en.wikipedia.org/wiki/Low-pass_filter), and two classes for the Quaternion-filtering
+algorithms [Madgwick](https://courses.cs.washington.edu/courses/cse474/17wi/labs/l4/madgwick_internal_report.pdf)
+and [Mahony](https://nitinjsanket.github.io/tutorials/attitudeest/mahony#mahonyfilt).
