@@ -22,7 +22,7 @@ namespace rft {
         public:
 
             // Simple static functions
-
+ 
             static float complementary(float a, float b, float c)
             {
                 return a * c + b * (1 - c);
