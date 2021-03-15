@@ -2,7 +2,7 @@
 '''
 Multiwii Serial Protocol Parser Generator
 
-Generates parser.hpp based on messages.json
+Generates serialtask.hpp based on messages.json
 
 Copyright (C) Simon D. Levy 2021
 
@@ -14,9 +14,6 @@ import os
 import json
 from pkg_resources import resource_string
 import argparse
-
-
-# Helper functions ============================================================
 
 
 def clean(string):
@@ -39,80 +36,8 @@ def _openw(fname):
     print('Creating file ' + fname)
     return open(fname, 'w')
 
-# Code-emitter classes ========================================================
 
-
-class CodeEmitter(object):
-
-    def __init__(self):
-
-        self.indent = '    '
-        self.type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
-
-    def _paysize(self, argtypes):
-
-        return sum([self.type2size[atype] for atype in argtypes])
-
-    def _msgsize(self, argtypes):
-
-        return self._paysize(argtypes)
-
-    def _getargnames(self, message):
-
-        return [argname for (argname, _) in self._getargs(message)]
-
-    def _getargtypes(self, message):
-
-        return [argtype for (_, argtype) in self._getargs(message)]
-
-    def _getargs(self, message):
-
-        return [(argname, argtype) for (argname, argtype) in
-                zip(message[1], message[2]) if argname.lower() != 'comment']
-
-    def _write_params(self, outfile, argtypes, argnames, prefix='(',
-                      ampersand=''):
-
-        outfile.write(prefix)
-        for argtype, argname in zip(argtypes, argnames):
-            outfile.write(self.type2decl[argtype] + ' ' + ampersand + ' ' +
-                          argname)
-            if argname != argnames[-1]:
-                outfile.write(', ')
-        outfile.write(')')
-
-    def _getsrc(self, filename):
-
-        return resource_string('resources', filename).decode('utf-8')
-
-    def _copyfile(self, src, dst, folder='output'):
-
-        outfile = _openw('%s/%s' % (folder, dst))
-        outfile.write(self._getsrc(src))
-        outfile.close()
-
-
-class LocalCodeEmitter(CodeEmitter):
-
-    def __init__(self, folder, ext):
-
-        CodeEmitter.__init__(self)
-
-        mkdir_if_missing('output/%s' % folder)
-
-
-class CompileableCodeEmitter(LocalCodeEmitter):
-
-    def __init__(self, folder, ext):
-
-        LocalCodeEmitter.__init__(self, folder, ext)
-
-        self._copyfile('%s.makefile' % folder, '%s/Makefile' % folder)
-
-# Firmware header-only code emitter ===========================================
-
-
-class HPP_Emitter(CodeEmitter):
+class HPP_Emitter:
 
     type2decl = {'byte': 'uint8_t',
                  'short': 'int16_t',
@@ -121,12 +46,12 @@ class HPP_Emitter(CodeEmitter):
 
     def __init__(self, msgdict):
 
-        CodeEmitter.__init__(self)
-
+        self.indent = '    '
+        self.type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
         self.type2decl = HPP_Emitter.type2decl
 
         # Open file for appending
-        self.output = open('mspparser.hpp', 'w')
+        self.output = open('seritaltask.hpp', 'w')
 
         # Add dispatchMessage() method
 
@@ -261,6 +186,49 @@ class HPP_Emitter(CodeEmitter):
         self.output.write('} // namespace hf\n')
         self.output.close()
 
+    def _paysize(self, argtypes):
+
+        return sum([self.type2size[atype] for atype in argtypes])
+
+    def _msgsize(self, argtypes):
+
+        return self._paysize(argtypes)
+
+    def _getargnames(self, message):
+
+        return [argname for (argname, _) in self._getargs(message)]
+
+    def _getargtypes(self, message):
+
+        return [argtype for (_, argtype) in self._getargs(message)]
+
+    def _getargs(self, message):
+
+        return [(argname, argtype) for (argname, argtype) in
+                zip(message[1], message[2]) if argname.lower() != 'comment']
+
+    def _write_params(self, outfile, argtypes, argnames, prefix='(',
+                      ampersand=''):
+
+        outfile.write(prefix)
+        for argtype, argname in zip(argtypes, argnames):
+            outfile.write(self.type2decl[argtype] + ' ' + ampersand + ' ' +
+                          argname)
+            if argname != argnames[-1]:
+                outfile.write(', ')
+        outfile.write(')')
+
+    def _getsrc(self, filename):
+
+        return resource_string('resources', filename).decode('utf-8')
+
+    def _copyfile(self, src, dst, folder='output'):
+
+        outfile = _openw('%s/%s' % (folder, dst))
+        outfile.write(self._getsrc(src))
+        outfile.close()
+
+
 # main ========================================================================
 
 
@@ -268,12 +236,19 @@ def main():
 
     # parse file name from command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('--filename', type=str, required=False,
+    parser.add_argument('--infile', type=str, required=False,
                         default='messages.json',
-                        help='Random seed for reproducibility')
+                        help='Input file')
+    parser.add_argument('--outfile', type=str, required=False,
+                        default='serialtask.hpp',
+                        help='Output file')
+    parser.add_argument('--classname', type=str, required=False,
+                        help='SerialTask')
+    parser.add_argument('--namespace', type=str, required=False,
+                        help='Namespace')
     args = parser.parse_args()
 
-    data = json.load(open(args.filename, 'r'))
+    data = json.load(open(args.infile, 'r'))
 
     # takes the types of messages from the json file
     unicode_message_types = data.keys()
