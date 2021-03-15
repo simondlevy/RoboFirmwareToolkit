@@ -15,6 +15,10 @@ import json
 from pkg_resources import resource_string
 import argparse
 
+type2decl = {'byte': 'uint8_t',
+             'short': 'int16_t',
+             'float': 'float',
+             'int': 'int32_t'}
 
 def clean(string):
     cleaned_string = string[1: len(string) - 1]
@@ -39,16 +43,10 @@ def getargtypes(message):
 
 class Emitter:
 
-    type2decl = {'byte': 'uint8_t',
-                 'short': 'int16_t',
-                 'float': 'float',
-                 'int': 'int32_t'}
-
     def __init__(self, msgdict, filename, classname, namespace):
 
         indent = '    '
         self.type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
-        self.type2decl = Emitter.type2decl
 
         # Open file for appending
         output = open(filename, 'w')
@@ -75,7 +73,7 @@ class Emitter:
             for k in range(nargs):
                 argname = argnames[k]
                 argtype = argtypes[k]
-                decl = self.type2decl[argtype]
+                decl = type2decl[argtype]
                 output.write(6*indent + decl + ' ' + argname +
                                   ' = 0;\n')
                 if msgid >= 200:
@@ -170,7 +168,7 @@ class Emitter:
             for k in range(nargs):
                 argname = argnames[k]
                 argtype = argtypes[k]
-                decl = self.type2decl[argtype]
+                decl = type2decl[argtype]
                 output.write(4*indent +
                                   'memcpy(&bytes[%d], &%s, sizeof(%s));\n' %
                                   (offset, argname, decl))
@@ -199,7 +197,7 @@ class Emitter:
 
         outfile.write(prefix)
         for argtype, argname in zip(argtypes, argnames):
-            outfile.write(self.type2decl[argtype] + ' ' + ampersand + ' ' +
+            outfile.write(type2decl[argtype] + ' ' + ampersand + ' ' +
                           argname)
             if argname != argnames[-1]:
                 outfile.write(', ')
