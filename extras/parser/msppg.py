@@ -20,6 +20,8 @@ type2decl = {'byte': 'uint8_t',
              'float': 'float',
              'int': 'int32_t'}
 
+type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
+
 def clean(string):
     cleaned_string = string[1: len(string) - 1]
     return cleaned_string
@@ -40,13 +42,16 @@ def getargtypes(message):
 
     return [argtype for (_, argtype) in getargs(message)]
 
+def paysize(argtypes):
+
+    return sum([type2size[atype] for atype in argtypes])
+
 
 class Emitter:
 
     def __init__(self, msgdict, filename, classname, namespace):
 
         indent = '    '
-        self.type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
 
         # Open file for appending
         output = open(filename, 'w')
@@ -80,7 +85,7 @@ class Emitter:
                     fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n\n'
                     output.write(6*indent +
                                       fmt % (argname, offset, decl))
-                offset += self.type2size[argtype]
+                offset += type2size[argtype]
             output.write(6*indent + 'handle_%s%s(' %
                               (msgtype, '_Request' if msgid < 200 else ''))
             for k in range(nargs):
@@ -157,7 +162,7 @@ class Emitter:
             self._write_params(output, argtypes, argnames,
                                '(uint8_t bytes[], ')
             output.write('\n' + 3*indent + '{\n')
-            msgsize = self._msgsize(argtypes)
+            msgsize = paysize(argtypes)
             output.write(4*indent + 'bytes[0] = 36;\n')
             output.write(4*indent + 'bytes[1] = 77;\n')
             output.write(4*indent + 'bytes[2] = 62;\n')
@@ -172,7 +177,7 @@ class Emitter:
                 output.write(4*indent +
                                   'memcpy(&bytes[%d], &%s, sizeof(%s));\n' %
                                   (offset, argname, decl))
-                offset += self.type2size[argtype]
+                offset += type2size[argtype]
             output.write('\n')
             output.write(4*indent +
                               'bytes[%d] = CRC8(&bytes[3], %d);\n\n' %
@@ -183,14 +188,6 @@ class Emitter:
         output.write(indent + '}; // class %s\n\n' % classname)
         output.write('} // namespace hf\n')
         output.close()
-
-    def _paysize(self, argtypes):
-
-        return sum([self.type2size[atype] for atype in argtypes])
-
-    def _msgsize(self, argtypes):
-
-        return self._paysize(argtypes)
 
     def _write_params(self, outfile, argtypes, argnames, prefix='(',
                       ampersand=''):
