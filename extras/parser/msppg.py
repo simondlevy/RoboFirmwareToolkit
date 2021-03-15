@@ -16,11 +16,6 @@ import argparse
 # Helper functions ============================================================
 
 
-def clean(string):
-    cleaned_string = string[1: len(string) - 1]
-    return cleaned_string
-
-
 def error(errmsg):
     print(errmsg)
     exit(1)
@@ -63,6 +58,12 @@ class CodeEmitter(object):
 
         self.indent = '    '
         self.type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
+
+    @staticmethod
+    def clean(string):
+        cleaned_string = string[1: len(string) - 1]
+        return cleaned_string
+
 
     def _paysize(self, argtypes):
 
@@ -435,7 +436,7 @@ def main():
     message_type_list = list()
     for key in unicode_message_types:
         message_type = json.dumps(key)
-        clean_type = clean(message_type)
+        clean_type = CodeEmitter.clean(message_type)
         message_type_list.append(clean_type)
 
     # make dictionary of names, types for each message's components
@@ -447,7 +448,7 @@ def main():
         argtypes = list()
         msgid = None
         for arg in data[msgtype]:
-            argname = clean(clean(json.dumps(list(arg.keys()))))
+            argname = CodeEmitter.clean(CodeEmitter.clean(json.dumps(list(arg.keys()))))
             argtype = arg[list(arg.keys())[0]]
             if argname == 'ID':
                 msgid = int(argtype)
