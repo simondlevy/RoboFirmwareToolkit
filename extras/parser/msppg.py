@@ -21,6 +21,22 @@ def clean(string):
     return cleaned_string
 
 
+def getargs(message):
+
+    return [(argname, argtype) for (argname, argtype) in
+            zip(message[1], message[2]) if argname.lower() != 'comment']
+
+
+def getargnames(message):
+
+    return [argname for (argname, _) in getargs(message)]
+
+
+def getargtypes(message):
+
+    return [argtype for (_, argtype) in getargs(message)]
+
+
 class Emitter:
 
     type2decl = {'byte': 'uint8_t',
@@ -48,8 +64,8 @@ class Emitter:
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
 
-            argnames = self._getargnames(msgstuff)
-            argtypes = self._getargtypes(msgstuff)
+            argnames = getargnames(msgstuff)
+            argtypes = getargtypes(msgstuff)
 
             output.write(5*indent + ('case %s:\n' %
                                                msgdict[msgtype][0]))
@@ -95,8 +111,8 @@ class Emitter:
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
 
-            argnames = self._getargnames(msgstuff)
-            argtypes = self._getargtypes(msgstuff)
+            argnames = getargnames(msgstuff)
+            argtypes = getargtypes(msgstuff)
 
             output.write(3*indent + 'virtual void handle_%s%s' %
                               (msgtype, '_Request' if msgid < 200 else ''))
@@ -116,8 +132,8 @@ class Emitter:
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
 
-            argnames = self._getargnames(msgstuff)
-            argtypes = self._getargtypes(msgstuff)
+            argnames = getargnames(msgstuff)
+            argtypes = getargtypes(msgstuff)
 
             # Incoming messages
             if msgid < 200:
@@ -178,19 +194,6 @@ class Emitter:
 
         return self._paysize(argtypes)
 
-    def _getargnames(self, message):
-
-        return [argname for (argname, _) in self._getargs(message)]
-
-    def _getargtypes(self, message):
-
-        return [argtype for (_, argtype) in self._getargs(message)]
-
-    def _getargs(self, message):
-
-        return [(argname, argtype) for (argname, argtype) in
-                zip(message[1], message[2]) if argname.lower() != 'comment']
-
     def _write_params(self, outfile, argtypes, argnames, prefix='(',
                       ampersand=''):
 
@@ -201,10 +204,6 @@ class Emitter:
             if argname != argnames[-1]:
                 outfile.write(', ')
         outfile.write(')')
-
-    def _getsrc(self, filename):
-
-        return resource_string('resources', filename).decode('utf-8')
 
 # main ========================================================================
 
