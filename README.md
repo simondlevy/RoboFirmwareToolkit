@@ -50,7 +50,7 @@ control via sensors.  Hence RFT also provides the following abstract classes:
 class specifies an abstract method <tt>modifyDemands()</tt> that inputs the robot's current state and
 outputs an array of floating-point values representing how that controller affects the demands. (For example,
 an altitude-hold controller for a quadcopter would use the 'copter's altitude and vertical velocity to 
-adjust the throttle demand.)  Because [PID control](https://en.wikipedia.org/wiki/PID_controller)is the most
+adjust the throttle demand.)  Because [PID control](https://en.wikipedia.org/wiki/PID_controller) is the most
 popular kind of closed-loop control, RFT provides a general-purpose C++
 [class](https://github.com/simondlevy/RoboFirmwareToolkit/blob/main/src/rft_closedloops/pidcontroller.hpp)
 for PID control as well.
