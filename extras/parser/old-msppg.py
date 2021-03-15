@@ -215,10 +215,11 @@ class Java_Emitter(CompileableCodeEmitter):
         self.output.write('/*\n')
         self.output.write('   Message dispatcher\n\n')
         self.output.write('   MIT License\n\n')
-        self.output.write('*/\n')
-        self._write('from msppg import Parser\n\n')
-        self._write('class MyParser(Parser):\n\n')
-        self._write('    def dispatchMessage(self):\n\n')
+        self.output.write('*/\n\n')
+        self._write('import edu.wlu.cs.mssppg.Parser;\n\n')
+        self._write('public class MyParser extends Parser {\n\n')
+        self._write('    protected void dispatchMessage(void) {\n\n')
+        self._write('        switch (_command) {\n\n')
 
          # Write handler cases for incoming messages
         for msgtype in msgdict.keys():
@@ -228,8 +229,8 @@ class Java_Emitter(CompileableCodeEmitter):
 
             if msgid < 200:
 
-                self._write(6*self.indent + 'case (byte)%d:\n' % msgid)
-                self._write(8*self.indent + 'this.handle_%s(\n' % msgtype)
+                self._write('            case (byte)%d:\n' % msgid)
+                self._write('                this.handle_%s(\n' % msgtype)
 
                 argnames = self._getargnames(msgstuff)
                 argtypes = self._getargtypes(msgstuff)
@@ -239,17 +240,16 @@ class Java_Emitter(CompileableCodeEmitter):
                 offset = 0
                 for k in range(nargs):
                     argtype = argtypes[k]
-                    self._write(8*self.indent + 'bb.get%s(%d)' %
+                    self._write('                        bb.get%s(%d)' %
                                 (self.type2bb[argtype], offset))
                     offset += self.type2size[argtype]
                     if k < nargs-1:
                         self._write(',\n')
                 self._write(');\n')
 
-                self._write(7*self.indent + 'break;\n\n')
+                self._write('                break;\n\n')
 
-        self._write(5*self.indent + '}\n' + 4*self.indent + '}\n' +
-                    2*self.indent + '}\n' + self.indent + '}\n\n')
+        self._write('        }\n    }\n\n');
 
         for msgtype in msgdict.keys():
 
