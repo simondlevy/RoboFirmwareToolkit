@@ -117,6 +117,10 @@ class Python_Emitter(LocalCodeEmitter):
                           'float': 'f',
                           'int': 'i'}
 
+        # Write header
+        self.output.write('#  Message dispatcher\n\n')
+        self.output.write('#  MIT License\n\n')
+        self._write('from msppg import Parser\n\n')
         self._write('class MyParser(Parser):\n\n')
         self._write('    def dispatchMessage(self):\n\n')
 
