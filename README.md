@@ -67,7 +67,7 @@ Other useful classes include:
 * A <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_motor.hpp">Motor</a> class that
 allows you to specify the hardware pin(s) for your motor(s), with individual motor types (brushed, brushless) supported
 through sub-classes. To spin a motor, you specify the index (id) of the motor you want, along with a speed normalized between
-0 and 1, allowing you to avoid worrying about the low-level signal details.
+0 (off) and 1 (maximum possible speed), allowing you to avoid worrying about the low-level signal details.
 
 * A <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_debugger.hpp">Debugger</a> class
 providing a C-like <tt>printf</tt> method that works with the Board class to direct debugging output to the Arduino Serial Monitor
