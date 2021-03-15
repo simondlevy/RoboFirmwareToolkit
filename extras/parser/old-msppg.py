@@ -11,7 +11,6 @@ MIT License
 from sys import exit
 import os
 import json
-from pkg_resources import resource_string
 import argparse
 
 
@@ -75,16 +74,6 @@ class CodeEmitter(object):
                 outfile.write(', ')
         outfile.write(')')
 
-    def _getsrc(self, filename):
-
-        return resource_string('resources', filename).decode('utf-8')
-
-    def _copyfile(self, src, dst, folder='output'):
-
-        outfile = _openw('%s/%s' % (folder, dst))
-        outfile.write(self._getsrc(src))
-        outfile.close()
-
 
 class LocalCodeEmitter(CodeEmitter):
 
@@ -98,8 +87,6 @@ class CompileableCodeEmitter(LocalCodeEmitter):
     def __init__(self, folder, ext):
 
         LocalCodeEmitter.__init__(self, folder, ext)
-
-        self._copyfile('%s.makefile' % folder, '%s/Makefile' % folder)
 
 # Python emitter ==============================================================
 
@@ -346,7 +333,7 @@ def main():
     Python_Emitter(msgdict)
 
     # Emite Java
-    # Java_Emitter(msgdict)
+    Java_Emitter(msgdict)
 
 
 if __name__ == '__main__':
