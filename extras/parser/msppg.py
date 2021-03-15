@@ -108,15 +108,13 @@ def main():
         argument_types.append(argtypes)
         msgdict[msgtype] = (msgid, argnames, argtypes)
 
-    indent = '    '
-
     # Open output file
     output = open(args.outfile, 'w')
 
     # Write header
     output.write('/*\n')
-    output.write(indent + 'Timer task for serial comms\n\n')
-    output.write(indent + 'MIT License\n')
+    output.write('  Timer task for serial comms\n\n')
+    output.write('  MIT License\n')
     output.write('*/\n\n')
     output.write('#pragma once\n\n')
     output.write('#include <RFT_timertask.hpp>\n')
@@ -128,7 +126,7 @@ def main():
 
     # Add optional namespace
     if args.namespace is not None:
-        output.write('namespace %s\n' % args.namespace)
+        output.write('namespace %s {\n\n' % args.namespace)
 
     # Add classname
     output.write('class %s {\n\n' % args.classname)
@@ -143,20 +141,17 @@ def main():
         argnames = getargnames(msgstuff)
         argtypes = getargtypes(msgstuff)
 
-        output.write(3*indent + 'private: void handle_%s%s' %
+        output.write('        private: void handle_%s%s' %
                      (msgtype, '_Request' if msgid < 200 else ''))
         write_params(output, argtypes, argnames,
                      ampersand=('&' if msgid < 200 else ''))
-        output.write('\n' + 3*indent + '{\n')
-        for argname in argnames:
-            output.write(4*indent + '(void)%s;\n' % argname)
-        output.write(3*indent + '}\n\n')
+        output.write('\n        {\n        }\n\n')
 
     # Add dispatchMessage() method
 
-    output.write(3*indent + 'protected: void dispatchMessage(void) override\n')
-    output.write(3*indent + '{\n')
-    output.write(4*indent + 'switch (_command) {\n\n')
+    output.write('        protected: void dispatchMessage(void) override\n')
+    output.write('        {\n')
+    output.write('            switch (_command) {\n\n')
 
     for msgtype in msgdict.keys():
 
@@ -166,20 +161,19 @@ def main():
         argnames = getargnames(msgstuff)
         argtypes = getargtypes(msgstuff)
 
-        output.write(5*indent + ('case %s:\n' % msgdict[msgtype][0]))
-        output.write(5*indent + '{\n')
+        output.write('                case %s: {\n' % msgdict[msgtype][0])
         nargs = len(argnames)
         offset = 0
         for k in range(nargs):
             argname = argnames[k]
             argtype = argtypes[k]
             decl = type2decl[argtype]
-            output.write(6*indent + decl + ' ' + argname + ' = 0;\n')
+            output.write('                    ' + decl + ' ' + argname + ' = 0;\n')
             if msgid >= 200:
                 fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n\n'
-                output.write(6*indent + fmt % (argname, offset, decl))
+                output.write(' '*20 + fmt % (argname, offset, decl))
             offset += type2size[argtype]
-        output.write(6*indent + 'handle_%s%s(' %
+        output.write('                    handle_%s%s(' %
                      (msgtype, '_Request' if msgid < 200 else ''))
         for k in range(nargs):
             output.write(argnames[k])
@@ -189,17 +183,18 @@ def main():
         if msgid < 200:
             # XXX enforce uniform type for now
             argtype = argtypes[0].capitalize()
-            output.write(6*indent + ('prepareToSend%ss(%d);\n' %
-                         (argtype, nargs)))
+            output.write('                    prepareToSend%ss(%d);\n' %
+                         (argtype, nargs))
             for argname in argnames:
-                output.write(6*indent + ('send%s(%s);\n' % (argtype, argname)))
-            output.write(6*indent + "serialize8(_checksum);\n")
-        output.write(6*indent + '} break;\n\n')
+                output.write('                    send%s(%s);\n' %
+                             (argtype, argname))
+            output.write('                    serialize8(_checksum);\n')
+        output.write('                } break;\n\n')
 
-    output.write(4*indent + '}\n')
-    output.write(3*indent + '}\n\n')
+    output.write('            }\n\n')
+    output.write('        } // dispatchMessage \n\n')
 
-    output.write(indent + '}; // class %s\n\n' % args.classname)
+    output.write('    }; // class %s\n\n' % args.classname)
     if args.namespace is not None:
         output.write('} // namespace hf\n')
     output.close()
