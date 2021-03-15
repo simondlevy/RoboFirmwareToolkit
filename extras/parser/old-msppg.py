@@ -131,12 +131,13 @@ class Python_Emitter(LocalCodeEmitter):
             self._write('            if self.message_direction == 0:\n\n')
             self._write('                self.handle_%s_Request()\n\n' %
                         msgtype)
-            self._write('         else:\n\n')
-            self._write('            self.handle_%s(*struct.unpack(\'=' %
+            self._write('            else:\n\n')
+            self._write('                self.handle_%s(*struct.unpack(\'=' %
                         msgtype)
             for argtype in self._getargtypes(msgstuff):
                 self._write('%s' % self.type2pack[argtype])
             self._write("\'" + ', self.message_buffer))\n\n')
+        self._write('\n')
 
         # Emit handler methods for parser
         for msgtype in msgdict.keys():
@@ -152,8 +153,8 @@ class Python_Emitter(LocalCodeEmitter):
             self._write('        Overridable handler method for ' +
                         'when a %s message is successfully parsed.\n' %
                         msgtype)
-            self._write("        '''\n")
-            self._write('        return\n\n\n')
+            self._write("        '''\n\n")
+            self._write('        return\n\n')
 
         # Emit serializer functions for module
         for msgtype in msgdict.keys():
@@ -161,7 +162,7 @@ class Python_Emitter(LocalCodeEmitter):
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
 
-            self._write('def serialize_' + msgtype +
+            self._write('\ndef serialize_' + msgtype +
                         '(' + ', '.join(self._getargnames(msgstuff)) + '):\n')
             self._write("    '''\n")
             self._write('    Serializes the contents of a message of type '
@@ -188,7 +189,7 @@ class Python_Emitter(LocalCodeEmitter):
 
             if msgid < 200:
 
-                self._write('def serialize_' + msgtype + '_Request():\n\n')
+                self._write('\ndef serialize_' + msgtype + '_Request():\n\n')
                 self._write(self.indent + "'''\n")
                 self._write(self.indent + 'Serializes a request for ' +
                             msgtype + ' data.\n')
