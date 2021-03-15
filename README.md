@@ -78,6 +78,6 @@ providing static methods for simple filters
 ([complementary](https://www.quora.com/What-is-a-complimentary-filter-How-does-it-differ-from-a-Kalman-filter)),
 a class for [Low-Pass-Filters](https://en.wikipedia.org/wiki/Low-pass_filter), and two classes for the Quaternion-filtering
 algorithms [Madgwick](https://courses.cs.washington.edu/courses/cse474/17wi/labs/l4/madgwick_internal_report.pdf)
-and [Mahony](https://nitinjsanket.github.io/tutorials/attitudeest/mahony#mahonyfilt).  (Because I have had much use for
+and [Mahony](https://nitinjsanket.github.io/tutorials/attitudeest/mahony#mahonyfilt).  (Because I have not had much need for
 Kalman filtering in my robotics work, I did not include a Kalman filter class here; but I do have an implementation of this
 filter in another [repository](https://github.com/simondlevy/TinyEKF)).
