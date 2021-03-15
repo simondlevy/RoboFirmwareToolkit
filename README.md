@@ -56,7 +56,7 @@ popular kind of closed-loop control, RFT sub-classes ClosedLoopController with a
 class.
 
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_sensor.hpp">Sensor</a>
-class specifies abstract methods <tt>ready()</tt> state for checking whether the sensor
+class specifies abstract methods <tt>ready()</tt> for checking whether the sensor
 has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's state based on that data.
 
 * The abstract <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_timertask.hpp">TimerTask</a>
