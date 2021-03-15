@@ -15,12 +15,6 @@ import argparse
 
 # Helper functions ============================================================
 
-
-def error(errmsg):
-    print(errmsg)
-    exit(1)
-
-
 def _openw(fname):
 
     print('Creating file ' + fname)
@@ -457,7 +451,8 @@ def main():
                 argnames.append(argname)
             argument_lists.append(argnames)
         if msgid is None:
-            error('Missing ID for message ' + msgtype)
+            print('Missing ID for message ' + msgtype)
+            exit(1)
         argument_types.append(argtypes)
         msgdict[msgtype] = (msgid, argnames, argtypes)
 
