@@ -2,9 +2,8 @@
 '''
 Multiwii Serial Protocol Parser Generator
 
-Generates parser.hpp based on messages.json
-
-Copyright (C) Simon D. Levy 2021
+Copyright (C) Rob Jones, Alec Singer, Chris Lavin, Blake Liebling,
+Simon D. Levy 2021
 
 MIT License
 '''
@@ -109,6 +108,112 @@ class CompileableCodeEmitter(LocalCodeEmitter):
 
         self._copyfile('%s.makefile' % folder, '%s/Makefile' % folder)
 
+# Python emitter ==============================================================
+
+
+class Python_Emitter(LocalCodeEmitter):
+
+    def __init__(self, msgdict):
+
+        LocalCodeEmitter.__init__(self, 'python', 'py')
+
+        mkdir_if_missing('output/python/msppg')
+
+        self._copyfile('setup.py', 'python/setup.py')
+
+        self.output = _openw('output/python/msppg/__init__.py')
+
+        self.type2pack = {'byte': 'B',
+                          'short': 'h',
+                          'float': 'f',
+                          'int': 'i'}
+
+        self._write(self._getsrc('top-py') + '\n')
+
+        for msgtype in msgdict.keys():
+            msgstuff = msgdict[msgtype]
+            msgid = msgstuff[0]
+            self._write(4*self.indent +
+                        ('if self.message_id == %d:\n\n' % msgstuff[0]))
+            self._write(5*self.indent +
+                        ('if self.message_direction == 0:\n\n'))
+            self._write(6*self.indent + 'self.handle_%s_Request()\n\n' %
+                        msgtype)
+            self._write(5*self.indent + 'else:\n\n')
+            self._write(6*self.indent + 'self.handle_%s(*struct.unpack(\'=' %
+                        msgtype)
+            for argtype in self._getargtypes(msgstuff):
+                self._write('%s' % self.type2pack[argtype])
+            self._write("\'" + ', self.message_buffer))\n\n')
+
+        self._write(self._getsrc('bottom-py') + '\n')
+
+        # Emit handler methods for parser
+        for msgtype in msgdict.keys():
+
+            msgstuff = msgdict[msgtype]
+            msgid = msgstuff[0]
+
+            self._write(self.indent + 'def handle_%s(self' % msgtype)
+            for argname in self._getargnames(msgstuff):
+                self._write(', ' + argname)
+            self._write('):\n')
+            self._write(2*self.indent + "'''\n")
+            self._write(2*self.indent + 'Overridable handler method for ' +
+                        'when a %s message is successfully parsed.\n' %
+                        msgtype)
+            self._write(2*self.indent + "'''\n")
+            self._write(2*self.indent + 'return\n\n')
+
+        # Emit serializer functions for module
+        for msgtype in msgdict.keys():
+
+            msgstuff = msgdict[msgtype]
+            msgid = msgstuff[0]
+
+            self._write('def serialize_' + msgtype +
+                        '(' + ', '.join(self._getargnames(msgstuff)) + '):\n')
+            self._write(self.indent + "'''\n")
+            self._write(self.indent + 'Serializes the contents of a message ' +
+                        'of type ' + msgtype + '.\n')
+            self._write(self.indent + "'''\n")
+            self._write(self.indent + 'message_buffer = struct.pack(\'')
+            for argtype in self._getargtypes(msgstuff):
+                self._write(self.type2pack[argtype])
+            self._write('\'')
+            for argname in self._getargnames(msgstuff):
+                self._write(', ' + argname)
+            self._write(')\n\n')
+            self._write(self.indent)
+
+            self._write('if sys.version[0] == \'2\':\n')
+            self._write(self.indent*2 + 'msg = chr(len(message_buffer)) + '
+                        'chr(%s) + str(message_buffer)\n' % msgid)
+            self._write(self.indent*2 + ('return \'$M%c\' + msg + ' +
+                        'chr(_CRC8(msg))\n\n') % ('>' if msgid < 200 else '<'))
+            self._write(self.indent+'else:\n')
+            self._write(self.indent*2 + ('msg = [len(message_buffer), %s] + ' +
+                        'list(message_buffer)\n') % msgid)
+            self._write(self.indent*2 + 'return bytes([ord(\'$\'), ' +
+                        'ord(\'M\'), ord(\'<\')] + msg + [_CRC8(msg)])\n\n')
+
+            if msgid < 200:
+
+                self._write('def serialize_' + msgtype + '_Request():\n\n')
+                self._write(self.indent + "'''\n")
+                self._write(self.indent + 'Serializes a request for ' +
+                            msgtype + ' data.\n')
+                self._write(self.indent + "'''\n")
+                self._write(self.indent + ('msg = \'$M<\' + chr(0) + '
+                            'chr(%s) + chr(%s)\n') % (msgid, msgid))
+                self._write(self.indent + 'return bytes(msg) ' +
+                            'if sys.version[0] == \'2\' else ' +
+                            'bytes(msg, \'utf-8\')\n\n')
+
+    def _write(self, s):
+
+        self.output.write(s)
+
 # Firmware header-only code emitter ===========================================
 
 
@@ -125,8 +230,11 @@ class HPP_Emitter(CodeEmitter):
 
         self.type2decl = HPP_Emitter.type2decl
 
+        # Create C++ header file
+        self._copyfile('mspparser.hpp', 'mspparser.hpp', '../../src')
+
         # Open file for appending
-        self.output = open('mspparser.hpp', 'w')
+        self.output = open('../../src/mspparser.hpp', 'a')
 
         # Add dispatchMessage() method
 
@@ -261,6 +369,106 @@ class HPP_Emitter(CodeEmitter):
         self.output.write('} // namespace hf\n')
         self.output.close()
 
+
+# Java emitter ================================================================
+
+class Java_Emitter(CompileableCodeEmitter):
+
+    def __init__(self, msgdict):
+
+        CompileableCodeEmitter.__init__(self, 'java', 'java')
+
+        mkdir_if_missing('output/java/edu')
+        mkdir_if_missing('output/java/edu/wlu')
+        mkdir_if_missing('output/java/edu/wlu/cs')
+        mkdir_if_missing('output/java/edu/wlu/cs/msppg')
+
+        self.type2decl = {'byte': 'byte',
+                          'short': 'short',
+                          'float': 'float',
+                          'int': 'int'}
+
+        self.type2bb = {'byte': '',
+                        'short': 'Short',
+                        'float': 'Float',
+                        'int': 'Int'}
+
+        self.output = _openw('output/java/edu/wlu/cs/msppg/Parser.java')
+
+        self._write(self._getsrc('parser-top-java'))
+
+        # Write handler cases for incoming messages
+        for msgtype in msgdict.keys():
+
+            msgstuff = msgdict[msgtype]
+            msgid = msgstuff[0]
+
+            if msgid < 200:
+
+                self._write(6*self.indent + 'case (byte)%d:\n' % msgid)
+                self._write(8*self.indent + 'this.handle_%s(\n' % msgtype)
+
+                argnames = self._getargnames(msgstuff)
+                argtypes = self._getargtypes(msgstuff)
+
+                nargs = len(argnames)
+
+                offset = 0
+                for k in range(nargs):
+                    argtype = argtypes[k]
+                    self._write(8*self.indent + 'bb.get%s(%d)' %
+                                (self.type2bb[argtype], offset))
+                    offset += self.type2size[argtype]
+                    if k < nargs-1:
+                        self._write(',\n')
+                self._write(');\n')
+
+                self._write(7*self.indent + 'break;\n\n')
+
+        self._write(5*self.indent + '}\n' + 4*self.indent + '}\n' +
+                    2*self.indent + '}\n' + self.indent + '}\n\n')
+
+        for msgtype in msgdict.keys():
+
+            msgstuff = msgdict[msgtype]
+            msgid = msgstuff[0]
+
+            argnames = self._getargnames(msgstuff)
+            argtypes = self._getargtypes(msgstuff)
+
+            # For messages from FC
+            if msgid < 200:
+
+                # Write serializer for requests
+                self._write(self.indent +
+                            'public byte [] serialize_%s_Request() {\n\n' %
+                            msgtype)
+                self._write('\n' + 2*self.indent +
+                            'byte [] message = new byte[6];\n\n')
+                self._write(2*self.indent + 'message[0] = 36;\n')
+                self._write(2*self.indent + 'message[1] = 77;\n')
+                self._write(2*self.indent + 'message[2] = 60;\n')
+                self._write(2*self.indent + 'message[3] = 0;\n')
+                self._write(2*self.indent + 'message[4] = (byte)%d;\n' %
+                            msgid)
+                self._write(2*self.indent + 'message[5] = (byte)%d;\n\n' %
+                            msgid)
+                self._write(2*self.indent + 'return message;\n')
+                self._write(self.indent + '}\n\n')
+
+                # Write handler for replies from flight controller
+                self._write(self.indent + 'protected void handle_%s' %
+                            msgtype)
+                self._write_params(self.output, argtypes, argnames)
+                self._write(' { \n')
+                self._write(self.indent + '}\n\n')
+
+        self._write('}\n')
+
+    def _write(self, s):
+
+        self.output.write(s)
+
 # main ========================================================================
 
 
@@ -306,6 +514,15 @@ def main():
             error('Missing ID for message ' + msgtype)
         argument_types.append(argtypes)
         msgdict[msgtype] = (msgid, argnames, argtypes)
+
+    #  make output directory if necessary
+    mkdir_if_missing('output')
+
+    # Emit Python
+    Python_Emitter(msgdict)
+
+    # Emite Java
+    Java_Emitter(msgdict)
 
     # Emit firmware header
     HPP_Emitter(msgdict)
