@@ -61,6 +61,13 @@ def write_params(outfile, argtypes, argnames, prefix='(', ampersand=''):
             outfile.write(', ')
     outfile.write(')')
 
+type2decl = {'byte': 'uint8_t',
+             'short': 'int16_t',
+             'float': 'float',
+             'int': 'int32_t'}
+
+type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
+
 
 # Code-emitter classes ========================================================
 
@@ -139,6 +146,79 @@ class Cpp_Emitter(LocalCodeEmitter):
         self.output.write('#include <RFT_actuator.hpp>\n')
         self.output.write('#include <RFT_serialtask.hpp>\n')
         self.output.write('#include <RFT_parser.hpp>\n\n')
+
+        # Add optional namespace
+        self.output.write('// namespace XXX {\n\n')
+
+        # Add classname
+        self.output.write('class MySerialTask {\n\n')
+        
+        # Add stubbed declarations for handler methods
+
+        for msgtype in msgdict.keys():
+
+            msgstuff = msgdict[msgtype]
+            msgid = msgstuff[0]
+
+            argnames = getargnames(msgstuff)
+            argtypes = getargtypes(msgstuff)
+
+            self.output.write('        private: void handle_%s%s' %
+                         (msgtype, '_Request' if msgid < 200 else ''))
+            write_params(self.output, argtypes, argnames,
+                         ampersand=('&' if msgid < 200 else ''))
+            self.output.write('\n        {\n        }\n\n')
+
+        # Add dispatchMessage() method
+
+        self.output.write('        protected: void dispatchMessage(void) override\n')
+        self.output.write('        {\n')
+        self.output.write('            switch (_command) {\n\n')
+
+        for msgtype in msgdict.keys():
+
+            msgstuff = msgdict[msgtype]
+            msgid = msgstuff[0]
+
+            argnames = getargnames(msgstuff)
+            argtypes = getargtypes(msgstuff)
+
+            self.output.write('                case %s: {\n' % msgdict[msgtype][0])
+            nargs = len(argnames)
+            offset = 0
+            for k in range(nargs):
+                argname = argnames[k]
+                argtype = argtypes[k]
+                decl = type2decl[argtype]
+                self.output.write('                    ' + decl + ' ' + argname + ' = 0;\n')
+                if msgid >= 200:
+                    fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n\n'
+                    self.output.write(' '*20 + fmt % (argname, offset, decl))
+                offset += type2size[argtype]
+            self.output.write('                    handle_%s%s(' %
+                         (msgtype, '_Request' if msgid < 200 else ''))
+            for k in range(nargs):
+                self.output.write(argnames[k])
+                if k < nargs-1:
+                    self.output.write(', ')
+            self.output.write(');\n')
+            if msgid < 200:
+                # XXX enforce uniform type for now
+                argtype = argtypes[0].capitalize()
+                self.output.write('                    prepareToSend%ss(%d);\n' %
+                             (argtype, nargs))
+                for argname in argnames:
+                    self.output.write('                    send%s(%s);\n' %
+                                 (argtype, argname))
+                self.output.write('                    serialize8(_checksum);\n')
+            self.output.write('                } break;\n\n')
+
+        self.output.write('            }\n\n')
+        self.output.write('        } // dispatchMessage \n\n')
+
+        self.output.write('    }; // class MySerialTask\n\n')
+        self.output.write('// XXX } // namespace hf\n')
+
 
 # Python emitter ==============================================================
 
@@ -351,12 +431,12 @@ def main():
 
     # parse file name from command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('--filename', type=str, required=False,
+    parser.add_argument('--infile', type=str, required=False,
                         default='messages.json',
                         help='Random seed for reproducibility')
     args = parser.parse_args()
 
-    data = json.load(open(args.filename, 'r'))
+    data = json.load(open(args.infile, 'r'))
 
     # takes the types of messages from the json file
     unicode_message_types = data.keys()
