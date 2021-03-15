@@ -23,11 +23,6 @@ def clean(string):
     return cleaned_string
 
 
-def mkdir_if_missing(dirname):
-    if not os.path.exists(dirname):
-        os.mkdir(dirname)
-
-
 def error(errmsg):
     print(errmsg)
     exit(1)
@@ -97,8 +92,6 @@ class LocalCodeEmitter(CodeEmitter):
 
         CodeEmitter.__init__(self)
 
-        mkdir_if_missing('output/%s' % folder)
-
 
 class CompileableCodeEmitter(LocalCodeEmitter):
 
@@ -117,18 +110,15 @@ class Python_Emitter(LocalCodeEmitter):
 
         LocalCodeEmitter.__init__(self, 'python', 'py')
 
-        mkdir_if_missing('output/python/msppg')
-
-        self._copyfile('setup.py', 'python/setup.py')
-
-        self.output = _openw('output/python/msppg/__init__.py')
+        self.output = _openw('output/python/msppg/myparser.py')
 
         self.type2pack = {'byte': 'B',
                           'short': 'h',
                           'float': 'f',
                           'int': 'i'}
 
-        self._write(self._getsrc('top-py') + '\n')
+        self._write('class MyParser(Parser):\n\n')
+        self._write('    def dispatchMessage(self):\n\n')
 
         for msgtype in msgdict.keys():
             msgstuff = msgdict[msgtype]
@@ -221,11 +211,6 @@ class Java_Emitter(CompileableCodeEmitter):
     def __init__(self, msgdict):
 
         CompileableCodeEmitter.__init__(self, 'java', 'java')
-
-        mkdir_if_missing('output/java/edu')
-        mkdir_if_missing('output/java/edu/wlu')
-        mkdir_if_missing('output/java/edu/wlu/cs')
-        mkdir_if_missing('output/java/edu/wlu/cs/msppg')
 
         self.type2decl = {'byte': 'byte',
                           'short': 'short',
@@ -359,14 +344,11 @@ def main():
         argument_types.append(argtypes)
         msgdict[msgtype] = (msgid, argnames, argtypes)
 
-    #  make output directory if necessary
-    mkdir_if_missing('output')
-
     # Emit Python
     Python_Emitter(msgdict)
 
     # Emite Java
-    Java_Emitter(msgdict)
+    # Java_Emitter(msgdict)
 
 
 if __name__ == '__main__':
