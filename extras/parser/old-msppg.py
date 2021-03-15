@@ -211,7 +211,16 @@ class Java_Emitter(CompileableCodeEmitter):
 
         self.output = _openw('output/java/edu/wlu/cs/msppg/MyParser.java')
 
-        # Write handler cases for incoming messages
+        # Write header
+        self.output.write('/*\n')
+        self.output.write('   Message dispatcher\n\n')
+        self.output.write('   MIT License\n\n')
+        self.output.write('*/\n')
+        self._write('from msppg import Parser\n\n')
+        self._write('class MyParser(Parser):\n\n')
+        self._write('    def dispatchMessage(self):\n\n')
+
+         # Write handler cases for incoming messages
         for msgtype in msgdict.keys():
 
             msgstuff = msgdict[msgtype]
