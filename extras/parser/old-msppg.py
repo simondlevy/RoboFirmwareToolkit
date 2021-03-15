@@ -8,7 +8,6 @@ Simon D. Levy 2021
 MIT License
 '''
 
-from sys import exit
 import os
 import json
 import argparse
@@ -31,6 +30,37 @@ def _openw(fname):
 
     print('Creating file ' + fname)
     return open(fname, 'w')
+
+def getargs(message):
+
+    return [(argname, argtype) for (argname, argtype) in
+            zip(message[1], message[2]) if argname.lower() != 'comment']
+
+
+def getargnames(message):
+
+    return [argname for (argname, _) in getargs(message)]
+
+
+def getargtypes(message):
+
+    return [argtype for (_, argtype) in getargs(message)]
+
+
+def paysize(argtypes):
+
+    return sum([type2size[atype] for atype in argtypes])
+
+
+def write_params(outfile, argtypes, argnames, prefix='(', ampersand=''):
+
+    outfile.write(prefix)
+    for argtype, argname in zip(argtypes, argnames):
+        outfile.write(type2decl[argtype] + ' ' + ampersand + ' ' + argname)
+        if argname != argnames[-1]:
+            outfile.write(', ')
+    outfile.write(')')
+
 
 # Code-emitter classes ========================================================
 
@@ -87,6 +117,14 @@ class CompileableCodeEmitter(LocalCodeEmitter):
     def __init__(self, folder, ext):
 
         LocalCodeEmitter.__init__(self, folder, ext)
+
+# C++ emitter ==-==============================================================
+
+class Cpp_Emitter(LocalCodeEmitter):
+
+    def __init__(self, msgdict):
+
+        return
 
 # Python emitter ==============================================================
 
@@ -338,12 +376,14 @@ def main():
         argument_types.append(argtypes)
         msgdict[msgtype] = (msgid, argnames, argtypes)
 
+    # Emit C++
+    Cpp_Emitter(msgdict)
+
     # Emit Python
     Python_Emitter(msgdict)
 
     # Emite Java
     Java_Emitter(msgdict)
-
 
 if __name__ == '__main__':
     main()
