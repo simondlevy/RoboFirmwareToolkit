@@ -81,3 +81,5 @@ algorithms [Madgwick](https://courses.cs.washington.edu/courses/cse474/17wi/labs
 and [Mahony](https://nitinjsanket.github.io/tutorials/attitudeest/mahony#mahonyfilt).  (Because I have not had much need for
 Kalman filtering in my robotics work, I did not include a Kalman filter class here; but I do have an implementation of this
 filter in another [repository](https://github.com/simondlevy/TinyEKF)).
+
+For serial communication, RFT relies on the lightweight [Multiwii Serial Protocol](http://www.armazila.com/MultiwiiSerialProtocol(draft)v02.pdf) (MSP).
