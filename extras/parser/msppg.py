@@ -51,21 +51,6 @@ def paysize(argtypes):
 
     return sum([type2size[atype] for atype in argtypes])
 
-
-def write_params(outfile, argtypes, argnames, prefix='(', ampersand=''):
-
-    outfile.write(prefix)
-    for argtype, argname in zip(argtypes, argnames):
-        outfile.write(type2decl[argtype] + ' ' + ampersand + ' ' + argname)
-        if argname != argnames[-1]:
-            outfile.write(', ')
-    outfile.write(')')
-
-type2decl = {'byte': 'uint8_t',
-             'short': 'int16_t',
-             'float': 'float',
-             'int': 'int32_t'}
-
 type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
 
 
@@ -131,6 +116,11 @@ class Cpp_Emitter(LocalCodeEmitter):
 
     def __init__(self, msgdict):
 
+        self.type2decl = {'byte': 'uint8_t',
+                          'short': 'int16_t',
+                          'float': 'float',
+                          'int': 'int32_t'}
+
         # Open output file
         self.output = _openw('output/serialtask.hpp')
 
@@ -165,8 +155,8 @@ class Cpp_Emitter(LocalCodeEmitter):
 
             self.output.write('        private: void handle_%s%s' %
                          (msgtype, '_Request' if msgid < 200 else ''))
-            write_params(self.output, argtypes, argnames,
-                         ampersand=('&' if msgid < 200 else ''))
+            self._write_params(self.output, argtypes, argnames,
+                               ampersand=('&' if msgid < 200 else ''))
             self.output.write('\n        {\n        }\n\n')
 
         # Add dispatchMessage() method
@@ -189,7 +179,7 @@ class Cpp_Emitter(LocalCodeEmitter):
             for k in range(nargs):
                 argname = argnames[k]
                 argtype = argtypes[k]
-                decl = type2decl[argtype]
+                decl = self.type2decl[argtype]
                 self.output.write('                    ' + decl + ' ' + argname + ' = 0;\n')
                 if msgid >= 200:
                     fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n\n'
