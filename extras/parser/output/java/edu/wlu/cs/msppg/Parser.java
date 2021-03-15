@@ -109,63 +109,11 @@ public class Parser {
                     ByteBuffer bb = newByteBuffer(this.message_length_received);
                     bb.put(this.message_buffer.toByteArray(), 0, this.message_length_received);
 
-                    switch (this.message_id) {
-                        case (byte)121:
-                                this.handle_RECEIVER(
-                                bb.getFloat(0),
-                                bb.getFloat(4),
-                                bb.getFloat(8),
-                                bb.getFloat(12),
-                                bb.getFloat(16),
-                                bb.getFloat(20));
-                            break;
-
-                        case (byte)122:
-                                this.handle_ATTITUDE_RADIANS(
-                                bb.getFloat(0),
-                                bb.getFloat(4),
-                                bb.getFloat(8));
-                            break;
-
-                    }
+                    dispatchMessage();
                 }
-        }
-    }
 
-    public byte [] serialize_RECEIVER_Request() {
+        } // switch(this.state)
 
+    } // public void parse
 
-        byte [] message = new byte[6];
-
-        message[0] = 36;
-        message[1] = 77;
-        message[2] = 60;
-        message[3] = 0;
-        message[4] = (byte)121;
-        message[5] = (byte)121;
-
-        return message;
-    }
-
-    protected void handle_RECEIVER(float  c1, float  c2, float  c3, float  c4, float  c5, float  c6) { 
-    }
-
-    public byte [] serialize_ATTITUDE_RADIANS_Request() {
-
-
-        byte [] message = new byte[6];
-
-        message[0] = 36;
-        message[1] = 77;
-        message[2] = 60;
-        message[3] = 0;
-        message[4] = (byte)122;
-        message[5] = (byte)122;
-
-        return message;
-    }
-
-    protected void handle_ATTITUDE_RADIANS(float  roll, float  pitch, float  yaw) { 
-    }
-
-}
+} // public class Parser
