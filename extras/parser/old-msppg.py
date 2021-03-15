@@ -127,20 +127,18 @@ class Python_Emitter(LocalCodeEmitter):
         for msgtype in msgdict.keys():
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
-            self._write(4*self.indent +
+            self._write(2*self.indent +
                         ('if self.message_id == %d:\n\n' % msgstuff[0]))
-            self._write(5*self.indent +
+            self._write(3*self.indent +
                         ('if self.message_direction == 0:\n\n'))
-            self._write(6*self.indent + 'self.handle_%s_Request()\n\n' %
+            self._write(4*self.indent + 'self.handle_%s_Request()\n\n' %
                         msgtype)
-            self._write(5*self.indent + 'else:\n\n')
-            self._write(6*self.indent + 'self.handle_%s(*struct.unpack(\'=' %
+            self._write(3*self.indent + 'else:\n\n')
+            self._write(4*self.indent + 'self.handle_%s(*struct.unpack(\'=' %
                         msgtype)
             for argtype in self._getargtypes(msgstuff):
                 self._write('%s' % self.type2pack[argtype])
             self._write("\'" + ', self.message_buffer))\n\n')
-
-        self._write(self._getsrc('bottom-py') + '\n')
 
         # Emit handler methods for parser
         for msgtype in msgdict.keys():
@@ -157,7 +155,7 @@ class Python_Emitter(LocalCodeEmitter):
                         'when a %s message is successfully parsed.\n' %
                         msgtype)
             self._write(2*self.indent + "'''\n")
-            self._write(2*self.indent + 'return\n\n')
+            self._write(2*self.indent + 'return\n\n\n')
 
         # Emit serializer functions for module
         for msgtype in msgdict.keys():
