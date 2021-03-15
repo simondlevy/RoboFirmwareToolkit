@@ -47,6 +47,15 @@ def paysize(argtypes):
     return sum([type2size[atype] for atype in argtypes])
 
 
+def write_params(outfile, argtypes, argnames, prefix='(', ampersand=''):
+
+    outfile.write(prefix)
+    for argtype, argname in zip(argtypes, argnames):
+        outfile.write(type2decl[argtype] + ' ' + ampersand + ' ' + argname)
+        if argname != argnames[-1]:
+            outfile.write(', ')
+    outfile.write(')')
+
 class Emitter:
 
     def __init__(self, msgdict, filename, classname, namespace):
@@ -119,7 +128,7 @@ class Emitter:
 
             output.write(3*indent + 'virtual void handle_%s%s' %
                               (msgtype, '_Request' if msgid < 200 else ''))
-            self._write_params(output, argtypes, argnames,
+            write_params(output, argtypes, argnames,
                                ampersand=('&' if msgid < 200 else ''))
             output.write('\n' + 3*indent + '{\n')
             for argname in argnames:
@@ -159,8 +168,7 @@ class Emitter:
             # Add parser method for serializing message
             output.write(3*indent + 'static uint8_t serialize_%s' %
                               msgtype)
-            self._write_params(output, argtypes, argnames,
-                               '(uint8_t bytes[], ')
+            write_params(output, argtypes, argnames, '(uint8_t bytes[], ')
             output.write('\n' + 3*indent + '{\n')
             msgsize = paysize(argtypes)
             output.write(4*indent + 'bytes[0] = 36;\n')
@@ -188,17 +196,6 @@ class Emitter:
         output.write(indent + '}; // class %s\n\n' % classname)
         output.write('} // namespace hf\n')
         output.close()
-
-    def _write_params(self, outfile, argtypes, argnames, prefix='(',
-                      ampersand=''):
-
-        outfile.write(prefix)
-        for argtype, argname in zip(argtypes, argnames):
-            outfile.write(type2decl[argtype] + ' ' + ampersand + ' ' +
-                          argname)
-            if argname != argnames[-1]:
-                outfile.write(', ')
-        outfile.write(')')
 
 # main ========================================================================
 
