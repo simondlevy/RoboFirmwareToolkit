@@ -144,16 +144,16 @@ class Python_Emitter(LocalCodeEmitter):
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
 
-            self._write(self.indent + 'def handle_%s(self' % msgtype)
+            self._write('    def handle_%s(self' % msgtype)
             for argname in self._getargnames(msgstuff):
                 self._write(', ' + argname)
             self._write('):\n')
-            self._write(2*self.indent + "'''\n")
-            self._write(2*self.indent + 'Overridable handler method for ' +
+            self._write("        '''\n")
+            self._write('        Overridable handler method for ' +
                         'when a %s message is successfully parsed.\n' %
                         msgtype)
-            self._write(2*self.indent + "'''\n")
-            self._write(2*self.indent + 'return\n\n\n')
+            self._write("        '''\n")
+            self._write('        return\n\n\n')
 
         # Emit serializer functions for module
         for msgtype in msgdict.keys():
@@ -163,18 +163,17 @@ class Python_Emitter(LocalCodeEmitter):
 
             self._write('def serialize_' + msgtype +
                         '(' + ', '.join(self._getargnames(msgstuff)) + '):\n')
-            self._write(self.indent + "'''\n")
-            self._write(self.indent + 'Serializes the contents of a message ' +
-                        'of type ' + msgtype + '.\n')
-            self._write(self.indent + "'''\n")
-            self._write(self.indent + 'message_buffer = struct.pack(\'')
+            self._write("    '''\n")
+            self._write('    Serializes the contents of a message of type '
+                        + msgtype + '.\n')
+            self._write("    '''\n")
+            self._write('    message_buffer = struct.pack(\'')
             for argtype in self._getargtypes(msgstuff):
                 self._write(self.type2pack[argtype])
             self._write('\'')
             for argname in self._getargnames(msgstuff):
                 self._write(', ' + argname)
-            self._write(')\n\n')
-            self._write(self.indent)
+            self._write(')\n\n    ')
 
             self._write('if sys.version[0] == \'2\':\n')
             self._write(self.indent*2 + 'msg = chr(len(message_buffer)) + '
