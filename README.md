@@ -4,8 +4,8 @@
 
 **RoboFirmwareToolkit** (RFT) is a simple, platform-independent, header-only C++ toolkit
 for building robot firmware to run on Arduino and other microcontrollers.  Because
-of its platform-indepdence it can also be used as the control code in a
-C++-based robot [simualtor](https://github.com/simondlevy/MulticopterSim).  As with 
+of its platform-independence it can also be used as the control code in a
+C++-based robot [simulator](https://github.com/simondlevy/MulticopterSim).  As with 
 other software [platforms](https://github.com/simondlevy) I've developed, the
 focus is on simplicity and ease-of-use rather than lots of features.
 
@@ -15,7 +15,7 @@ it to teach students about ideas like
 [sensor fusion](https://en.wikipedia.org/wiki/Sensor_fusion),
 and related important ideas in robotics.  People will typically learn about such important ideas from a textbook,
 and then implement them in a &ldquo;bottom-up&rdquo; (ad-hoc) way on Arduino, Teensy, STM32, ESP32, and
-other micrcontrollers. This approach is useful for rapid prototyping but makes it
+other microcontrollers. This approach is useful for rapid prototyping but makes it
 difficult to extend the project beyond the prototyping stage.  RFT aims to fill
 this gap by taking a top-down approach in which controllers, sensors, and actuators can be
 plugged into a pre-existing framework in a way that is easily extended for more advanced work.
@@ -65,5 +65,5 @@ class allows you to run different processes (closed-loop control, serial communi
 Other useful classes include:
 
 * A <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_debugger.hpp">Debugger</a> class
-providig a C-like <tt>printf</tt> method that works with the Board class to direct debugging output to the Arduino Serial Monitor
+providing a C-like <tt>printf</tt> method that works with the Board class to direct debugging output to the Arduino Serial Monitor
 (for Arduino-compatible boards) or an on-screen display (for flight simulators).
