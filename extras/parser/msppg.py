@@ -9,10 +9,7 @@ Copyright (C) Simon D. Levy 2021
 MIT License
 '''
 
-from sys import exit
-import os
 import json
-from pkg_resources import resource_string
 import argparse
 
 type2decl = {'byte': 'uint8_t',
@@ -21,6 +18,7 @@ type2decl = {'byte': 'uint8_t',
              'int': 'int32_t'}
 
 type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
+
 
 def clean(string):
     cleaned_string = string[1: len(string) - 1]
@@ -42,6 +40,7 @@ def getargtypes(message):
 
     return [argtype for (_, argtype) in getargs(message)]
 
+
 def paysize(argtypes):
 
     return sum([type2size[atype] for atype in argtypes])
@@ -55,6 +54,7 @@ def write_params(outfile, argtypes, argnames, prefix='(', ampersand=''):
         if argname != argnames[-1]:
             outfile.write(', ')
     outfile.write(')')
+
 
 def main():
 
@@ -127,8 +127,7 @@ def main():
         argnames = getargnames(msgstuff)
         argtypes = getargtypes(msgstuff)
 
-        output.write(5*indent + ('case %s:\n' %
-                                           msgdict[msgtype][0]))
+        output.write(5*indent + ('case %s:\n' % msgdict[msgtype][0]))
         output.write(5*indent + '{\n')
         nargs = len(argnames)
         offset = 0
@@ -136,15 +135,13 @@ def main():
             argname = argnames[k]
             argtype = argtypes[k]
             decl = type2decl[argtype]
-            output.write(6*indent + decl + ' ' + argname +
-                              ' = 0;\n')
+            output.write(6*indent + decl + ' ' + argname + ' = 0;\n')
             if msgid >= 200:
                 fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n\n'
-                output.write(6*indent +
-                                  fmt % (argname, offset, decl))
+                output.write(6*indent + fmt % (argname, offset, decl))
             offset += type2size[argtype]
         output.write(6*indent + 'handle_%s%s(' %
-                          (msgtype, '_Request' if msgid < 200 else ''))
+                     (msgtype, '_Request' if msgid < 200 else ''))
         for k in range(nargs):
             output.write(argnames[k])
             if k < nargs-1:
@@ -154,10 +151,9 @@ def main():
             # XXX enforce uniform type for now
             argtype = argtypes[0].capitalize()
             output.write(6*indent + ('prepareToSend%ss(%d);\n' %
-                              (argtype, nargs)))
+                         (argtype, nargs)))
             for argname in argnames:
-                output.write(6*indent + ('send%s(%s);\n' %
-                                  (argtype, argname)))
+                output.write(6*indent + ('send%s(%s);\n' % (argtype, argname)))
             output.write(6*indent + "serialize8(_checksum);\n")
         output.write(6*indent + '} break;\n\n')
 
@@ -175,9 +171,9 @@ def main():
         argtypes = getargtypes(msgstuff)
 
         output.write(3*indent + 'virtual void handle_%s%s' %
-                          (msgtype, '_Request' if msgid < 200 else ''))
+                     (msgtype, '_Request' if msgid < 200 else ''))
         write_params(output, argtypes, argnames,
-                           ampersand=('&' if msgid < 200 else ''))
+                     ampersand=('&' if msgid < 200 else ''))
         output.write('\n' + 3*indent + '{\n')
         for argname in argnames:
             output.write(4*indent + '(void)%s;\n' % argname)
@@ -205,17 +201,15 @@ def main():
             output.write(4*indent + 'bytes[0] = 36;\n')
             output.write(4*indent + 'bytes[1] = 77;\n')
             output.write(4*indent + 'bytes[2] = %d;\n' %
-                              60 if msgid < 200 else 62)
+                         60 if msgid < 200 else 62)
             output.write(4*indent + 'bytes[3] = 0;\n')
             output.write(4*indent + 'bytes[4] = %d;\n' % msgid)
-            output.write(4*indent + 'bytes[5] = %d;\n\n' %
-                              msgid)
+            output.write(4*indent + 'bytes[5] = %d;\n\n' % msgid)
             output.write(4*indent + 'return 6;\n')
             output.write(3*indent + '}\n\n')
 
         # Add parser method for serializing message
-        output.write(3*indent + 'static uint8_t serialize_%s' %
-                          msgtype)
+        output.write(3*indent + 'static uint8_t serialize_%s' % msgtype)
         write_params(output, argtypes, argnames, '(uint8_t bytes[], ')
         output.write('\n' + 3*indent + '{\n')
         msgsize = paysize(argtypes)
@@ -230,14 +224,12 @@ def main():
             argname = argnames[k]
             argtype = argtypes[k]
             decl = type2decl[argtype]
-            output.write(4*indent +
-                              'memcpy(&bytes[%d], &%s, sizeof(%s));\n' %
-                              (offset, argname, decl))
+            output.write(4*indent + 'memcpy(&bytes[%d], &%s, sizeof(%s));\n' %
+                         (offset, argname, decl))
             offset += type2size[argtype]
         output.write('\n')
-        output.write(4*indent +
-                          'bytes[%d] = CRC8(&bytes[3], %d);\n\n' %
-                          (msgsize+5, msgsize+2))
+        output.write(4*indent + 'bytes[%d] = CRC8(&bytes[3], %d);\n\n' %
+                     (msgsize+5, msgsize+2))
         output.write(4*indent + 'return %d;\n' % (msgsize+6))
         output.write(3*indent + '}\n\n')
 
