@@ -1,8 +1,6 @@
 /*
    MSP parsing routines
 
-   Auto-generated code: DO NOT EDIT!
-
    Copyright (C) Simon D. Levy 2021
 
    MIT License
