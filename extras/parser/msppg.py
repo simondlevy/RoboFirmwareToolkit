@@ -21,43 +21,27 @@ def clean(string):
     return cleaned_string
 
 
-def mkdir_if_missing(dirname):
-    if not os.path.exists(dirname):
-        os.mkdir(dirname)
-
-
-def error(errmsg):
-    print(errmsg)
-    exit(1)
-
-
-def _openw(fname):
-
-    print('Creating file ' + fname)
-    return open(fname, 'w')
-
-
-class HPP_Emitter:
+class Emitter:
 
     type2decl = {'byte': 'uint8_t',
                  'short': 'int16_t',
                  'float': 'float',
                  'int': 'int32_t'}
 
-    def __init__(self, msgdict):
+    def __init__(self, msgdict, filename, classname, namespace):
 
-        self.indent = '    '
+        indent = '    '
         self.type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
-        self.type2decl = HPP_Emitter.type2decl
+        self.type2decl = Emitter.type2decl
 
         # Open file for appending
-        self.output = open('seritaltask.hpp', 'w')
+        output = open(filename, 'w')
 
         # Add dispatchMessage() method
 
-        self.output.write(3*self.indent + 'void dispatchMessage(void)\n')
-        self.output.write(3*self.indent + '{\n')
-        self.output.write(4*self.indent + 'switch (_command) {\n\n')
+        output.write(3*indent + 'void dispatchMessage(void)\n')
+        output.write(3*indent + '{\n')
+        output.write(4*indent + 'switch (_command) {\n\n')
 
         for msgtype in msgdict.keys():
 
@@ -67,42 +51,42 @@ class HPP_Emitter:
             argnames = self._getargnames(msgstuff)
             argtypes = self._getargtypes(msgstuff)
 
-            self.output.write(5*self.indent + ('case %s:\n' %
+            output.write(5*indent + ('case %s:\n' %
                                                msgdict[msgtype][0]))
-            self.output.write(5*self.indent + '{\n')
+            output.write(5*indent + '{\n')
             nargs = len(argnames)
             offset = 0
             for k in range(nargs):
                 argname = argnames[k]
                 argtype = argtypes[k]
                 decl = self.type2decl[argtype]
-                self.output.write(6*self.indent + decl + ' ' + argname +
+                output.write(6*indent + decl + ' ' + argname +
                                   ' = 0;\n')
                 if msgid >= 200:
                     fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n\n'
-                    self.output.write(6*self.indent +
+                    output.write(6*indent +
                                       fmt % (argname, offset, decl))
                 offset += self.type2size[argtype]
-            self.output.write(6*self.indent + 'handle_%s%s(' %
+            output.write(6*indent + 'handle_%s%s(' %
                               (msgtype, '_Request' if msgid < 200 else ''))
             for k in range(nargs):
-                self.output.write(argnames[k])
+                output.write(argnames[k])
                 if k < nargs-1:
-                    self.output.write(', ')
-            self.output.write(');\n')
+                    output.write(', ')
+            output.write(');\n')
             if msgid < 200:
                 # XXX enforce uniform type for now
                 argtype = argtypes[0].capitalize()
-                self.output.write(6*self.indent + ('prepareToSend%ss(%d);\n' %
+                output.write(6*indent + ('prepareToSend%ss(%d);\n' %
                                   (argtype, nargs)))
                 for argname in argnames:
-                    self.output.write(6*self.indent + ('send%s(%s);\n' %
+                    output.write(6*indent + ('send%s(%s);\n' %
                                       (argtype, argname)))
-                self.output.write(6*self.indent + "serialize8(_checksum);\n")
-            self.output.write(6*self.indent + '} break;\n\n')
+                output.write(6*indent + "serialize8(_checksum);\n")
+            output.write(6*indent + '} break;\n\n')
 
-        self.output.write(4*self.indent + '}\n')
-        self.output.write(3*self.indent + '}\n\n')
+        output.write(4*indent + '}\n')
+        output.write(3*indent + '}\n\n')
 
         # Add virtual declarations for handler methods
 
@@ -114,18 +98,18 @@ class HPP_Emitter:
             argnames = self._getargnames(msgstuff)
             argtypes = self._getargtypes(msgstuff)
 
-            self.output.write(3*self.indent + 'virtual void handle_%s%s' %
+            output.write(3*indent + 'virtual void handle_%s%s' %
                               (msgtype, '_Request' if msgid < 200 else ''))
-            self._write_params(self.output, argtypes, argnames,
+            self._write_params(output, argtypes, argnames,
                                ampersand=('&' if msgid < 200 else ''))
-            self.output.write('\n' + 3*self.indent + '{\n')
+            output.write('\n' + 3*indent + '{\n')
             for argname in argnames:
-                self.output.write(4*self.indent + '(void)%s;\n' % argname)
-            self.output.write(3*self.indent + '}\n\n')
+                output.write(4*indent + '(void)%s;\n' % argname)
+            output.write(3*indent + '}\n\n')
 
         # Add message-serialization declarations to header
 
-        self.output.write(self.indent*2 + 'public:\n\n')
+        output.write(indent*2 + 'public:\n\n')
 
         for msgtype in msgdict.keys():
 
@@ -140,51 +124,51 @@ class HPP_Emitter:
 
                 # Write request method
                 fmt = 'static uint8_t serialize_%s_Request(uint8_t bytes[])\n'
-                self.output.write(3*self.indent + fmt % msgtype)
-                self.output.write(3*self.indent + '{\n')
-                self.output.write(4*self.indent + 'bytes[0] = 36;\n')
-                self.output.write(4*self.indent + 'bytes[1] = 77;\n')
-                self.output.write(4*self.indent + 'bytes[2] = %d;\n' %
+                output.write(3*indent + fmt % msgtype)
+                output.write(3*indent + '{\n')
+                output.write(4*indent + 'bytes[0] = 36;\n')
+                output.write(4*indent + 'bytes[1] = 77;\n')
+                output.write(4*indent + 'bytes[2] = %d;\n' %
                                   60 if msgid < 200 else 62)
-                self.output.write(4*self.indent + 'bytes[3] = 0;\n')
-                self.output.write(4*self.indent + 'bytes[4] = %d;\n' % msgid)
-                self.output.write(4*self.indent + 'bytes[5] = %d;\n\n' %
+                output.write(4*indent + 'bytes[3] = 0;\n')
+                output.write(4*indent + 'bytes[4] = %d;\n' % msgid)
+                output.write(4*indent + 'bytes[5] = %d;\n\n' %
                                   msgid)
-                self.output.write(4*self.indent + 'return 6;\n')
-                self.output.write(3*self.indent + '}\n\n')
+                output.write(4*indent + 'return 6;\n')
+                output.write(3*indent + '}\n\n')
 
             # Add parser method for serializing message
-            self.output.write(3*self.indent + 'static uint8_t serialize_%s' %
+            output.write(3*indent + 'static uint8_t serialize_%s' %
                               msgtype)
-            self._write_params(self.output, argtypes, argnames,
+            self._write_params(output, argtypes, argnames,
                                '(uint8_t bytes[], ')
-            self.output.write('\n' + 3*self.indent + '{\n')
+            output.write('\n' + 3*indent + '{\n')
             msgsize = self._msgsize(argtypes)
-            self.output.write(4*self.indent + 'bytes[0] = 36;\n')
-            self.output.write(4*self.indent + 'bytes[1] = 77;\n')
-            self.output.write(4*self.indent + 'bytes[2] = 62;\n')
-            self.output.write(4*self.indent + 'bytes[3] = %d;\n' % msgsize)
-            self.output.write(4*self.indent + 'bytes[4] = %d;\n\n' % msgid)
+            output.write(4*indent + 'bytes[0] = 36;\n')
+            output.write(4*indent + 'bytes[1] = 77;\n')
+            output.write(4*indent + 'bytes[2] = 62;\n')
+            output.write(4*indent + 'bytes[3] = %d;\n' % msgsize)
+            output.write(4*indent + 'bytes[4] = %d;\n\n' % msgid)
             nargs = len(argnames)
             offset = 5
             for k in range(nargs):
                 argname = argnames[k]
                 argtype = argtypes[k]
                 decl = self.type2decl[argtype]
-                self.output.write(4*self.indent +
+                output.write(4*indent +
                                   'memcpy(&bytes[%d], &%s, sizeof(%s));\n' %
                                   (offset, argname, decl))
                 offset += self.type2size[argtype]
-            self.output.write('\n')
-            self.output.write(4*self.indent +
+            output.write('\n')
+            output.write(4*indent +
                               'bytes[%d] = CRC8(&bytes[3], %d);\n\n' %
                               (msgsize+5, msgsize+2))
-            self.output.write(4*self.indent + 'return %d;\n' % (msgsize+6))
-            self.output.write(3*self.indent + '}\n\n')
+            output.write(4*indent + 'return %d;\n' % (msgsize+6))
+            output.write(3*indent + '}\n\n')
 
-        self.output.write(self.indent + '}; // class MspParser\n\n')
-        self.output.write('} // namespace hf\n')
-        self.output.close()
+        output.write(indent + '}; // class %s\n\n' % classname)
+        output.write('} // namespace hf\n')
+        output.close()
 
     def _paysize(self, argtypes):
 
@@ -222,13 +206,6 @@ class HPP_Emitter:
 
         return resource_string('resources', filename).decode('utf-8')
 
-    def _copyfile(self, src, dst, folder='output'):
-
-        outfile = _openw('%s/%s' % (folder, dst))
-        outfile.write(self._getsrc(src))
-        outfile.close()
-
-
 # main ========================================================================
 
 
@@ -243,6 +220,7 @@ def main():
                         default='serialtask.hpp',
                         help='Output file')
     parser.add_argument('--classname', type=str, required=False,
+                        default='SerialTask',
                         help='SerialTask')
     parser.add_argument('--namespace', type=str, required=False,
                         help='Namespace')
@@ -278,12 +256,13 @@ def main():
                 argnames.append(argname)
             argument_lists.append(argnames)
         if msgid is None:
-            error('Missing ID for message ' + msgtype)
+            print('Missing ID for message ' + msgtype)
+            exit(1)
         argument_types.append(argtypes)
         msgdict[msgtype] = (msgid, argnames, argtypes)
 
     # Emit firmware header
-    HPP_Emitter(msgdict)
+    Emitter(msgdict, args.outfile, args.classname, args.namespace)
 
 
 if __name__ == '__main__':
