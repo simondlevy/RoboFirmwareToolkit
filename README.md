@@ -62,3 +62,8 @@ has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's s
 * The abstract <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_timertask.hpp">TimerTask</a>
 class allows you to run different processes (closed-loop control, serial communication) at different rates.
 
+Other useful classes include:
+
+* A <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_debugger.hpp">Debugger</a> class
+providig a C-like <tt>printf</tt> method that works with the Board class to direct debugging output to the Arduino Serial Monitor
+(for Arduino-compatible boards) or an on-screen display (for flight simulators).
