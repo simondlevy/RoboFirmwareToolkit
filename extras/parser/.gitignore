@@ -1,3 +1,3 @@
-*.hpp
+output/serialtask*.hpp
 output/python/msppg/myparser.py
 output/java/edu/wlu/cs/msppg/MyParser.java
