@@ -15,11 +15,6 @@ import argparse
 
 # Helper functions ============================================================
 
-def _openw(fname):
-
-    print('Creating file ' + fname)
-    return open(fname, 'w')
-
 def getargs(message):
 
     return [(argname, argtype) for (argname, argtype) in
@@ -58,6 +53,11 @@ class CodeEmitter(object):
         cleaned_string = string[1: len(string) - 1]
         return cleaned_string
 
+
+    def _openw(self, fname):
+
+        print('Creating file ' + fname)
+        return open(fname, 'w')
 
     def _paysize(self, argtypes):
 
@@ -117,7 +117,7 @@ class Cpp_Emitter(LocalCodeEmitter):
                           'int': 'int32_t'}
 
         # Open output file
-        self.output = _openw('output/serialtask.hpp')
+        self.output = self._openw('output/serialtask.hpp')
 
         # Write header
         self.output.write('/*\n')
@@ -214,7 +214,7 @@ class Python_Emitter(LocalCodeEmitter):
 
         LocalCodeEmitter.__init__(self, 'python', 'py')
 
-        self.output = _openw('output/python/msppg/myparser.py')
+        self.output = self._openw('output/python/msppg/myparser.py')
 
         self.type2pack = {'byte': 'B',
                           'short': 'h',
@@ -326,7 +326,7 @@ class Java_Emitter(CompileableCodeEmitter):
                         'float': 'Float',
                         'int': 'Int'}
 
-        self.output = _openw('output/java/edu/wlu/cs/msppg/MyParser.java')
+        self.output = self._openw('output/java/edu/wlu/cs/msppg/MyParser.java')
 
         # Write header
         self.output.write('/*\n')
