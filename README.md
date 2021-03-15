@@ -66,4 +66,4 @@ Other useful classes include:
 
 * A <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_debugger.hpp">Debugger</a> class
 providing a C-like <tt>printf</tt> method that works with the Board class to direct debugging output to the Arduino Serial Monitor
-(for Arduino-compatible boards) or an on-screen display (for flight simulators).
+(for Arduino-compatible boards) or an on-screen display (for simulators).
