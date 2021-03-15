@@ -10,7 +10,7 @@ other software [platforms](https://github.com/simondlevy) I've developed, the
 focus is on simplicity and ease-of-use rather than lots of features.
 
 RFT is geared toward people like me who want to tinker with firmware and use
-it to teach students about ideas like
+it to teach students about topics like
 [open-loop / closed loop control](https://circuitglobe.com/difference-between-open-loop-and-closed-loop-system.html),
 [sensor fusion](https://en.wikipedia.org/wiki/Sensor_fusion),
 and related important ideas in robotics.  People will typically learn about such important ideas from a textbook,
@@ -51,7 +51,7 @@ class specifies an abstract method <tt>modifyDemands()</tt> that inputs the robo
 outputs an array of floating-point values representing how that controller affects the demands. (For example,
 an altitude-hold controller for a quadcopter would use the 'copter's altitude and vertical velocity to 
 adjust the throttle demand.)  Because [PID control](https://en.wikipedia.org/wiki/PID_controller) is the most
-popular kind of closed-loop control, RFT sub-classed ClosedLoopController with a 
+popular kind of closed-loop control, RFT sub-classes ClosedLoopController with a 
 [PidController](https://github.com/simondlevy/RoboFirmwareToolkit/blob/main/src/rft_closedloops/pidcontroller.hpp)
 class.
 
