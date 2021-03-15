@@ -124,7 +124,21 @@ class Cpp_Emitter(LocalCodeEmitter):
 
     def __init__(self, msgdict):
 
-        return
+        # Open output file
+        self.output = _openw('output/serialtask.hpp')
+
+        # Write header
+        self.output.write('/*\n')
+        self.output.write('  Timer task for serial comms\n\n')
+        self.output.write('  MIT License\n')
+        self.output.write('*/\n\n')
+        self.output.write('#pragma once\n\n')
+        self.output.write('#include <RFT_timertask.hpp>\n')
+        self.output.write('#include <RFT_board.hpp>\n')
+        self.output.write('#include <RFT_debugger.hpp>\n')
+        self.output.write('#include <RFT_actuator.hpp>\n')
+        self.output.write('#include <RFT_serialtask.hpp>\n')
+        self.output.write('#include <RFT_parser.hpp>\n\n')
 
 # Python emitter ==============================================================
 
