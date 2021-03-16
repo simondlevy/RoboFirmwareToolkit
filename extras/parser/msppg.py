@@ -21,9 +21,9 @@ class CodeEmitter(object):
     def __init__(self, msgdict, typevals):
 
         self.msgdict = msgdict
-        self.sizedict = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
         typenames = ('byte', 'short', 'float', 'int')
         self.typedict = {n:t  for n, t in zip(typenames, typevals)}
+        self.sizedict = {n:t  for n, t in zip(typenames, (1,2,3,4))}
 
     @staticmethod
     def clean(string):
