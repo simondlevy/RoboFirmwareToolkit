@@ -31,7 +31,7 @@ class CodeEmitter(object):
     def _openw(self, fname):
 
         fname = 'output/' + fname
-        print('Creating file' + fname)
+        print('Creating file ' + fname)
         return open(fname, 'w')
 
     def _paysize(self, argtypes):
@@ -261,26 +261,26 @@ class Python_Emitter(LocalCodeEmitter):
             self._write(')\n\n    ')
 
             self._write('if sys.version[0] == \'2\':\n')
-            self._write(self.indent*2 + 'msg = chr(len(message_buffer)) + '
+            self._write('        msg = chr(len(message_buffer)) + '
                         'chr(%s) + str(message_buffer)\n' % msgid)
-            self._write(self.indent*2 + ('return \'$M%c\' + msg + ' +
+            self._write(('        return \'$M%c\' + msg + ' +
                         'chr(_CRC8(msg))\n\n') % ('>' if msgid < 200 else '<'))
-            self._write(self.indent+'else:\n')
-            self._write(self.indent*2 + ('msg = [len(message_buffer), %s] + ' +
+            self._write('        else:\n')
+            self._write(('        msg = [len(message_buffer), %s] + ' +
                         'list(message_buffer)\n') % msgid)
-            self._write(self.indent*2 + 'return bytes([ord(\'$\'), ' +
+            self._write('        return bytes([ord(\'$\'), ' +
                         'ord(\'M\'), ord(\'<\')] + msg + [_CRC8(msg)])\n\n')
 
             if msgid < 200:
 
                 self._write('\ndef serialize_' + msgtype + '_Request():\n\n')
-                self._write(self.indent + "'''\n")
-                self._write(self.indent + 'Serializes a request for ' +
+                self._write("        '''\n")
+                self._write('        Serializes a request for ' +
                             msgtype + ' data.\n')
-                self._write(self.indent + "'''\n")
-                self._write(self.indent + ('msg = \'$M<\' + chr(0) + '
+                self._write("        '''\n")
+                self._write(('        msg = \'$M<\' + chr(0) + '
                             'chr(%s) + chr(%s)\n') % (msgid, msgid))
-                self._write(self.indent + 'return bytes(msg) ' +
+                self._write('        return bytes(msg) ' +
                             'if sys.version[0] == \'2\' else ' +
                             'bytes(msg, \'utf-8\')\n\n')
 
