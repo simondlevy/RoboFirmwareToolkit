@@ -13,31 +13,6 @@ import json
 import argparse
 
 
-# Helper functions ============================================================
-
-def getargs(message):
-
-    return [(argname, argtype) for (argname, argtype) in
-            zip(message[1], message[2]) if argname.lower() != 'comment']
-
-
-def getargnames(message):
-
-    return [argname for (argname, _) in getargs(message)]
-
-
-def getargtypes(message):
-
-    return [argtype for (_, argtype) in getargs(message)]
-
-
-def paysize(argtypes):
-
-    return sum([type2size[atype] for atype in argtypes])
-
-type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
-
-
 # Code-emitter classes ========================================================
 
 
@@ -107,9 +82,11 @@ class CompileableCodeEmitter(LocalCodeEmitter):
 
 # C++ emitter ==-==============================================================
 
-class Cpp_Emitter(LocalCodeEmitter):
+class Cpp_Emitter(CodeEmitter):
 
     def __init__(self, msgdict):
+
+        CodeEmitter.__init__(self)
 
         self.type2decl = {'byte': 'uint8_t',
                           'short': 'int16_t',
@@ -145,8 +122,8 @@ class Cpp_Emitter(LocalCodeEmitter):
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
 
-            argnames = getargnames(msgstuff)
-            argtypes = getargtypes(msgstuff)
+            argnames = self._getargnames(msgstuff)
+            argtypes = self._getargtypes(msgstuff)
 
             self.output.write('        private: void handle_%s%s' %
                          (msgtype, '_Request' if msgid < 200 else ''))
@@ -165,8 +142,8 @@ class Cpp_Emitter(LocalCodeEmitter):
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
 
-            argnames = getargnames(msgstuff)
-            argtypes = getargtypes(msgstuff)
+            argnames = self._getargnames(msgstuff)
+            argtypes = self._getargtypes(msgstuff)
 
             self.output.write('                case %s: {\n' % msgdict[msgtype][0])
             nargs = len(argnames)
@@ -179,7 +156,7 @@ class Cpp_Emitter(LocalCodeEmitter):
                 if msgid >= 200:
                     fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n\n'
                     self.output.write(' '*20 + fmt % (argname, offset, decl))
-                offset += type2size[argtype]
+                offset += self.type2size[argtype]
             self.output.write('                    handle_%s%s(' %
                          (msgtype, '_Request' if msgid < 200 else ''))
             for k in range(nargs):
