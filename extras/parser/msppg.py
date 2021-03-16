@@ -20,7 +20,6 @@ class CodeEmitter(object):
 
     def __init__(self):
 
-        self.indent = '    '
         self.type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
 
     @staticmethod
@@ -361,28 +360,24 @@ class Java_Emitter(CompileableCodeEmitter):
             if msgid < 200:
 
                 # Write serializer for requests
-                self._write(self.indent +
-                            'public byte [] serialize_%s_Request() {\n\n' %
-                            msgtype)
-                self._write('\n' + 2*self.indent +
+                self._write(('        public byte [] serialize_%s_Request() ' +
+                            '{\n\n') % msgtype)
+                self._write('\n        ' + 
                             'byte [] message = new byte[6];\n\n')
-                self._write(2*self.indent + 'message[0] = 36;\n')
-                self._write(2*self.indent + 'message[1] = 77;\n')
-                self._write(2*self.indent + 'message[2] = 60;\n')
-                self._write(2*self.indent + 'message[3] = 0;\n')
-                self._write(2*self.indent + 'message[4] = (byte)%d;\n' %
-                            msgid)
-                self._write(2*self.indent + 'message[5] = (byte)%d;\n\n' %
-                            msgid)
-                self._write(2*self.indent + 'return message;\n')
-                self._write(self.indent + '}\n\n')
+                self._write('        message[0] = 36;\n')
+                self._write('        message[1] = 77;\n')
+                self._write('        message[2] = 60;\n')
+                self._write('        message[3] = 0;\n')
+                self._write('        message[4] = (byte)%d;\n' % msgid)
+                self._write('        message[5] = (byte)%d;\n\n' % msgid)
+                self._write('        return message;\n')
+                self._write('        }\n\n')
 
                 # Write handler for replies from flight controller
-                self._write(self.indent + 'protected void handle_%s' %
-                            msgtype)
+                self._write('    protected void handle_%s' % msgtype)
                 self._write_params(self.output, argtypes, argnames)
                 self._write(' { \n')
-                self._write(self.indent + '}\n\n')
+                self._write('}\n\n')
 
         self._write('}\n')
 
