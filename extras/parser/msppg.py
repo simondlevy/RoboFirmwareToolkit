@@ -18,10 +18,12 @@ import argparse
 
 class CodeEmitter(object):
 
-    def __init__(self, msgdict):
+    def __init__(self, msgdict, typevals):
 
         self.msgdict = msgdict
         self.type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
+        typenames = ('byte', 'short', 'float', 'int')
+        self.typedict = {n:t  for n, t in zip(typenames, typevals)}
 
     @staticmethod
     def clean(string):
@@ -60,7 +62,7 @@ class CodeEmitter(object):
 
         outfile.write(prefix)
         for argtype, argname in zip(argtypes, argnames):
-            outfile.write(self.type2decl[argtype] + ' ' + ampersand + ' ' +
+            outfile.write(self.typedict[argtype] + ' ' + ampersand + ' ' +
                           argname)
             if argname != argnames[-1]:
                 outfile.write(', ')
@@ -74,12 +76,8 @@ class Cpp_Emitter(CodeEmitter):
 
     def __init__(self, msgdict):
 
-        CodeEmitter.__init__(self, msgdict)
-
-        self.type2decl = {'byte': 'uint8_t',
-                          'short': 'int16_t',
-                          'float': 'float',
-                          'int': 'int32_t'}
+        CodeEmitter.__init__(self, msgdict,
+                             ('uint8_t', 'int16_t', 'float', 'int32_t'))
 
     def emit(self):
 
@@ -145,7 +143,7 @@ class Cpp_Emitter(CodeEmitter):
             for k in range(nargs):
                 argname = argnames[k]
                 argtype = argtypes[k]
-                decl = self.type2decl[argtype]
+                decl = self.typedict[argtype]
                 output.write('                    ' + decl + ' ' + argname +
                              ' = 0;\n')
                 if msgid >= 200:
@@ -183,12 +181,13 @@ class Python_Emitter(CodeEmitter):
 
     def __init__(self, msgdict):
 
-        CodeEmitter.__init__(self, msgdict)
+        CodeEmitter.__init__(self, msgdict, ('B' ,'h', 'f', 'i'))
 
         self.type2pack = {'byte': 'B',
                           'short': 'h',
                           'float': 'f',
                           'int': 'i'}
+
 
     def emit(self):
 
@@ -271,14 +270,9 @@ class Java_Emitter(CodeEmitter):
 
     def __init__(self, msgdict):
 
-        CodeEmitter.__init__(self, msgdict)
+        CodeEmitter.__init__(self, msgdict, ('byte', 'short', 'float', 'int'))
 
-        self.type2decl = {'byte': 'byte',
-                          'short': 'short',
-                          'float': 'float',
-                          'int': 'int'}
-
-        self.type2bb = {'byte': '',
+        self.bbdict = {'byte': '',
                         'short': 'Short',
                         'float': 'Float',
                         'int': 'Int'}
@@ -317,7 +311,7 @@ class Java_Emitter(CodeEmitter):
                 for k in range(nargs):
                     argtype = argtypes[k]
                     self._write('                        bb.get%s(%d)' %
-                                (self.type2bb[argtype], offset))
+                                (self.bbdict[argtype], offset))
                     offset += self.type2size[argtype]
                     if k < nargs-1:
                         self._write(',\n')
