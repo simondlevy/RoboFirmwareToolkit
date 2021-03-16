@@ -113,11 +113,11 @@ class Cpp_Emitter(CodeEmitter):
         output.write('// namespace XXX {\n\n')
 
         # Add classname
-        output.write('\nclass MySerialTask {\n\n')
+        output.write('\nclass MySerialTask {')
 
         # Add stubbed declarations for handler methods
 
-        output.write('    private:\n\n')
+        output.write('\n\n    private:\n\n')
 
         for msgtype in msgdict.keys():
 
@@ -204,24 +204,23 @@ class Python_Emitter(LocalCodeEmitter):
                           'int': 'i'}
 
         # Write header
-        self.output.write('#  Message dispatcher\n\n')
-        self.output.write('#  MIT License\n\n')
-        self._write('import struct\n')
-        self._write('from msppg import Parser\n\n')
-        self._write('\nclass MyParser(Parser):\n\n')
-        self._write('    def dispatchMessage(self):\n\n')
+        self.output.write('#  Message dispatcher')
+        self.output.write('\n\n#  MIT License')
+        self._write('\n\nimport struct')
+        self._write('\nfrom msppg import Parser')
+        self._write('\n\n\nclass MyParser(Parser):')
+        self._write('\n\n    def dispatchMessage(self):')
 
         for msgtype in msgdict.keys():
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
             if msgid < 200:
-                self._write('        if self.message_id == %d:\n' % msgstuff[0])
+                self._write('\n\n        if self.message_id == %d:\n' % msgstuff[0])
                 self._write('            self.handle_%s(*struct.unpack(\'=' %
                             msgtype)
                 for argtype in self._getargtypes(msgstuff):
                     self._write('%s' % self.type2pack[argtype])
-                self._write("\'" + ', self.message_buffer))\n\n')
-            self._write('\n')
+                self._write("\'" + ', self.message_buffer))')
 
         # Emit handler methods for parser
         for msgtype in msgdict.keys():
@@ -229,12 +228,12 @@ class Python_Emitter(LocalCodeEmitter):
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
             if msgid < 200:
-                self._write('    def handle_%s(self' % msgtype)
+                self._write('\n\n    def handle_%s(self' % msgtype)
                 for argname in self._getargnames(msgstuff):
                     self._write(', ' + argname)
                 self._write('):\n')
                 self._write('        # XXX YOUR CODE HERE\n')
-                self._write('        return\n\n')
+                self._write('        return')
 
         # Emit serializer functions for module
         for msgtype in msgdict.keys():
@@ -244,14 +243,14 @@ class Python_Emitter(LocalCodeEmitter):
 
             if msgid < 200:
 
-                self._write('\ndef serialize_' + msgtype + '_Request():\n')
+                self._write('\n\n\ndef serialize_' + msgtype + '_Request():\n')
                 self._write(('    msg = \'$M<\' + chr(0) + '
                             'chr(%s) + chr(%s)\n') % (msgid, msgid))
-                self._write('    return bytes(msg, \'utf-8\')\n\n')
+                self._write('    return bytes(msg, \'utf-8\')')
 
             else:
 
-                self._write('\ndef serialize_' + msgtype +
+                self._write('\n\n\ndef serialize_' + msgtype +
                             '(' + ', '.join(self._getargnames(msgstuff)) + '):\n')
                 self._write('    message_buffer = struct.pack(\'')
                 for argtype in self._getargtypes(msgstuff):
@@ -264,7 +263,7 @@ class Python_Emitter(LocalCodeEmitter):
                 self._write(('    msg = [len(message_buffer), %s] + ' +
                             'list(message_buffer)\n') % msgid)
                 self._write('    return bytes([ord(\'$\'), ord(\'M\'), ' +
-                            'ord(\'<\')] + msg + [Parser.crc8(msg)])\n\n')
+                            'ord(\'<\')] + msg + [Parser.crc8(msg)])')
 
     def _write(self, s):
 
