@@ -21,7 +21,7 @@ class CodeEmitter(object):
     def __init__(self, msgdict, typevals):
 
         self.msgdict = msgdict
-        self.type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
+        self.sizedict = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
         typenames = ('byte', 'short', 'float', 'int')
         self.typedict = {n:t  for n, t in zip(typenames, typevals)}
 
@@ -38,7 +38,7 @@ class CodeEmitter(object):
 
     def _paysize(self, argtypes):
 
-        return sum([self.type2size[atype] for atype in argtypes])
+        return sum([self.sizedict[atype] for atype in argtypes])
 
     def _msgsize(self, argtypes):
 
@@ -149,7 +149,7 @@ class Cpp_Emitter(CodeEmitter):
                 if msgid >= 200:
                     fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n\n'
                     output.write(' '*20 + fmt % (argname, offset, decl))
-                offset += self.type2size[argtype]
+                offset += self.sizedict[argtype]
             output.write('                    handle_%s%s(' %
                          (msgtype, '_Request' if msgid < 200 else ''))
             for k in range(nargs):
@@ -312,7 +312,7 @@ class Java_Emitter(CodeEmitter):
                     argtype = argtypes[k]
                     self._write('                        bb.get%s(%d)' %
                                 (self.bbdict[argtype], offset))
-                    offset += self.type2size[argtype]
+                    offset += self.sizedict[argtype]
                     if k < nargs-1:
                         self._write(',\n')
                 self._write(');\n')
