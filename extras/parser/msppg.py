@@ -131,7 +131,8 @@ class Cpp_Emitter(CodeEmitter):
                          (msgtype, '_Request' if msgid < 200 else ''))
             self._write_params(output, argtypes, argnames,
                                ampersand=('&' if msgid < 200 else ''))
-            output.write('\n        {\n        }\n\n')
+            output.write(' { \n            // XXX YOUR CODE HERE\n')
+            output.write('        }\n\n')
 
         # Add dispatchMessage() method
 
