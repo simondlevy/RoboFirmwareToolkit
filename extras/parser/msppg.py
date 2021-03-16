@@ -264,6 +264,7 @@ class Python_Emitter(LocalCodeEmitter):
                             'list(message_buffer)\n') % msgid)
                 self._write('    return bytes([ord(\'$\'), ord(\'M\'), ' +
                             'ord(\'<\')] + msg + [Parser.crc8(msg)])')
+        self._write('\n')
 
     def _write(self, s):
 
