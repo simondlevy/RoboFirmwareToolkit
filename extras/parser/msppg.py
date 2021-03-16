@@ -235,11 +235,7 @@ class Python_Emitter(LocalCodeEmitter):
             for argname in self._getargnames(msgstuff):
                 self._write(', ' + argname)
             self._write('):\n')
-            self._write("        '''\n")
-            self._write('        Overridable handler method for ' +
-                        'when a %s message is successfully parsed.\n' %
-                        msgtype)
-            self._write("        '''\n\n")
+            self._write('        # XXX YOUR CODE HERE\n')
             self._write('        return\n\n')
 
         # Emit serializer functions for module
@@ -250,41 +246,25 @@ class Python_Emitter(LocalCodeEmitter):
 
             self._write('\ndef serialize_' + msgtype +
                         '(' + ', '.join(self._getargnames(msgstuff)) + '):\n')
-            self._write("    '''\n")
-            self._write('    Serializes the contents of a message of type '
-                        + msgtype + '.\n')
-            self._write("    '''\n")
             self._write('    message_buffer = struct.pack(\'')
             for argtype in self._getargtypes(msgstuff):
                 self._write(self.type2pack[argtype])
             self._write('\'')
             for argname in self._getargnames(msgstuff):
                 self._write(', ' + argname)
-            self._write(')\n\n    ')
+            self._write(')\n')
 
-            self._write('if sys.version[0] == \'2\':\n')
-            self._write('        msg = chr(len(message_buffer)) + '
-                        'chr(%s) + str(message_buffer)\n' % msgid)
-            self._write(('        return \'$M%c\' + msg + ' +
-                        'chr(_CRC8(msg))\n\n') % ('>' if msgid < 200 else '<'))
-            self._write('        else:\n')
-            self._write(('        msg = [len(message_buffer), %s] + ' +
+            self._write(('    msg = [len(message_buffer), %s] + ' +
                         'list(message_buffer)\n') % msgid)
-            self._write('        return bytes([ord(\'$\'), ' +
+            self._write('    return bytes([ord(\'$\'), ' +
                         'ord(\'M\'), ord(\'<\')] + msg + [_CRC8(msg)])\n\n')
 
             if msgid < 200:
 
-                self._write('\ndef serialize_' + msgtype + '_Request():\n\n')
-                self._write("        '''\n")
-                self._write('        Serializes a request for ' +
-                            msgtype + ' data.\n')
-                self._write("        '''\n")
-                self._write(('        msg = \'$M<\' + chr(0) + '
+                self._write('\ndef serialize_' + msgtype + '_Request():\n')
+                self._write(('    msg = \'$M<\' + chr(0) + '
                             'chr(%s) + chr(%s)\n') % (msgid, msgid))
-                self._write('        return bytes(msg) ' +
-                            'if sys.version[0] == \'2\' else ' +
-                            'bytes(msg, \'utf-8\')\n\n')
+                self._write('    return bytes(msg, \'utf-8\')\n\n')
 
     def _write(self, s):
 
