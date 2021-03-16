@@ -8,7 +8,6 @@ Simon D. Levy 2021
 MIT License
 '''
 
-import os
 import json
 import argparse
 
@@ -27,7 +26,6 @@ class CodeEmitter(object):
     def clean(string):
         cleaned_string = string[1: len(string) - 1]
         return cleaned_string
-
 
     def _openw(self, fname):
 
@@ -80,7 +78,8 @@ class CompileableCodeEmitter(LocalCodeEmitter):
 
         LocalCodeEmitter.__init__(self, folder, ext)
 
-# C++ emitter ==-==============================================================
+# C++ emitter =================================================================
+
 
 class Cpp_Emitter(CodeEmitter):
 
@@ -114,7 +113,7 @@ class Cpp_Emitter(CodeEmitter):
 
         # Add classname
         output.write('class MySerialTask {\n\n')
-        
+
         # Add stubbed declarations for handler methods
 
         for msgtype in msgdict.keys():
@@ -133,7 +132,8 @@ class Cpp_Emitter(CodeEmitter):
 
         # Add dispatchMessage() method
 
-        output.write('        protected: void dispatchMessage(void) override\n')
+        output.write('        protected: void dispatchMessage(void) ' +
+                     'override\n')
         output.write('        {\n')
         output.write('            switch (_command) {\n\n')
 
@@ -152,7 +152,8 @@ class Cpp_Emitter(CodeEmitter):
                 argname = argnames[k]
                 argtype = argtypes[k]
                 decl = self.type2decl[argtype]
-                output.write('                    ' + decl + ' ' + argname + ' = 0;\n')
+                output.write('                    ' + decl + ' ' + argname +
+                             ' = 0;\n')
                 if msgid >= 200:
                     fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n\n'
                     output.write(' '*20 + fmt % (argname, offset, decl))
@@ -287,6 +288,7 @@ class Python_Emitter(LocalCodeEmitter):
 
 # Java emitter ================================================================
 
+
 class Java_Emitter(CompileableCodeEmitter):
 
     def __init__(self, msgdict):
@@ -315,7 +317,7 @@ class Java_Emitter(CompileableCodeEmitter):
         self._write('    protected void dispatchMessage(void) {\n\n')
         self._write('        switch (_command) {\n\n')
 
-         # Write handler cases for incoming messages
+        # Write handler cases for incoming messages
         for msgtype in msgdict.keys():
 
             msgstuff = msgdict[msgtype]
@@ -343,7 +345,7 @@ class Java_Emitter(CompileableCodeEmitter):
 
                 self._write('                break;\n\n')
 
-        self._write('        }\n    }\n\n');
+        self._write('        }\n    }\n\n')
 
         for msgtype in msgdict.keys():
 
@@ -419,7 +421,8 @@ def main():
         argtypes = list()
         msgid = None
         for arg in data[msgtype]:
-            argname = CodeEmitter.clean(CodeEmitter.clean(json.dumps(list(arg.keys()))))
+            argname = CodeEmitter.clean(CodeEmitter.clean(
+                json.dumps(list(arg.keys()))))
             argtype = arg[list(arg.keys())[0]]
             if argname == 'ID':
                 msgid = int(argtype)
@@ -441,6 +444,7 @@ def main():
 
     # Emite Java
     Java_Emitter(msgdict)
+
 
 if __name__ == '__main__':
     main()
