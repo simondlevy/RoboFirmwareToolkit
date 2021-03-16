@@ -22,12 +22,12 @@ class CodeEmitter(object):
 
         self.msgdict = msgdict
         self.typedict = CodeEmitter._makedict(typevals)
-        self.sizedict = CodeEmitter._makedict((1,2,3,4))
+        self.sizedict = CodeEmitter._makedict((1, 2, 3, 4))
 
     @staticmethod
     def _makedict(items):
         typenames = ('byte', 'short', 'float', 'int')
-        return {n:t  for n, t in zip(typenames, items)}
+        return {n: t for n, t in zip(typenames, items)}
 
     @staticmethod
     def clean(string):
@@ -141,7 +141,8 @@ class Cpp_Emitter(CodeEmitter):
             argnames = self._getargnames(msgstuff)
             argtypes = self._getargtypes(msgstuff)
 
-            output.write('                case %s: {\n' % self.msgdict[msgtype][0])
+            output.write('                case %s: {\n' %
+                         self.msgdict[msgtype][0])
             nargs = len(argnames)
             offset = 0
             for k in range(nargs):
@@ -185,7 +186,7 @@ class Python_Emitter(CodeEmitter):
 
     def __init__(self, msgdict):
 
-        CodeEmitter.__init__(self, msgdict, ('B' ,'h', 'f', 'i'))
+        CodeEmitter.__init__(self, msgdict, ('B', 'h', 'f', 'i'))
 
     def emit(self):
 
