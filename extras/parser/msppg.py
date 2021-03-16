@@ -113,7 +113,7 @@ class Cpp_Emitter(CodeEmitter):
         output.write('// namespace XXX {\n\n')
 
         # Add classname
-        output.write('class MySerialTask {\n\n')
+        output.write('\nclass MySerialTask {\n\n')
 
         # Add stubbed declarations for handler methods
 
@@ -206,18 +206,19 @@ class Python_Emitter(LocalCodeEmitter):
         # Write header
         self.output.write('#  Message dispatcher\n\n')
         self.output.write('#  MIT License\n\n')
+        self._write('import struct\n')
         self._write('from msppg import Parser\n\n')
-        self._write('class MyParser(Parser):\n\n')
+        self._write('\nclass MyParser(Parser):\n\n')
         self._write('    def dispatchMessage(self):\n\n')
 
         for msgtype in msgdict.keys():
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
-            self._write('        if self.message_id == %d:\n\n' % msgstuff[0])
-            self._write('            if self.message_direction == 0:\n\n')
-            self._write('                self.handle_%s_Request()\n\n' %
+            self._write('        if self.message_id == %d:\n' % msgstuff[0])
+            self._write('            if self.message_direction == 0:\n')
+            self._write('                self.handle_%s_Request()\n' %
                         msgtype)
-            self._write('            else:\n\n')
+            self._write('            else:\n')
             self._write('                self.handle_%s(*struct.unpack(\'=' %
                         msgtype)
             for argtype in self._getargtypes(msgstuff):
@@ -256,8 +257,8 @@ class Python_Emitter(LocalCodeEmitter):
 
             self._write(('    msg = [len(message_buffer), %s] + ' +
                         'list(message_buffer)\n') % msgid)
-            self._write('    return bytes([ord(\'$\'), ' +
-                        'ord(\'M\'), ord(\'<\')] + msg + [_CRC8(msg)])\n\n')
+            self._write('    return bytes([ord(\'$\'), ord(\'M\'), ' +
+                        'ord(\'<\')] + msg + [Parser.crc8(msg)])\n\n')
 
             if msgid < 200:
 

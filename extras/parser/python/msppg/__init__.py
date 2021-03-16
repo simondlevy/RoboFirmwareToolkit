@@ -11,16 +11,6 @@ MIT License
 import struct
 import sys
 
-def _CRC8(data):
-
-    crc = 0x00
-   
-    for c in data:
-
-        crc ^= ord(c) if sys.version[0] == '2' else c
-
-    return crc
-
 class Parser(object):
 
     def __init__(self):
@@ -90,3 +80,16 @@ class Parser(object):
 
         else:
             print('Unknown state detected: %d' % self.state)
+            
+    @staticmethod
+    def crc8(data):
+
+        crc = 0x00
+       
+        for c in data:
+
+            crc ^= ord(c) if sys.version[0] == '2' else c
+
+        return crc
+
+
