@@ -21,9 +21,12 @@ class CodeEmitter(object):
     def __init__(self, msgdict, typevals):
 
         self.msgdict = msgdict
-        typenames = ('byte', 'short', 'float', 'int')
-        self.typedict = {n:t  for n, t in zip(typenames, typevals)}
-        self.sizedict = {n:t  for n, t in zip(typenames, (1,2,3,4))}
+        self.typenames = ('byte', 'short', 'float', 'int')
+        self.typedict = self._makedict(typevals)
+        self.sizedict = self._makedict((1,2,3,4))
+
+    def _makedict(self, items):
+        return {n:t  for n, t in zip(self.typenames, items)}
 
     @staticmethod
     def clean(string):
@@ -183,12 +186,6 @@ class Python_Emitter(CodeEmitter):
 
         CodeEmitter.__init__(self, msgdict, ('B' ,'h', 'f', 'i'))
 
-        self.type2pack = {'byte': 'B',
-                          'short': 'h',
-                          'float': 'f',
-                          'int': 'i'}
-
-
     def emit(self):
 
         # Open output file
@@ -211,7 +208,7 @@ class Python_Emitter(CodeEmitter):
                 self._write('            self.handle_%s(*struct.unpack(\'=' %
                             msgtype)
                 for argtype in self._getargtypes(msgstuff):
-                    self._write('%s' % self.type2pack[argtype])
+                    self._write('%s' % self.typedict[argtype])
                 self._write("\'" + ', self.message_buffer))')
 
         # Emit handler methods for parser
@@ -247,7 +244,7 @@ class Python_Emitter(CodeEmitter):
                             '):\n')
                 self._write('    message_buffer = struct.pack(\'')
                 for argtype in self._getargtypes(msgstuff):
-                    self._write(self.type2pack[argtype])
+                    self._write(self.typedict[argtype])
                 self._write('\'')
                 for argname in self._getargnames(msgstuff):
                     self._write(', ' + argname)
