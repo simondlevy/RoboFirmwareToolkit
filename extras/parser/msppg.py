@@ -8,6 +8,7 @@ Simon D. Levy 2021
 MIT License
 '''
 
+import os
 import json
 import argparse
 
@@ -29,7 +30,8 @@ class CodeEmitter(object):
 
     def _openw(self, fname):
 
-        print('Creating file ' + fname)
+        fname = 'output/' + fname
+        print('Creating file' + fname)
         return open(fname, 'w')
 
     def _paysize(self, argtypes):
@@ -435,6 +437,9 @@ def main():
             exit(1)
         argument_types.append(argtypes)
         msgdict[msgtype] = (msgid, argnames, argtypes)
+
+    # Create output directory
+    os.makedirs('output/', exist_ok=True)
 
     # Emit C++
     Cpp_Emitter(msgdict)
