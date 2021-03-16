@@ -117,6 +117,8 @@ class Cpp_Emitter(CodeEmitter):
 
         # Add stubbed declarations for handler methods
 
+        output.write('    private:\n\n')
+
         for msgtype in msgdict.keys():
 
             msgstuff = msgdict[msgtype]
@@ -125,7 +127,7 @@ class Cpp_Emitter(CodeEmitter):
             argnames = self._getargnames(msgstuff)
             argtypes = self._getargtypes(msgstuff)
 
-            output.write('        private: void handle_%s%s' %
+            output.write('        void handle_%s%s' %
                          (msgtype, '_Request' if msgid < 200 else ''))
             self._write_params(output, argtypes, argnames,
                                ampersand=('&' if msgid < 200 else ''))
@@ -133,8 +135,8 @@ class Cpp_Emitter(CodeEmitter):
 
         # Add dispatchMessage() method
 
-        output.write('        protected: void dispatchMessage(void) ' +
-                     'override\n')
+        output.write('    protected:\n\n')
+        output.write('        void dispatchMessage(void) override\n')
         output.write('        {\n')
         output.write('            switch (_command) {\n\n')
 
