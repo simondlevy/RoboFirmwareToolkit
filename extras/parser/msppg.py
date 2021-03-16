@@ -73,12 +73,6 @@ class LocalCodeEmitter(CodeEmitter):
         CodeEmitter.__init__(self)
 
 
-class CompileableCodeEmitter(LocalCodeEmitter):
-
-    def __init__(self, folder, ext):
-
-        LocalCodeEmitter.__init__(self, folder, ext)
-
 # C++ emitter =================================================================
 
 
@@ -110,10 +104,10 @@ class Cpp_Emitter(CodeEmitter):
         output.write('#include <RFT_parser.hpp>\n\n')
 
         # Add optional namespace
-        output.write('// namespace XXX {\n\n')
+        output.write('namespace XXX {\n\n')
 
         # Add classname
-        output.write('\nclass MySerialTask {')
+        output.write('\nclass SerialTask {')
 
         # Add stubbed declarations for handler methods
 
@@ -182,9 +176,8 @@ class Cpp_Emitter(CodeEmitter):
 
         output.write('            }\n\n')
         output.write('        } // dispatchMessage \n\n')
-
-        output.write('    }; // class MySerialTask\n\n')
-        output.write('// XXX } // namespace hf\n')
+        output.write('    }; // class SerialTask\n\n')
+        output.write('} // namespace XXX\n')
 
 
 # Python emitter ==============================================================
@@ -215,7 +208,8 @@ class Python_Emitter(LocalCodeEmitter):
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
             if msgid < 200:
-                self._write('\n\n        if self.message_id == %d:\n' % msgstuff[0])
+                self._write('\n\n        if self.message_id == %d:\n'
+                            % msgstuff[0])
                 self._write('            self.handle_%s(*struct.unpack(\'=' %
                             msgtype)
                 for argtype in self._getargtypes(msgstuff):
@@ -251,7 +245,8 @@ class Python_Emitter(LocalCodeEmitter):
             else:
 
                 self._write('\n\n\ndef serialize_' + msgtype +
-                            '(' + ', '.join(self._getargnames(msgstuff)) + '):\n')
+                            '(' + ', '.join(self._getargnames(msgstuff)) +
+                            '):\n')
                 self._write('    message_buffer = struct.pack(\'')
                 for argtype in self._getargtypes(msgstuff):
                     self._write(self.type2pack[argtype])
@@ -273,11 +268,11 @@ class Python_Emitter(LocalCodeEmitter):
 # Java emitter ================================================================
 
 
-class Java_Emitter(CompileableCodeEmitter):
+class Java_Emitter(LocalCodeEmitter):
 
     def __init__(self, msgdict):
 
-        CompileableCodeEmitter.__init__(self, 'java', 'java')
+        LocalCodeEmitter.__init__(self, 'java', 'java')
 
         self.type2decl = {'byte': 'byte',
                           'short': 'short',
