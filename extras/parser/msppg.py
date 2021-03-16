@@ -214,30 +214,27 @@ class Python_Emitter(LocalCodeEmitter):
         for msgtype in msgdict.keys():
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
-            self._write('        if self.message_id == %d:\n' % msgstuff[0])
-            self._write('            if self.message_direction == 0:\n')
-            self._write('                self.handle_%s_Request()\n' %
-                        msgtype)
-            self._write('            else:\n')
-            self._write('                self.handle_%s(*struct.unpack(\'=' %
-                        msgtype)
-            for argtype in self._getargtypes(msgstuff):
-                self._write('%s' % self.type2pack[argtype])
-            self._write("\'" + ', self.message_buffer))\n\n')
-        self._write('\n')
+            if msgid < 200:
+                self._write('        if self.message_id == %d:\n' % msgstuff[0])
+                self._write('            self.handle_%s(*struct.unpack(\'=' %
+                            msgtype)
+                for argtype in self._getargtypes(msgstuff):
+                    self._write('%s' % self.type2pack[argtype])
+                self._write("\'" + ', self.message_buffer))\n\n')
+            self._write('\n')
 
         # Emit handler methods for parser
         for msgtype in msgdict.keys():
 
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
-
-            self._write('    def handle_%s(self' % msgtype)
-            for argname in self._getargnames(msgstuff):
-                self._write(', ' + argname)
-            self._write('):\n')
-            self._write('        # XXX YOUR CODE HERE\n')
-            self._write('        return\n\n')
+            if msgid < 200:
+                self._write('    def handle_%s(self' % msgtype)
+                for argname in self._getargnames(msgstuff):
+                    self._write(', ' + argname)
+                self._write('):\n')
+                self._write('        # XXX YOUR CODE HERE\n')
+                self._write('        return\n\n')
 
         # Emit serializer functions for module
         for msgtype in msgdict.keys():
@@ -245,27 +242,29 @@ class Python_Emitter(LocalCodeEmitter):
             msgstuff = msgdict[msgtype]
             msgid = msgstuff[0]
 
-            self._write('\ndef serialize_' + msgtype +
-                        '(' + ', '.join(self._getargnames(msgstuff)) + '):\n')
-            self._write('    message_buffer = struct.pack(\'')
-            for argtype in self._getargtypes(msgstuff):
-                self._write(self.type2pack[argtype])
-            self._write('\'')
-            for argname in self._getargnames(msgstuff):
-                self._write(', ' + argname)
-            self._write(')\n')
-
-            self._write(('    msg = [len(message_buffer), %s] + ' +
-                        'list(message_buffer)\n') % msgid)
-            self._write('    return bytes([ord(\'$\'), ord(\'M\'), ' +
-                        'ord(\'<\')] + msg + [Parser.crc8(msg)])\n\n')
-
             if msgid < 200:
 
                 self._write('\ndef serialize_' + msgtype + '_Request():\n')
                 self._write(('    msg = \'$M<\' + chr(0) + '
                             'chr(%s) + chr(%s)\n') % (msgid, msgid))
                 self._write('    return bytes(msg, \'utf-8\')\n\n')
+
+            else:
+
+                self._write('\ndef serialize_' + msgtype +
+                            '(' + ', '.join(self._getargnames(msgstuff)) + '):\n')
+                self._write('    message_buffer = struct.pack(\'')
+                for argtype in self._getargtypes(msgstuff):
+                    self._write(self.type2pack[argtype])
+                self._write('\'')
+                for argname in self._getargnames(msgstuff):
+                    self._write(', ' + argname)
+                self._write(')\n')
+
+                self._write(('    msg = [len(message_buffer), %s] + ' +
+                            'list(message_buffer)\n') % msgid)
+                self._write('    return bytes([ord(\'$\'), ord(\'M\'), ' +
+                            'ord(\'<\')] + msg + [Parser.crc8(msg)])\n\n')
 
     def _write(self, s):
 
