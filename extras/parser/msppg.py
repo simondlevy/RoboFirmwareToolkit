@@ -18,8 +18,9 @@ import argparse
 
 class CodeEmitter(object):
 
-    def __init__(self):
+    def __init__(self, msgdict):
 
+        self.msgdict = msgdict
         self.type2size = {'byte': 1, 'short': 2, 'float': 4, 'int': 4}
 
     @staticmethod
@@ -68,9 +69,9 @@ class CodeEmitter(object):
 
 class LocalCodeEmitter(CodeEmitter):
 
-    def __init__(self, folder, ext):
+    def __init__(self, msgdict, folder, ext):
 
-        CodeEmitter.__init__(self)
+        CodeEmitter.__init__(self, msgdict)
 
 
 # C++ emitter =================================================================
@@ -80,12 +81,14 @@ class Cpp_Emitter(CodeEmitter):
 
     def __init__(self, msgdict):
 
-        CodeEmitter.__init__(self)
+        CodeEmitter.__init__(self, msgdict)
 
         self.type2decl = {'byte': 'uint8_t',
                           'short': 'int16_t',
                           'float': 'float',
                           'int': 'int32_t'}
+
+    def emit(self):
 
         # Open output file
         output = self._openw('serialtask.hpp')
@@ -113,9 +116,9 @@ class Cpp_Emitter(CodeEmitter):
 
         output.write('\n\n    private:\n\n')
 
-        for msgtype in msgdict.keys():
+        for msgtype in self.msgdict.keys():
 
-            msgstuff = msgdict[msgtype]
+            msgstuff = self.msgdict[msgtype]
             msgid = msgstuff[0]
 
             argnames = self._getargnames(msgstuff)
@@ -135,15 +138,15 @@ class Cpp_Emitter(CodeEmitter):
         output.write('        {\n')
         output.write('            switch (_command) {\n\n')
 
-        for msgtype in msgdict.keys():
+        for msgtype in self.msgdict.keys():
 
-            msgstuff = msgdict[msgtype]
+            msgstuff = self.msgdict[msgtype]
             msgid = msgstuff[0]
 
             argnames = self._getargnames(msgstuff)
             argtypes = self._getargtypes(msgstuff)
 
-            output.write('                case %s: {\n' % msgdict[msgtype][0])
+            output.write('                case %s: {\n' % self.msgdict[msgtype][0])
             nargs = len(argnames)
             offset = 0
             for k in range(nargs):
@@ -187,14 +190,17 @@ class Python_Emitter(LocalCodeEmitter):
 
     def __init__(self, msgdict):
 
-        LocalCodeEmitter.__init__(self, 'python', 'py')
-
-        self.output = self._openw('myparser.py')
+        LocalCodeEmitter.__init__(self, msgdict, 'python', 'py')
 
         self.type2pack = {'byte': 'B',
                           'short': 'h',
                           'float': 'f',
                           'int': 'i'}
+
+    def emit(self):
+
+        # Open output file
+        self.output = self._openw('myparser.py')
 
         # Write header
         self.output.write('#  Message dispatcher')
@@ -204,8 +210,8 @@ class Python_Emitter(LocalCodeEmitter):
         self._write('\n\n\nclass MyParser(Parser):')
         self._write('\n\n    def dispatchMessage(self):')
 
-        for msgtype in msgdict.keys():
-            msgstuff = msgdict[msgtype]
+        for msgtype in self.msgdict.keys():
+            msgstuff = self.msgdict[msgtype]
             msgid = msgstuff[0]
             if msgid < 200:
                 self._write('\n\n        if self.message_id == %d:\n'
@@ -217,9 +223,9 @@ class Python_Emitter(LocalCodeEmitter):
                 self._write("\'" + ', self.message_buffer))')
 
         # Emit handler methods for parser
-        for msgtype in msgdict.keys():
+        for msgtype in self.msgdict.keys():
 
-            msgstuff = msgdict[msgtype]
+            msgstuff = self.msgdict[msgtype]
             msgid = msgstuff[0]
             if msgid < 200:
                 self._write('\n\n    def handle_%s(self' % msgtype)
@@ -230,9 +236,9 @@ class Python_Emitter(LocalCodeEmitter):
                 self._write('        return')
 
         # Emit serializer functions for module
-        for msgtype in msgdict.keys():
+        for msgtype in self.msgdict.keys():
 
-            msgstuff = msgdict[msgtype]
+            msgstuff = self.msgdict[msgtype]
             msgid = msgstuff[0]
 
             if msgid < 200:
@@ -272,7 +278,7 @@ class Java_Emitter(LocalCodeEmitter):
 
     def __init__(self, msgdict):
 
-        LocalCodeEmitter.__init__(self, 'java', 'java')
+        LocalCodeEmitter.__init__(self, msgdict, 'java', 'java')
 
         self.type2decl = {'byte': 'byte',
                           'short': 'short',
@@ -283,6 +289,8 @@ class Java_Emitter(LocalCodeEmitter):
                         'short': 'Short',
                         'float': 'Float',
                         'int': 'Int'}
+
+    def emit(self):
 
         self.output = self._openw('MyParser.java')
 
@@ -297,9 +305,9 @@ class Java_Emitter(LocalCodeEmitter):
         self._write('        switch (_command) {\n\n')
 
         # Write handler cases for incoming messages
-        for msgtype in msgdict.keys():
+        for msgtype in self.msgdict.keys():
 
-            msgstuff = msgdict[msgtype]
+            msgstuff = self.msgdict[msgtype]
             msgid = msgstuff[0]
 
             if msgid < 200:
@@ -326,9 +334,9 @@ class Java_Emitter(LocalCodeEmitter):
 
         self._write('        }\n    }\n\n')
 
-        for msgtype in msgdict.keys():
+        for msgtype in self.msgdict.keys():
 
-            msgstuff = msgdict[msgtype]
+            msgstuff = self.msgdict[msgtype]
             msgid = msgstuff[0]
 
             argnames = self._getargnames(msgstuff)
@@ -413,13 +421,13 @@ def main():
     os.makedirs('output/', exist_ok=True)
 
     # Emit C++
-    Cpp_Emitter(msgdict)
+    Cpp_Emitter(msgdict).emit()
 
     # Emit Python
-    Python_Emitter(msgdict)
+    Python_Emitter(msgdict).emit()
 
     # Emite Java
-    Java_Emitter(msgdict)
+    Java_Emitter(msgdict).emit()
 
 
 if __name__ == '__main__':
