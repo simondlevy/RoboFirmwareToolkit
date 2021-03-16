@@ -21,12 +21,13 @@ class CodeEmitter(object):
     def __init__(self, msgdict, typevals):
 
         self.msgdict = msgdict
-        self.typenames = ('byte', 'short', 'float', 'int')
-        self.typedict = self._makedict(typevals)
-        self.sizedict = self._makedict((1,2,3,4))
+        self.typedict = CodeEmitter._makedict(typevals)
+        self.sizedict = CodeEmitter._makedict((1,2,3,4))
 
-    def _makedict(self, items):
-        return {n:t  for n, t in zip(self.typenames, items)}
+    @staticmethod
+    def _makedict(items):
+        typenames = ('byte', 'short', 'float', 'int')
+        return {n:t  for n, t in zip(typenames, items)}
 
     @staticmethod
     def clean(string):
@@ -269,10 +270,7 @@ class Java_Emitter(CodeEmitter):
 
         CodeEmitter.__init__(self, msgdict, ('byte', 'short', 'float', 'int'))
 
-        self.bbdict = {'byte': '',
-                        'short': 'Short',
-                        'float': 'Float',
-                        'int': 'Int'}
+        self.bbdict = CodeEmitter._makedict(('', 'Short', 'Float', 'Int'))
 
     def emit(self):
 
