@@ -94,7 +94,7 @@ class Cpp_Emitter(CodeEmitter):
                           'int': 'int32_t'}
 
         # Open output file
-        output = self._openw('output/serialtask.hpp')
+        output = self._openw('serialtask.hpp')
 
         # Write header
         output.write('/*\n')
@@ -191,7 +191,7 @@ class Python_Emitter(LocalCodeEmitter):
 
         LocalCodeEmitter.__init__(self, 'python', 'py')
 
-        self.output = self._openw('output/python/msppg/myparser.py')
+        self.output = self._openw('myparser.py')
 
         self.type2pack = {'byte': 'B',
                           'short': 'h',
@@ -303,7 +303,7 @@ class Java_Emitter(CompileableCodeEmitter):
                         'float': 'Float',
                         'int': 'Int'}
 
-        self.output = self._openw('output/java/edu/wlu/cs/msppg/MyParser.java')
+        self.output = self._openw('MyParser.java')
 
         # Write header
         self.output.write('/*\n')
