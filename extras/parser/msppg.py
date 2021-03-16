@@ -67,13 +67,6 @@ class CodeEmitter(object):
         outfile.write(')')
 
 
-class LocalCodeEmitter(CodeEmitter):
-
-    def __init__(self, msgdict, folder, ext):
-
-        CodeEmitter.__init__(self, msgdict)
-
-
 # C++ emitter =================================================================
 
 
@@ -186,11 +179,11 @@ class Cpp_Emitter(CodeEmitter):
 # Python emitter ==============================================================
 
 
-class Python_Emitter(LocalCodeEmitter):
+class Python_Emitter(CodeEmitter):
 
     def __init__(self, msgdict):
 
-        LocalCodeEmitter.__init__(self, msgdict, 'python', 'py')
+        CodeEmitter.__init__(self, msgdict)
 
         self.type2pack = {'byte': 'B',
                           'short': 'h',
@@ -274,11 +267,11 @@ class Python_Emitter(LocalCodeEmitter):
 # Java emitter ================================================================
 
 
-class Java_Emitter(LocalCodeEmitter):
+class Java_Emitter(CodeEmitter):
 
     def __init__(self, msgdict):
 
-        LocalCodeEmitter.__init__(self, msgdict, 'java', 'java')
+        CodeEmitter.__init__(self, msgdict)
 
         self.type2decl = {'byte': 'byte',
                           'short': 'short',
