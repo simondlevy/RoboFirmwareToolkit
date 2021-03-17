@@ -194,7 +194,7 @@ class Python_Emitter(CodeEmitter):
         self.output = self._openw('msputils.py')
 
         # Write header
-        self.output.write('#  Message dispatcher')
+        self.output.write('#  MSP Parser subclass and message builders')
         self.output.write('\n\n#  MIT License')
         self._write('\n\nimport struct')
         self._write('\nfrom msp import Parser')
