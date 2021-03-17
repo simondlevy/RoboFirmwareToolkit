@@ -191,7 +191,7 @@ class Python_Emitter(CodeEmitter):
     def emit(self):
 
         # Open output file
-        self.output = self._openw('mymsp.py')
+        self.output = self._openw('msputils.py')
 
         # Write header
         self.output.write('#  Message dispatcher')
