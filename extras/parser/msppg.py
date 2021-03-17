@@ -191,7 +191,7 @@ class Python_Emitter(CodeEmitter):
     def emit(self):
 
         # Open output file
-        self.output = self._openw('msputils.py')
+        self.output = self._openw('mspparser.py')
 
         # Write header
         self.output.write('#  MSP Parser subclass and message builders')
@@ -232,19 +232,21 @@ class Python_Emitter(CodeEmitter):
             msgstuff = self.msgdict[msgtype]
             msgid = msgstuff[0]
 
+            self._write('\n\n    @staticmethod')
+
             if msgid < 200:
 
-                self._write('\n\n\ndef serialize_' + msgtype + '_Request():\n')
-                self._write(('    msg = \'$M<\' + chr(0) + '
+                self._write('\n    def serialize_' + msgtype + '_Request():\n')
+                self._write(('        msg = \'$M<\' + chr(0) + '
                             'chr(%s) + chr(%s)\n') % (msgid, msgid))
-                self._write('    return bytes(msg, \'utf-8\')')
+                self._write('        return bytes(msg, \'utf-8\')')
 
             else:
 
-                self._write('\n\n\ndef serialize_' + msgtype +
+                self._write('\n    def serialize_' + msgtype +
                             '(' + ', '.join(self._getargnames(msgstuff)) +
                             '):\n')
-                self._write('    message_buffer = struct.pack(\'')
+                self._write('        message_buffer = struct.pack(\'')
                 for argtype in self._getargtypes(msgstuff):
                     self._write(self.typedict[argtype])
                 self._write('\'')
@@ -252,9 +254,9 @@ class Python_Emitter(CodeEmitter):
                     self._write(', ' + argname)
                 self._write(')\n')
 
-                self._write(('    msg = [len(message_buffer), %s] + ' +
+                self._write(('        msg = [len(message_buffer), %s] + ' +
                             'list(message_buffer)\n') % msgid)
-                self._write('    return bytes([ord(\'$\'), ord(\'M\'), ' +
+                self._write('        return bytes([ord(\'$\'), ord(\'M\'), ' +
                             'ord(\'<\')] + msg + [Parser.crc8(msg)])')
         self._write('\n')
 
@@ -329,8 +331,8 @@ class Java_Emitter(CodeEmitter):
             if msgid < 200:
 
                 # Write serializer for requests
-                self._write(('    public byte [] serialize_%s_Request() ' +
-                            '{\n\n') % msgtype)
+                self._write(('    public static byte [] ' +
+                            '{serialize_%s_Request() \n\n') % msgtype)
                 self._write('        byte [] message = new byte[6];\n\n')
                 self._write('        message[0] = 36;\n')
                 self._write('        message[1] = 77;\n')
