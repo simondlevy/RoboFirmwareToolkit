@@ -105,11 +105,11 @@ class Cpp_Emitter(CodeEmitter):
         output.write('namespace /* XXX */ {\n\n')
 
         # Add classname
-        output.write('\nclass SerialTask : public rft::SerialTask {')
+        output.write('\n    class SerialTask : public rft::SerialTask {')
 
         # Add stubbed declarations for handler methods
 
-        output.write('\n\n    private:\n')
+        output.write('\n\n        private:\n')
 
         for msgtype in self.msgdict.keys():
 
@@ -119,20 +119,20 @@ class Cpp_Emitter(CodeEmitter):
             argnames = self._getargnames(msgstuff)
             argtypes = self._getargtypes(msgstuff)
 
-            output.write('\n        void handle_%s%s' %
+            output.write('\n            void handle_%s%s' %
                          (msgtype, '_Request' if msgid < 200 else ''))
             self._write_params(output, argtypes, argnames,
                                ampersand=('&' if msgid < 200 else ''))
-            output.write('\n        {')
-            output.write('\n            // XXX')
-            output.write('\n        }\n')
+            output.write('\n            {')
+            output.write('\n                // XXX')
+            output.write('\n            }\n')
 
         # Add dispatchMessage() method
 
-        output.write('\n    protected:\n\n')
-        output.write('        void dispatchMessage(void) override\n')
-        output.write('        {\n')
-        output.write('            switch (_command) {\n\n')
+        output.write('\n        protected:\n\n')
+        output.write('            void dispatchMessage(void) override\n')
+        output.write('            {\n')
+        output.write('                switch (_command) {\n\n')
 
         for msgtype in self.msgdict.keys():
 
@@ -142,21 +142,23 @@ class Cpp_Emitter(CodeEmitter):
             argnames = self._getargnames(msgstuff)
             argtypes = self._getargtypes(msgstuff)
 
-            output.write('                case %s: {\n' %
+            output.write('                    case %s:' %
                          self.msgdict[msgtype][0])
+            output.write('\n                        {')
             nargs = len(argnames)
             offset = 0
             for k in range(nargs):
                 argname = argnames[k]
                 argtype = argtypes[k]
                 decl = self.typedict[argtype]
-                output.write('                    ' + decl + ' ' + argname +
-                             ' = 0;\n')
+                output.write('\n                            ' + 
+                             decl + ' ' + argname + ' = 0;')
                 if msgid >= 200:
-                    fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n\n'
-                    output.write(' '*20 + fmt % (argname, offset, decl))
+                    fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n'
+                    output.write('\n                            ')
+                    output.write(fmt % (argname, offset, decl))
                 offset += self.sizedict[argtype]
-            output.write('                    handle_%s%s(' %
+            output.write('\n                            handle_%s%s(' %
                          (msgtype, '_Request' if msgid < 200 else ''))
             for k in range(nargs):
                 output.write(argnames[k])
@@ -166,17 +168,18 @@ class Cpp_Emitter(CodeEmitter):
             if msgid < 200:
                 # XXX enforce uniform type for now
                 argtype = argtypes[0].capitalize()
-                output.write('                    prepareToSend%ss(%d);\n' %
-                             (argtype, nargs))
+                output.write('                            ')
+                output.write('prepareToSend%ss(%d);\n' % (argtype, nargs))
                 for argname in argnames:
-                    output.write('                    send%s(%s);\n' %
+                    output.write('                            send%s(%s);\n' %
                                  (argtype, argname))
-                output.write('                    serialize8(_checksum);\n')
-            output.write('                } break;\n\n')
+                output.write('                            ')
+                output.write('serialize8(_checksum);\n')
+            output.write('                        } break;\n\n')
 
-        output.write('            }\n\n')
-        output.write('        } // dispatchMessage \n\n')
-        output.write('    }; // class SerialTask\n\n')
+        output.write('                } // switch (_command)\n\n')
+        output.write('            } // dispatchMessage \n\n')
+        output.write('        }; // class SerialTask\n\n')
         output.write('} // namespace XXX\n')
 
 
