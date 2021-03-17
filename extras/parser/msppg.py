@@ -22,7 +22,7 @@ class CodeEmitter(object):
 
         self.msgdict = msgdict
         self.typedict = CodeEmitter._makedict(typevals)
-        self.sizedict = CodeEmitter._makedict((1, 2, 3, 4))
+        self.sizedict = CodeEmitter._makedict((1, 2, 4, 4))
 
     @staticmethod
     def _makedict(items):
@@ -101,11 +101,14 @@ class Cpp_Emitter(CodeEmitter):
         output.write('#include <RFT_serialtask.hpp>\n')
         output.write('#include <RFT_parser.hpp>\n\n')
 
-        # Add optional namespace
+        # Add namespace
         output.write('namespace /* XXX */ {\n\n')
 
         # Add classname
         output.write('\n    class SerialTask : public rft::SerialTask {')
+
+        # Add friend class declaration
+        output.write('\n\n        friend class /* XXX */;')
 
         # Add stubbed declarations for handler methods
 
