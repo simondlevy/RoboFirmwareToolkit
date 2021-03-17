@@ -1,7 +1,5 @@
 '''
-Python implementation of MSPPG parser
-
-Auto-generated code: DO NOT EDIT!
+Python implementation of Multiwii Serial Protocol routines
 
 Copyright (C) Rob Jones, Alec Singer, Chris Lavin, Blake Liebling,
 Simon D. Levy 2021

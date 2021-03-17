@@ -10,4 +10,4 @@ MIT License
 
 from distutils.core import setup
 
-setup(name='msppg', packages=['msppg'])
+setup(name='msp', packages=['msp'])
