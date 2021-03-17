@@ -102,10 +102,10 @@ class Cpp_Emitter(CodeEmitter):
         output.write('#include <RFT_parser.hpp>\n\n')
 
         # Add optional namespace
-        output.write('namespace XXX {\n\n')
+        output.write('namespace /* XXX */ {\n\n')
 
         # Add classname
-        output.write('\nclass SerialTask {')
+        output.write('\nclass SerialTask : public rft::SerialTask {')
 
         # Add stubbed declarations for handler methods
 
@@ -123,7 +123,7 @@ class Cpp_Emitter(CodeEmitter):
                          (msgtype, '_Request' if msgid < 200 else ''))
             self._write_params(output, argtypes, argnames,
                                ampersand=('&' if msgid < 200 else ''))
-            output.write(' { \n            // XXX YOUR CODE HERE\n')
+            output.write(' { \n            // XXX\n')
             output.write('        }\n\n')
 
         # Add dispatchMessage() method
@@ -223,7 +223,7 @@ class Python_Emitter(CodeEmitter):
                 for argname in self._getargnames(msgstuff):
                     self._write(', ' + argname)
                 self._write('):\n')
-                self._write('        # XXX YOUR CODE HERE\n')
+                self._write('        # XXX\n')
                 self._write('        return')
 
         # Emit serializer functions for module
@@ -344,7 +344,7 @@ class Java_Emitter(CodeEmitter):
                 # Write handler for replies from flight controller
                 self._write('    protected void handle_%s' % msgtype)
                 self._write_params(self.output, argtypes, argnames)
-                self._write(' { \n        // XXX YOUR CODE HERE\n    }\n\n')
+                self._write(' { \n        // XXX\n    }\n\n')
 
         self._write('}\n')
 
