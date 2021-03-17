@@ -197,8 +197,9 @@ class Python_Emitter(CodeEmitter):
         self.output.write('#  MSP Parser subclass and message builders')
         self.output.write('\n\n#  MIT License')
         self._write('\n\nimport struct')
+        self._write('\n\nimport abc')
         self._write('\nfrom msp import Parser')
-        self._write('\n\n\nclass MspParser(Parser):')
+        self._write('\n\n\nclass MspParser(Parser, metaclass=abc.ABCMeta):')
         self._write('\n\n    def dispatchMessage(self):')
 
         for msgtype in self.msgdict.keys():
@@ -219,11 +220,11 @@ class Python_Emitter(CodeEmitter):
             msgstuff = self.msgdict[msgtype]
             msgid = msgstuff[0]
             if msgid < 200:
-                self._write('\n\n    def handle_%s(self' % msgtype)
+                self._write('\n\n    @abc.abstractmethod')
+                self._write('\n    def handle_%s(self' % msgtype)
                 for argname in self._getargnames(msgstuff):
                     self._write(', ' + argname)
                 self._write('):\n')
-                self._write('        # XXX\n')
                 self._write('        return')
 
         # Emit serializer functions for module
