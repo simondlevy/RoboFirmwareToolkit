@@ -1,5 +1,3 @@
 __pycache__/
 python/build/
-serialtask.hpp
-myparser.py
-MyParser.java
+output/

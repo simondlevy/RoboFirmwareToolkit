@@ -191,13 +191,13 @@ class Python_Emitter(CodeEmitter):
     def emit(self):
 
         # Open output file
-        self.output = self._openw('myparser.py')
+        self.output = self._openw('mymsp.py')
 
         # Write header
         self.output.write('#  Message dispatcher')
         self.output.write('\n\n#  MIT License')
         self._write('\n\nimport struct')
-        self._write('\nfrom msppg import Parser')
+        self._write('\nfrom msp import Parser')
         self._write('\n\n\nclass MyParser(Parser):')
         self._write('\n\n    def dispatchMessage(self):')
 

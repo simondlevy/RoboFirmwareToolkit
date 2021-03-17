@@ -7,7 +7,7 @@ Copyright (C) Simon D. Levy 2021
 MIT License
 */
 
-package edu.wlu.cs.msppg;
+package edu.wlu.cs.msp;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
