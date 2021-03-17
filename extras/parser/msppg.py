@@ -198,7 +198,7 @@ class Python_Emitter(CodeEmitter):
         self.output.write('\n\n#  MIT License')
         self._write('\n\nimport struct')
         self._write('\nfrom msp import Parser')
-        self._write('\n\n\nclass MyParser(Parser):')
+        self._write('\n\n\nclass MspParser(Parser):')
         self._write('\n\n    def dispatchMessage(self):')
 
         for msgtype in self.msgdict.keys():
@@ -275,7 +275,7 @@ class Java_Emitter(CodeEmitter):
 
     def emit(self):
 
-        self.output = self._openw('MyParser.java')
+        self.output = self._openw('MspParser.java')
 
         # Write header
         self.output.write('/*\n')
@@ -283,7 +283,7 @@ class Java_Emitter(CodeEmitter):
         self.output.write('   MIT License\n\n')
         self.output.write('*/\n\n')
         self._write('import edu.wlu.cs.mssppg.Parser;\n\n')
-        self._write('public class MyParser extends Parser {\n\n')
+        self._write('public class MspParser extends Parser {\n\n')
         self._write('    protected void dispatchMessage(void) {\n\n')
         self._write('        switch (_command) {\n\n')
 
