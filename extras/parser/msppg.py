@@ -90,9 +90,9 @@ class Cpp_Emitter(CodeEmitter):
 
         # Write header
         output.write('/*\n')
-        output.write('  Timer task for serial comms\n\n')
-        output.write('  MIT License\n')
-        output.write('*/\n\n')
+        output.write('   Timer task for serial comms\n\n')
+        output.write('   MIT License\n')
+        output.write(' */\n\n')
         output.write('#pragma once\n\n')
         output.write('#include <RFT_timertask.hpp>\n')
         output.write('#include <RFT_board.hpp>\n')
@@ -109,7 +109,7 @@ class Cpp_Emitter(CodeEmitter):
 
         # Add stubbed declarations for handler methods
 
-        output.write('\n\n    private:\n\n')
+        output.write('\n\n    private:\n')
 
         for msgtype in self.msgdict.keys():
 
@@ -119,16 +119,17 @@ class Cpp_Emitter(CodeEmitter):
             argnames = self._getargnames(msgstuff)
             argtypes = self._getargtypes(msgstuff)
 
-            output.write('        void handle_%s%s' %
+            output.write('\n        void handle_%s%s' %
                          (msgtype, '_Request' if msgid < 200 else ''))
             self._write_params(output, argtypes, argnames,
                                ampersand=('&' if msgid < 200 else ''))
-            output.write(' { \n            // XXX\n')
-            output.write('        }\n\n')
+            output.write('\n        {')
+            output.write('\n            // XXX')
+            output.write('\n        }\n')
 
         # Add dispatchMessage() method
 
-        output.write('    protected:\n\n')
+        output.write('\n    protected:\n\n')
         output.write('        void dispatchMessage(void) override\n')
         output.write('        {\n')
         output.write('            switch (_command) {\n\n')
