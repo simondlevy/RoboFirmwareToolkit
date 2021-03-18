@@ -104,6 +104,8 @@ and [Mahony](https://nitinjsanket.github.io/tutorials/attitudeest/mahony#mahonyf
 Kalman filtering in my robotics work, I did not include a Kalman filter class here; but I do have an implementation of this
 filter in another [repository](https://github.com/simondlevy/TinyEKF)).
 
+## Serial communication
+
 For serial communication, RFT relies on the lightweight [Multiwii Serial Protocol](http://www.armazila.com/MultiwiiSerialProtocol(draft)v02.pdf) (MSP).  The [SerialTask](https://github.com/simondlevy/RoboFirmwareToolkit/blob/main/src/RFT_serialtask.hpp) class contains code for parsing
 arbitrary MSP messages.  By writing a subclass implementing the <tt>dispatchMessage()</tt>  method of this class, you can support the 
 messages you want for your robot.  To help facilitate creating such messages, RFT provides a
