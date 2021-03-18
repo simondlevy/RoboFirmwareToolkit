@@ -35,7 +35,7 @@ implement for a particular microcontroller or simulator.  As the following class
 several boards are currently supported:
 
 <p align="center"> 
-<img src="extras/media/boards.png" width=800>
+<img src="extras/media/boards.png" width=500>
 </p>
 
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_openloop.hpp">OpenLoopController</a>
