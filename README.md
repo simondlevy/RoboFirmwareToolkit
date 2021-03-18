@@ -33,6 +33,10 @@ of C++ made it straightforward to support other robot types through abstract cla
 class specifies an abstract (pure virtual) <tt>getTime()</tt> method that you must
 implement for a particular microcontroller or simulator.
 
+<p align="center"> 
+<img src="extras/media/boards.png" width=800>
+</p>
+
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_openloop.hpp">OpenLoopController</a>
 class performs basic functions associated with open-loop control, and specifies a set of abstract methods that you
 implement for a particular controller like an R/C receiver.
