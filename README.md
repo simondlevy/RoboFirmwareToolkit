@@ -22,7 +22,7 @@ whereas ROS is a massive package providing an entire operating system
 supporting multiple robots and programming languages, RFT is focused entirely
 on simple C++ firmware for a single robot.)
 
-## Classes
+## C++ Classes
 
 RFT grew out my experience developing a simple [toolkit](https://github.com/simondlevy/Hackflight)
 for flight-control firmware of multi-rotor vehicles.  At some point I realized that most of this
