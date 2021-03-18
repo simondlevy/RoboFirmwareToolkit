@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "motor.hpp"
+#include "rft_motor.hpp"
 
 namespace rft {
 
