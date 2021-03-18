@@ -67,7 +67,7 @@ state based on that data.  If you're mathematically-minded, you can think of a
 sensor as a function from states to states: <b><i>Sensor</i>: <i>State</i> &rarr;
 <i>State</i></b>
 
-Together, these five classes interact as shown in the following diagram:
+Together, these classes interact as shown in the following diagram:
 
 <p align="center"> 
 <img src="extras/media/dataflow.png" width=700>
