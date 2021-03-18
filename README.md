@@ -66,8 +66,8 @@ class.
 class specifies abstract methods <tt>ready()</tt> for checking whether the sensor
 has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's
 state based on that data.  If you're mathematically-minded, you can think of a
-sensor as a function from states to states: <i>Sensor</i>: <i>State</i> &rarr;
-<i>State</i>
+sensor as a function from states to states: <b><i>Sensor</i>: <i>State</i> &rarr;
+<i>State</i></b>
 
 * The abstract <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_timertask.hpp">TimerTask</a>
 class allows you to run different processes (closed-loop control, serial communication) at different rates.
