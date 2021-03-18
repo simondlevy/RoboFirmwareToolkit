@@ -2,6 +2,8 @@
 <img src="extras/media/logo.png" width=450>
 </p>
 
+## Intro
+
 **RoboFirmwareToolkit** (RFT) is a simple, platform-independent, header-only C++ toolkit
 for building robot firmware to run on Arduino and other microcontrollers.  Because
 of its platform-independence it can also be used as the control code in a
@@ -23,6 +25,8 @@ plugged into a pre-existing framework in a way that is easily extended for more 
 whereas ROS is a massive package providing an entire operating system
 supporting multiple robots and programming languages, RFT is focused entirely
 on simple C++ firmware for a single robot.)
+
+## Classes
 
 RFT grew out my experience developing a simple [toolkit](https://github.com/simondlevy/Hackflight)
 for flight-control firmware of multi-rotor vehicles.  At some point I realized that most of this
@@ -60,13 +64,6 @@ mathematically-minded, you can think of a closed-loop controller as a function f
 (<i>State</i>, <i>Demands</i>) pair to <i>Demands</i>:
 <b><i>ClosedLoopController</i>: <i>State</i> &times; <i>Demands</i> &rarr; <i>Demands</i></b>
 
-
-Because [PID control](https://en.wikipedia.org/wiki/PID_controller) is the most
-popular kind of closed-loop control, RFT sub-classes ClosedLoopController with a 
-[PidController](https://github.com/simondlevy/RoboFirmwareToolkit/blob/main/src/rft_closedloops/pidcontroller.hpp)
-class.
-
-
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_sensor.hpp">Sensor</a>
 class specifies abstract methods <tt>ready()</tt> for checking whether the sensor
 has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's
@@ -74,10 +71,26 @@ state based on that data.  If you're mathematically-minded, you can think of a
 sensor as a function from states to states: <b><i>Sensor</i>: <i>State</i> &rarr;
 <i>State</i></b>
 
+Together, these five classes interact as shown in the following diagram:
+
+<p align="center"> 
+<img src="extras/media/dataflow.png" width=800>
+</p>
+
+
+# PID controllers
+
+Because [PID control](https://en.wikipedia.org/wiki/PID_controller) is the most
+popular kind of closed-loop control, RFT sub-classes ClosedLoopController with a 
+[PidController](https://github.com/simondlevy/RoboFirmwareToolkit/blob/main/src/rft_closedloops/pidcontroller.hpp)
+class.
+
+## Timer tasks
+
 * The abstract <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_timertask.hpp">TimerTask</a>
 class allows you to run different processes (closed-loop control, serial communication) at different rates.
 
-Other useful classes include:
+## Other useful classes
 
 * A <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_motor.hpp">Motor</a> class that
 allows you to specify the hardware pin(s) for your motor(s), with individual motor types (brushed, brushless) supported
