@@ -1,7 +1,3 @@
-<p align="center"> 
-<img src="extras/media/logo.png" width=450>
-</p>
-
 ## Intro
 
 **RoboFirmwareToolkit** (RFT) is a simple, platform-independent, header-only C++ toolkit
@@ -78,19 +74,17 @@ Together, these five classes interact as shown in the following diagram:
 </p>
 
 
-# PID controllers
+## PID controllers
 
 Because [PID control](https://en.wikipedia.org/wiki/PID_controller) is the most
 popular kind of closed-loop control, RFT sub-classes ClosedLoopController with a 
 [PidController](https://github.com/simondlevy/RoboFirmwareToolkit/blob/main/src/rft_closedloops/pidcontroller.hpp)
 class.
 
-## Timer tasks
+## Other useful classes
 
 * The abstract <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_timertask.hpp">TimerTask</a>
 class allows you to run different processes (closed-loop control, serial communication) at different rates.
-
-## Other useful classes
 
 * A <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_motor.hpp">Motor</a> class that
 allows you to specify the hardware pin(s) for your motor(s), with individual motor types (brushed, brushless) supported
