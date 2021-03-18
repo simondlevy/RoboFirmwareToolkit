@@ -49,15 +49,25 @@ control via sensors.  Hence RFT also provides the following abstract classes:
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_closedloop.hpp">ClosedLoopController</a>
 class specifies an abstract method <tt>modifyDemands()</tt> that inputs the robot's current state and
 outputs an array of floating-point values representing how that controller affects the demands. (For example,
-an altitude-hold controller for a quadcopter would use the 'copter's altitude and vertical velocity to 
-adjust the throttle demand.)  Because [PID control](https://en.wikipedia.org/wiki/PID_controller) is the most
+an altitude-hold controller for a quadcopter would use the 'copter's altitude
+and vertical velocity to adjust the throttle demand.)  If you're
+mathematically-minded, you can think of a closed-loop controller as a function from a
+(<i>State</i>, <i>Demands</i>) pair to <i>Demands</i>:
+<b><i>ClosedLoopController</i>: <i>State</i> &times; <i>Demands</i> &rarr; <i>Demands</i></b>
+
+
+Because [PID control](https://en.wikipedia.org/wiki/PID_controller) is the most
 popular kind of closed-loop control, RFT sub-classes ClosedLoopController with a 
 [PidController](https://github.com/simondlevy/RoboFirmwareToolkit/blob/main/src/rft_closedloops/pidcontroller.hpp)
 class.
 
+
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_sensor.hpp">Sensor</a>
 class specifies abstract methods <tt>ready()</tt> for checking whether the sensor
-has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's state based on that data.
+has new data avaiable, and  <tt>modifyState()</tt> for modifying the vehicle's
+state based on that data.  If you're mathematically-minded, you can think of a
+sensor as a function from states to states: <i>Sensor</i>: <i>State</i> &rarr;
+<i>State</i>
 
 * The abstract <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_timertask.hpp">TimerTask</a>
 class allows you to run different processes (closed-loop control, serial communication) at different rates.
