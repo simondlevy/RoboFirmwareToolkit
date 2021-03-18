@@ -24,9 +24,10 @@ namespace rft {
 
     };  // class PidController
 
-    // PID controller for a single degree of freedom.  Because time differences (dt) appear more-or-less constant,
-    // we avoid incoroporating them into the code; i.e., they are "absorbed" into tuning constants Ki and Kd.
-    class Pid {
+    // PID controller for a single degree of freedom.  Because time differences
+    // (dt) appear more-or-less constant, we avoid incoroporating them into the
+    // code; i.e., they are "absorbed" into tuning constants Ki and Kd.
+    class DofPid {
 
         private: 
 
@@ -72,7 +73,7 @@ namespace rft {
                 // Compute I term
                 float iterm = 0;
                 if (_Ki > 0) { // optimization
-                    _errorI = Filter::constrainAbs(_errorI + error, _windupMax); // avoid integral windup
+                    _errorI = Filter::constrainAbs(_errorI + error, _windupMax);
                     iterm =  _errorI * _Ki;
                 }
 
@@ -103,6 +104,6 @@ namespace rft {
                 _previousTime = 0;
             }
 
-    };  // class Pid
+    };  // class DofPid
 
 } // namespace rft
