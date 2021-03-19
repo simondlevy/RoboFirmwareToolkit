@@ -16,10 +16,10 @@ containing:
 **messages.json**
 
 * **mspparser.py**, a Python module containing a **Parser** class that you can subclass to implement your
-message-handling methods.
+message-handling methods
 
 * **MspParser.java**, a Java module containing a **Parser** class that you can subclass to implement your
-message-handling methods.
+message-handling methods
 
 To use the C++ header, you should add code in the places marked ```XXX``` in **serialask.hpp**.
 
