@@ -5,7 +5,7 @@
 **msppgy.py** is a standalone Python script that outputs code for parsing and generating
 [MSP](http://www.armazila.com/MultiwiiSerialProtocol(draft)v02.pdf) messages
 parsing code based on a simple JSON specification.  By using this script you can avoid the
-error-prone task of writing your own parsing code from scratch.
+lengthy and error-prone task of writing your own parsing code from scratch.
 
 ## Usage
 
@@ -14,6 +14,12 @@ containing:
 
 * **serialtask.hpp**, C++ header file that you can include in your firmware to parse the messages defined in
 **messages.json**
+
+* **mspparser.py**, a Python module containing a **Parser** class that you can subclass to implement your
+message-handling methods.
+
+* **MspParser.java**, a Java module containing a **Parser** class that you can subclass to implement your
+message-handling methods.
 
 ## Extending
 
