@@ -12,7 +12,7 @@ lengthy and error-prone task of writing your own parsing code from scratch.
 Running **msppg.py** in a directory that contains a file **messages.json** will produce a new **output** directory
 containing:
 
-* **serialtask.hpp**, C++ header file that you can include in your firmware to parse the messages defined in
+* **serialtask.hpp**, a C++ header file that you can include in your firmware to parse the messages defined in
 **messages.json**
 
 * **mspparser.py**, a Python module containing a **Parser** class that you can subclass to implement your
