@@ -4,7 +4,7 @@
 
 **msppgy.py** is a standalone Python script that outputs code for parsing and generating
 [MSP](http://www.armazila.com/MultiwiiSerialProtocol(draft)v02.pdf) messages
-parsing code based on a simple JSON specification.  By using this script you can avoid the
+based on a simple JSON specification.  By using this script you can avoid the
 lengthy and error-prone task of writing your own parsing code from scratch.
 
 ## Usage
