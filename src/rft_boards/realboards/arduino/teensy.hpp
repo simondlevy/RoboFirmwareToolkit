@@ -20,11 +20,6 @@ namespace rft {
             Teensy40(void) 
                 : ArduinoBoard(13)
             {
-                // Start I^2C
-                //Wire.begin(TWI_PINS_6_7);
-
-                // Hang a bit
-                delay(100);
             }
 
     }; // class Teensy40
