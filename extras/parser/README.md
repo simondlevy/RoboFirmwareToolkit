@@ -46,7 +46,7 @@ of the Hackflight project.
 
 The messages.json file currently contains just a few message specifications,
 but you can easily add to it by specifying additional messages from the the MSP
-[standard](http://www.multiwii.com/wiki/index.php?title=Multiwii_Serial_Protocol),
+[standard](http://www.armazila.com/MultiwiiSerialProtocol(draft)v02.pdf),
 or add some of your own new message types.  MSPPG currently supports types
 byte, short, int, and float, but we will likely add int as the need arises.
 
