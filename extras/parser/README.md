@@ -1,4 +1,4 @@
-# **M**ultiwii Serial Protocol Parser Generator
+# MSPPG: Multiwii Serial Protocol Parser Generator
 
 <img src="https://github.com/simondlevy/RoboFirmwareToolkit/blob/main/extras/media/msppg.png" width=600>
 
