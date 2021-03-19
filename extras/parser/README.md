@@ -21,14 +21,16 @@ message-handling methods.
 * **MspParser.java**, a Java module containing a **Parser** class that you can subclass to implement your
 message-handling methods.
 
-To use the Python output, you should also install the support code for the **Parser** class:
+To use the C++ header, you should add code in the places marked ```XXX``` in **serialask.hpp**.
+
+To use the Python class, you should also install the support code for the **Parser** class:
 
 ```
 % cd python
 % python3 setup.py install
 ```
 
-(on Unix systems you will probably have to run the setup command as sudo.)
+(On Unix systems you will probably have to run the setup command as sudo.)
 
 ## Example
 
