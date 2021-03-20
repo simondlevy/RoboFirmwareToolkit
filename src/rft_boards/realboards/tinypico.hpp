@@ -43,24 +43,13 @@ namespace rft {
                 Serial.write(c);
             }
 
-         public:
-
-            TinyPico(void) 
+            void begin(void)
             {
                 // Start serial communcation for GCS/debugging
                 Serial.begin(115200);
 
                 // This will blink the LED
                 RealBoard::begin();
-
-                // Hang a bit 
-                delay(100);
-
-                // Start I^2C
-                Wire.begin();
-
-                // Hang a bit
-                delay(100);
             }
 
     }; // class TinyPico
