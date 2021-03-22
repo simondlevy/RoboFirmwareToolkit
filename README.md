@@ -1,3 +1,5 @@
+<img src="extras/media/bobbie-rft.jpg">
+
 ## Intro
 
 **RoboFirmwareToolkit** (RFT) is a simple, platform-independent, header-only C++ toolkit
