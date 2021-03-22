@@ -85,8 +85,8 @@ class.
 
 ## Other useful classes
 
-* The abstract <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_timertask.hpp">TimerTask</a>
-class allows you to run different processes (closed-loop control, serial communication) at different rates.
+* A <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_timertask.hpp">TimerTask</a>
+class that allows you to run different processes (closed-loop control, serial communication) at different rates.
 
 * A <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_motor.hpp">Motor</a> class that
 allows you to specify the hardware pin(s) for your motor(s), with individual motor types (brushed, brushless) supported
