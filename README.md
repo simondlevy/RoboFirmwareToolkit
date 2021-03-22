@@ -1,4 +1,4 @@
-<img src="extras/media/bobbie-rft.jpg">
+<img src="extras/media/bobbie-rft.jpg" width=400>
 
 ## Intro
 
