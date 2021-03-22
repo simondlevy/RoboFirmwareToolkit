@@ -1,5 +1,5 @@
 <!-- img src="extras/media/bobbie-rft.png" width=400 align=right -->
-<img src="extras/media/bobbie2.png" width=400>
+<img src="extras/media/bobbie2.png">
 
 ## Intro
 
