@@ -1,4 +1,4 @@
-<img src="extras/media/bobbie3.png" width=350 align=right>
+<a href="https://www.instagram.com/bobbiebotbooks/"><img src="extras/media/bobbie3.png" width=350 align=right></a>
 
 ## Intro
 
