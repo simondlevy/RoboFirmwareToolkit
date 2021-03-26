@@ -21,8 +21,9 @@ namespace rft {
             {
             }
 
-            virtual void begin(void) override
+            virtual void init(uint8_t index) override
             {
+                (void)index;
             }
 
             virtual void write(uint8_t index, float value) override

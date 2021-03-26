@@ -21,12 +21,10 @@ namespace rft {
             {
             }
 
-            void begin(void) override
+            virtual void init(uint8_t index) override
             {
-                for (uint8_t k=0; k<_count; ++k) {
-                    analogWriteFrequency(_pins[k], 10000);  
-                    analogWrite(_pins[k], 0);  
-                }
+                analogWriteFrequency(_pins[index], 10000);  
+                analogWrite(_pins[index], 0);  
             }
 
             virtual void write(uint8_t index, float value) override

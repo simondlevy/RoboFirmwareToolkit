@@ -36,12 +36,10 @@ namespace rft {
             {
             }
 
-            virtual void begin(void) override
+            virtual void init(uint8_t index) override
             {
-                for (uint8_t k=0; k<_count; ++k) {
-                    pinMode(_pins[k], OUTPUT);
-                    writeValue(k, MINVAL);
-                }
+                pinMode(_pins[index], OUTPUT);
+                writeValue(index, MINVAL);
             }
 
             virtual void write(uint8_t index, float value) override
