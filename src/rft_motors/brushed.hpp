@@ -21,15 +21,15 @@ namespace rft {
             {
             }
 
-            virtual void init(uint8_t index) override
+            virtual void beginPin(uint8_t pin) override
             {
-                analogWriteFrequency(_pins[index], 10000);  
-                analogWrite(_pins[index], 0);  
+                analogWriteFrequency(pin, 10000);  
+                analogWrite(pin, 0);  
             }
 
-            virtual void write(uint8_t index, float value) override
+            virtual void writePin(uint8_t pin, float value) override
             {
-                analogWrite(_pins[index], (uint8_t)(value * 255));
+                analogWrite(pin, (uint8_t)(value * 255));
             }
 
     }; // class BrushedMotor
