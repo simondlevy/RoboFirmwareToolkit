@@ -24,9 +24,9 @@ namespace rft {
             static const uint16_t MINVAL = 125;
             static const uint16_t MAXVAL = 250;
 
-            void writeValue(uint8_t index, uint16_t value)
+            void writeValue(uint8_t pin, uint16_t value)
             {
-                analogWrite(_pins[index], value+OFFSET);
+                analogWrite(pin, value+OFFSET);
             }
 
         public:
@@ -36,17 +36,15 @@ namespace rft {
             {
             }
 
-            virtual void begin(void) override
+            virtual void beginPin(uint8_t pin) override
             {
-                for (uint8_t k=0; k<_count; ++k) {
-                    pinMode(_pins[k], OUTPUT);
-                    writeValue(k, MINVAL);
-                }
+                pinMode(pin, OUTPUT);
+                writeValue(pin, MINVAL);
             }
 
-            virtual void write(uint8_t index, float value) override
+            virtual void writePin(uint8_t pin, float value) override
             { 
-                writeValue(index, (uint16_t)(MINVAL+value*(MAXVAL-MINVAL))); 
+                writeValue(pin, (uint16_t)(MINVAL+value*(MAXVAL-MINVAL))); 
             }
 
     }; // class StandardMotor

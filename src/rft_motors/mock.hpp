@@ -21,13 +21,14 @@ namespace rft {
             {
             }
 
-            virtual void begin(void) override
+            virtual void beginPin(uint8_t pin) override
             {
+                (void)pin;
             }
 
-            virtual void write(uint8_t index, float value) override
+            virtual void writePin(uint8_t pin, float value) override
             {
-                (void)index;
+                (void)pin;
                 (void)value;
             }
 

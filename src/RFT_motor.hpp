@@ -16,12 +16,15 @@ namespace rft {
 
     class Motor {
 
-        protected:
+        private:
 
             static const uint8_t MAX_COUNT = 20; // arbitrary
 
             uint8_t _pins[MAX_COUNT];
+
             uint8_t _count = 0;
+
+        protected:
 
             Motor(const uint8_t count) 
             {
@@ -36,11 +39,22 @@ namespace rft {
                 _count = count;
             }
 
+            virtual void beginPin(uint8_t pin) = 0;
+            virtual void writePin(uint8_t pin, float value) = 0;
+
         public:
 
-            virtual void begin(void) { }
+            void begin(void)
+            {
+                for (uint8_t k=0; k<_count; ++k) {
+                    beginPin(_pins[k]);
+                }
+            }
 
-            virtual void write(uint8_t index, float value) = 0;
+            void write(uint8_t index, float value) 
+            {
+                writePin(_pins[index], value);
+            }
 
     }; // class Motor
 
