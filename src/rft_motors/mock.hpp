@@ -17,18 +17,13 @@ namespace rft {
         public:
 
             MockMotor(void) 
-                : Motor(NULL, 0)
+                : Motor(0)
             {
             }
 
-            virtual void beginPin(uint8_t pin) override
+            virtual void write(uint8_t index, float value) override
             {
-                (void)pin;
-            }
-
-            virtual void writePin(uint8_t pin, float value) override
-            {
-                (void)pin;
+                (void)index;
                 (void)value;
             }
 

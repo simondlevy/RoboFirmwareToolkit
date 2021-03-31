@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include "RFT_motor.hpp"
+#include "rft_motors/RFT_realmotor.hpp"
 
 namespace rft {
 
-    class BrushedMotor : public Motor {
+    class BrushedMotor : public RealMotor {
 
         public:
 
             BrushedMotor(const uint8_t * pins, const uint8_t count) 
-                : Motor(pins, count) 
+                : RealMotor(pins, count) 
             {
             }
 
