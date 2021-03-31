@@ -26,11 +26,6 @@ namespace rft {
 
         protected:
 
-            Motor(const uint8_t count) 
-            {
-                _count = count;
-            }
-
             Motor(const uint8_t * pins, const uint8_t count)
             {
                 for (uint8_t k=0; k<count; ++k) {
