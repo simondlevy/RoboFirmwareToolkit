@@ -164,7 +164,7 @@ namespace rft {
                 state->failsafe = false;
 
                 // Initialize timer task for PID controllers
-                _closedLoopTask.begin(_board, _olc, _actuator, state);
+                // XXX _closedLoopTask.begin(_board, _olc, _actuator, state);
 
                 // Support safety override by simulator
                 state->armed = armed;
