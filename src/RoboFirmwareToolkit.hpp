@@ -71,6 +71,9 @@ namespace rft {
             {
                 State * state = getState();
 
+                // Some gyrometers may need to know the current time
+                float time = _board->getTime();
+
                 for (uint8_t k=0; k<_sensor_count; ++k) {
                     rft::Sensor * sensor = _sensors[k];
                     float time = _board->getTime();
