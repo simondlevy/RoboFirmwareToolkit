@@ -22,7 +22,8 @@ namespace rft {
 
     class RFT {
 
-        private:
+        // XXX private:
+        protected:
 
             // Safety
             bool _safeToArm = false;
@@ -31,11 +32,6 @@ namespace rft {
             Sensor * _sensors[256] = {NULL};
             uint8_t _sensor_count = 0;
 
-            // Timer task for PID controllers
-            ClosedLoopTask _closedLoopTask;
-
-            Debugger _debugger;
-
             void startSensors(void) 
             {
                 for (uint8_t k=0; k<_sensor_count; ++k) {
@@ -43,9 +39,16 @@ namespace rft {
                 }
             }
 
-        protected:
-
             Board * _board = NULL;
+
+        private:
+
+            // Timer task for PID controllers
+            ClosedLoopTask _closedLoopTask;
+
+            Debugger _debugger;
+
+        protected:
 
             OpenLoopController * _olc = NULL;
 
