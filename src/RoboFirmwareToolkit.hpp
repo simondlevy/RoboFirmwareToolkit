@@ -14,9 +14,9 @@
 #include "RFT_closedloop.hpp"
 #include "RFT_sensor.hpp"
 #include "RFT_actuator.hpp"
+#include "RFT_parser.hpp"
+#include "rft_timertasks/serialtask.hpp"
 #include "rft_timertasks/closedlooptask.hpp"
-//#include "RFT_mspparser.hpp"
-//#include "rft_timertasks/serialtask.hpp"
 
 namespace rft {
 
