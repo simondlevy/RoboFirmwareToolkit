@@ -180,7 +180,7 @@ namespace rft {
 
             void addClosedLoopController(rft::ClosedLoopController * controller, uint8_t modeIndex=0) 
             {
-                _closedLoopTask.addClosedLoopController(controller, modeIndex);
+                _closedLoopTask.addController(controller, modeIndex);
             }
 
 

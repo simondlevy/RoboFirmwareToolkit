@@ -34,7 +34,8 @@ namespace rft {
             Actuator * _actuator = NULL;
             State  * _state    = NULL;
 
-        protected:
+        // XXX protected:
+        public:
 
             ClosedLoopTask(void)
                 : TimerTask(FREQ)
@@ -51,7 +52,7 @@ namespace rft {
                 _state = state;
             }
 
-            void addClosedLoopController(ClosedLoopController * controller, uint8_t modeIndex) 
+            void addController(ClosedLoopController * controller, uint8_t modeIndex) 
             {
                 controller->modeIndex = modeIndex;
 
