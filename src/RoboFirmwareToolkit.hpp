@@ -132,10 +132,10 @@ namespace rft {
             void update(void)
             {
                 // Grab control signal if available
-                checkOpenLoopController();
+                // checkOpenLoopController();
 
                 // Update PID controllers task
-                _closedLoopTask.update();
+                // _closedLoopTask.update();
 
                 // Check sensors
                 checkSensors();
