@@ -19,8 +19,7 @@ namespace rft {
         friend class SerialTask;
         friend class ClosedLoopTask;
 
-        // XXX protected:
-        public:
+        protected:
 
             static const uint8_t MAX_DEMANDS = 10; // arbitrary
 

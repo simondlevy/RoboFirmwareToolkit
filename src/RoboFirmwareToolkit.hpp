@@ -22,8 +22,7 @@ namespace rft {
 
     class RFT {
 
-        // XXX private:
-        protected:
+        private:
 
             // Safety
             bool _safeToArm = false;
@@ -39,16 +38,14 @@ namespace rft {
                 }
             }
 
-            Board * _board = NULL;
-
-        private:
-
             // Timer task for PID controllers
             ClosedLoopTask _closedLoopTask;
 
             Debugger _debugger;
 
         protected:
+
+            Board * _board = NULL;
 
             OpenLoopController * _olc = NULL;
 
