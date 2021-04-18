@@ -135,7 +135,7 @@ namespace rft {
                 // checkOpenLoopController();
 
                 // Update PID controllers task
-                // _closedLoopTask.update();
+                _closedLoopTask.update();
 
                 // Check sensors
                 checkSensors();
@@ -164,7 +164,7 @@ namespace rft {
                 state->failsafe = false;
 
                 // Initialize timer task for PID controllers
-                // XXX _closedLoopTask.begin(_board, _olc, _actuator, state);
+                _closedLoopTask.begin(_board, _olc, _actuator, state);
 
                 // Support safety override by simulator
                 state->armed = armed;
