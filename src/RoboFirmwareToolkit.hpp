@@ -67,6 +67,8 @@ namespace rft {
 
             virtual State * getState(void) = 0;
 
+            virtual bool safeStateForArming(void) = 0;
+
             void checkSensors(void)
             {
                 State * state = getState();
@@ -96,7 +98,7 @@ namespace rft {
                     return;
                 }
 
-                // Check whether open-loop controller data is available
+                // Check whether controller data is available
                 if (!_olc->ready()) return;
 
                 // Disarm
@@ -104,22 +106,23 @@ namespace rft {
                     state->armed = false;
                 } 
 
-                // Avoid arming if aux1 switch down on startup
+                // Avoid arming when controller is in armed state
                 if (!_safeToArm) {
                     _safeToArm = !_olc->inArmedState();
                 }
 
                 // Arm (after lots of safety checks!)
-                if (_safeToArm &&
-                    !state->armed && 
-                    _olc->inactive() && 
-                    _olc->inArmedState() && 
-                    !state->failsafe && 
-                    state->safeToArm()) {
+                if (_safeToArm
+                    && !state->armed
+                    && _olc->inactive()
+                    && _olc->inArmedState()
+                    && !state->failsafe 
+                    && safeStateForArming()
+                    ) {
                     state->armed = true;
                 }
 
-                // Cut motors on throttle-down
+                // Cut motors on inactivity
                 if (state->armed && _olc->inactive()) {
                     _actuator->cut();
                 }
@@ -132,7 +135,7 @@ namespace rft {
             void update(void)
             {
                 // Grab control signal if available
-                // checkOpenLoopController();
+                checkOpenLoopController();
 
                 // Update PID controllers task
                 _closedLoopTask.update();
