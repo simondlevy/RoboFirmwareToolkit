@@ -51,9 +51,12 @@ namespace rft {
 
             rft::Actuator * _actuator = NULL;
 
-            RFT(Board * board, OpenLoopController * olc, Actuator * actuator)
+            State * _state = NULL;
+
+            RFT(State * state, Board * board, OpenLoopController * olc, Actuator * actuator)
             {
                 // Store the essentials
+                _state = state;
                 _board    = board;
                 _olc = olc;
                 _actuator = actuator;
@@ -62,34 +65,28 @@ namespace rft {
                 _sensor_count = 0;
             }
 
-            virtual State * getState(void) = 0;
-
             virtual bool safeStateForArming(void) = 0;
 
             void checkSensors(void)
             {
-                State * state = getState();
-
                 // Some sensors may need to know the current time
                 float time = _board->getTime();
 
                 for (uint8_t k=0; k<_sensor_count; ++k) {
                     rft::Sensor * sensor = _sensors[k];
                     if (sensor->ready(time)) {
-                        sensor->modifyState(state, time);
+                        sensor->modifyState(_state, time);
                     }
                 }
             }
 
             void checkOpenLoopController(void)
             {
-                State * state = getState();
-
                 // Sync failsafe to open-loop-controller
-                if (_olc->lostSignal() && state->armed) {
+                if (_olc->lostSignal() && _state->armed) {
                     _actuator->cut();
-                    state->armed = false;
-                    state->failsafe = true;
+                    _state->armed = false;
+                    _state->failsafe = true;
                     _board->showArmedStatus(false);
                     return;
                 }
@@ -98,8 +95,8 @@ namespace rft {
                 if (!_olc->ready()) return;
 
                 // Disarm
-                if (state->armed && !_olc->inArmedState()) {
-                    state->armed = false;
+                if (_state->armed && !_olc->inArmedState()) {
+                    _state->armed = false;
                 } 
 
                 // Avoid arming when controller is in armed state
@@ -109,22 +106,22 @@ namespace rft {
 
                 // Arm (after lots of safety checks!)
                 if (_safeToArm
-                    && !state->armed
+                    && !_state->armed
                     && _olc->inactive()
                     && _olc->inArmedState()
-                    && !state->failsafe 
+                    && !_state->failsafe 
                     && safeStateForArming()
                     ) {
-                    state->armed = true;
+                    _state->armed = true;
                 }
 
                 // Cut motors on inactivity
-                if (state->armed && _olc->inactive()) {
+                if (_state->armed && _olc->inactive()) {
                     _actuator->cut();
                 }
 
                 // Set LED based on arming status
-                _board->showArmedStatus(state->armed);
+                _board->showArmedStatus(_state->armed);
 
             } // checkOpenLoopController
 
@@ -157,16 +154,14 @@ namespace rft {
                 // Start the actuator
                 _actuator->begin();
 
-                State * state = getState();
-
                 // Initialize failsafe
-                state->failsafe = false;
+                _state->failsafe = false;
 
                 // Initialize timer task for PID controllers
-                _closedLoopTask.begin(_board, _olc, _actuator, state);
+                _closedLoopTask.begin(_board, _olc, _actuator, _state);
 
                 // Support safety override by simulator
-                state->armed = armed;
+                _state->armed = armed;
 
             } // begin
 
