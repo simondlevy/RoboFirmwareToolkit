@@ -92,10 +92,16 @@ namespace rft {
                 _board->flashLed(shouldFlash);
 
                 // Use updated demands to run motors
-                if (_state->armed && !_state->failsafe && !_olc->inactive()) {
-                    _actuator->run(demands);
+                if (_state->armed) {
+                    if (!_state->failsafe) {
+                        _actuator->run(demands);
+                    }
                 }
-             }
+
+                else {
+                    _actuator->runDisarmed();
+                }
+            }
 
     };  // ClosedLoopTask
 

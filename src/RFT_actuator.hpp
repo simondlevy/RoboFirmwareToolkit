@@ -13,7 +13,8 @@ namespace rft {
     class Actuator {
 
         friend class RFT;
-        friend class SerialTask;
+        friend class SerialTask; // XXX ?
+        friend class ClosedLoopTask;
 
         protected:
 
