@@ -9,7 +9,6 @@
 #pragma once
 
 #include "RFT_filters.hpp"
-#include "RFT_state.hpp"
 #include "RFT_closedloop.hpp"
 
 namespace rft {

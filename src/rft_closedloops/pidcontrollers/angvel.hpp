@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <RFT_filters.hpp>
 #include <rft_closedloops/pidcontroller.hpp>
 
 namespace rft {
