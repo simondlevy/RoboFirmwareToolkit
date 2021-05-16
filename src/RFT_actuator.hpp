@@ -29,6 +29,12 @@ namespace rft {
 
             virtual void run(float * demands) = 0;
 
+            virtual void setMotorDisarmed(uint8_t index, float value)
+            {
+                (void)index;
+                (void)value;
+            }
+
     }; // class Actuator
 
 } // namespace rft
