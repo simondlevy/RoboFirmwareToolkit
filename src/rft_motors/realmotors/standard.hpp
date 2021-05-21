@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "rft_motors/RFT_realmotor.hpp"
+#include "rft_motors/real.hpp"
 
 #ifdef ESP32
 #include <analogWrite.h>
@@ -28,27 +28,27 @@ namespace rft {
             static const uint16_t MINVAL = 125;
             static const uint16_t MAXVAL = 250;
 
-            void writeValue(uint8_t pin, uint16_t value)
+            void writeValue(uint16_t value)
             {
-                analogWrite(pin, value+OFFSET);
+                analogWrite(_pin, value+OFFSET);
             }
 
         public:
 
-            StandardMotor(const uint8_t pins[], const uint8_t count) 
-                : RealMotor(pins, count)
+            StandardMotor(uint8_t pin)
+                : Motor(pin)
             {
             }
 
-            virtual void beginPin(uint8_t pin) override
+            virtual void begin(void) override
             {
-                pinMode(pin, OUTPUT);
-                writeValue(pin, MINVAL);
+                pinMode(_pin, OUTPUT);
+                writeValue(_pin, MINVAL);
             }
 
-            virtual void writePin(uint8_t pin, float value) override
+            virtual void write(float value) override
             { 
-                writeValue(pin, (uint16_t)(MINVAL+value*(MAXVAL-MINVAL))); 
+                writeValue(_pin, (uint16_t)(MINVAL+value*(MAXVAL-MINVAL))); 
             }
 
     }; // class StandardMotor

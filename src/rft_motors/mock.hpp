@@ -21,9 +21,8 @@ namespace rft {
             {
             }
 
-            virtual void write(uint8_t index, float value) override
+            virtual void write(float value) override
             {
-                (void)index;
                 (void)value;
             }
 

@@ -1,5 +1,5 @@
 /*
-   A class for brushed motors
+   A class for servo motors
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -10,28 +10,34 @@
 
 #include "rft_motors/real.hpp"
 
+#include <Servo.h>
+
 namespace rft {
 
-    class BrushedMotor : public RealMotor {
+    class ServoMotor : public RealMotor {
+
+        private:
+
+            Servo _servo;
 
         public:
 
-            BrushedMotor(uint8_t pin)
+            ServoMotor(uint8_t pin)
                 : RealMotor(pin)
             {
             }
 
             virtual void begin(void) override 
             {
-                analogWriteFrequency(_pin, 10000);
-                analogWrite(_pin, 0);
+                _servo.attach(_pin);
             }
 
             virtual void write(float value) override
             {
-                analogWrite(_pin, (uint8_t)(value * 255));
+                // [-.5,+.5] => [0,180]
+                _servo.write((uint8_t)(180*(value+0.5)));
             }
 
-    }; // class BrushedMotor
+    }; // class ServoMotor
 
 } // namespace rft
