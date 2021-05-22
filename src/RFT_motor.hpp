@@ -19,6 +19,8 @@ namespace rft {
             
             virtual void write(float value) = 0;
 
+            virtual float constrainValue(float value) = 0;
+
     }; // class Motor
 
 } // namespace rft

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "rft_motors/real.hpp"
+#include "rft_filters.hpp"
 
 #include <Servo.h>
 
@@ -36,6 +37,11 @@ namespace rft {
             {
                 // [-.5,+.5] => [0,180]
                 _servo.write((uint8_t)(180*(value+0.5)));
+            }
+
+            virtual float constrainValue(float value) override
+            {
+                return Filter::constrainAbs(value, 0.45);
             }
 
     }; // class ServoMotor

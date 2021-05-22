@@ -26,6 +26,12 @@ namespace rft {
                 (void)value;
             }
 
+            virtual float constrainValue(float value) override
+            {
+                (void)value;
+                return 0;
+            }
+
     }; // class MockMotor
 
 } // namespace rft
