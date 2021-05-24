@@ -9,13 +9,13 @@
 #pragma once
 
 #include "rft_motors/real.hpp"
-#include "rft_filters.hpp"
+#include "rft_motors/servo.hpp"
 
 #include <Servo.h>
 
 namespace rft {
 
-    class ServoMotor : public RealMotor {
+    class RealServo : public RealMotor, public ServoMotor {
 
         private:
 
@@ -23,7 +23,7 @@ namespace rft {
 
         public:
 
-            ServoMotor(uint8_t pin)
+            RealServo(uint8_t pin)
                 : RealMotor(pin)
             {
             }
@@ -39,11 +39,6 @@ namespace rft {
                 _servo.write((uint8_t)(180*(value+0.5)));
             }
 
-            virtual float constrainValue(float value) override
-            {
-                return Filter::constrainAbs(value, 0.45);
-            }
-
-    }; // class ServoMotor
+    }; // class RealServo
 
 } // namespace rft

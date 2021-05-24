@@ -9,7 +9,7 @@
 #pragma once
 
 #include "rft_motors/real.hpp"
-#include "rft_filters.hpp"
+#include "rft_motors/rotary.hpp"
 
 #ifdef ESP32
 #include <analogWrite.h>
@@ -17,7 +17,7 @@
 
 namespace rft {
 
-    class StandardMotor : public RealMotor {
+    class BrushlessMotor : public RealMotor, public RotaryMotor {
 
         private:
 
@@ -36,8 +36,8 @@ namespace rft {
 
         public:
 
-            StandardMotor(uint8_t pin)
-                : Motor(pin)
+            BrushlessMotor(uint8_t pin)
+                : RealMotor(pin)
             {
             }
 
@@ -52,11 +52,6 @@ namespace rft {
                 writeValue(_pin, (uint16_t)(MINVAL+value*(MAXVAL-MINVAL))); 
             }
 
-            virtual float constrainValue(float value) override
-            {
-                return Filter::constrainMinMax(value, 0, 1);
-            }
-
-    }; // class StandardMotor
+    }; // class BrushlessMotor
 
 } // namespace rft

@@ -1,5 +1,5 @@
 /*
-   Abstract class for motors
+   Abstract class for real motors (using a specific pin)
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -8,11 +8,9 @@
 
 #pragma once
 
-#include "RFT_motor.hpp"
-
 namespace rft {
 
-    class RealMotor : public Motor {
+    class RealMotor {
 
         protected:
 
