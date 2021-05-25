@@ -1,21 +1,27 @@
 /*
-   A class for servo motors
+   Mock implementation of servo motors for testing and simulation
 
-   Copyright (c) 2021 Simon D. Levy
+   Copyright(C) 2021 Simon D.Levy
 
    MIT License
- */
+   */
 
 #pragma once
 
-#include "rft_motors/mock.hpp"
-#include "rft_motors/servo.hpp"
+#include <rft_motors/mock.hpp>
+#include <rft_motors/servo.hpp>
 
 namespace rft {
 
-    class MockServo : public MockMotor, public ServoMotor {
+    class MockServoMotor : public MockMotor, public ServoMotor {
 
+        protected:
 
-    }; // class MockServo
+            virtual void write(float value) override
+            {
+                MockMotor::write(value);
+            }
+
+    }; // class MockServoMotor
 
 } // namespace rft

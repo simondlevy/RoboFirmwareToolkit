@@ -1,35 +1,33 @@
 /*
-   Mock motor for testing
+   Mock implementation of motors for testing and simulation
 
-   Copyright (c) 2021 Simon D. Levy
+   Copyright(C) 2021 Simon D.Levy
 
    MIT License
- */
+   */
 
 #pragma once
 
-#include "RFT_motor.hpp"
-
 namespace rft {
 
-    class MockMotor : public Motor {
+    class MockMotor {
+
+        private:
+
+            float _value = 0;
+
+        protected:
+
+            void write(float value)
+            {
+                _value = value;
+            }
 
         public:
 
-            MockMotor(void) 
-                : Motor(0)
+            float getValue(void)
             {
-            }
-
-            virtual void write(float value) override
-            {
-                (void)value;
-            }
-
-            virtual float constrainValue(float value) override
-            {
-                (void)value;
-                return 0;
+                return _value;
             }
 
     }; // class MockMotor
