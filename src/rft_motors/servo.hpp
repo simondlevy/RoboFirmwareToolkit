@@ -9,7 +9,6 @@
 #pragma once
 
 #include "RFT_motor.hpp"
-#include "rft_filters.hpp"
 
 namespace rft {
 
