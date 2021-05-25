@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <RFT_filters.hpp>
 
 namespace rft {
 
