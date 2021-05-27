@@ -21,37 +21,53 @@ namespace rft {
 
         private:
 
-#ifdef ESP32
-            static const uint16_t OFFSET = 25;
-#else
-            static const uint16_t OFFSET = 0;
-#endif
             static const uint16_t MINVAL = 125;
             static const uint16_t MAXVAL = 250;
 
+            uint16_t _offset = 0;
+
             void writeValue(uint16_t value)
             {
-                analogWrite(_pin, value+OFFSET);
+                analogWrite(_pin, value + _offset);
+            }
+
+        protected:
+
+            BrushlessMotor(uint8_t pin, uint16_t offset)
+                : RealMotor(pin)
+            {
+                _offset = offset;
             }
 
         public:
 
             BrushlessMotor(uint8_t pin)
-                : RealMotor(pin)
+                : BrushlessMotor(pin, 0)
             {
             }
 
             virtual void begin(void) override
             {
                 pinMode(_pin, OUTPUT);
-                writeValue(_pin, MINVAL);
+                writeValue(MINVAL);
             }
 
             virtual void write(float value) override
             { 
-                writeValue(_pin, (uint16_t)(MINVAL+value*(MAXVAL-MINVAL))); 
+                writeValue((uint16_t)(MINVAL+value*(MAXVAL-MINVAL))); 
             }
 
     }; // class BrushlessMotor
+
+    class BrushlessMotorEsp32 : public BrushlessMotor {
+
+        public:
+
+            BrushlessMotorEsp32(uint8_t pin)
+                : BrushlessMotor(pin, 25)
+            {
+            }
+
+    };  // class BrushlessMotorEsp32
 
 } // namespace rft
