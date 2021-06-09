@@ -11,6 +11,10 @@
 #include "rft_motors/real.hpp"
 #include "rft_motors/rotary.hpp"
 
+#ifdef ESP32
+#include <analogWrite.h>
+#endif
+
 namespace rft {
 
     class BrushedMotor : public RealMotor, public RotaryMotor {
