@@ -33,7 +33,8 @@ namespace rft {
 
             float _prevTime;
 
-        protected:
+        // protected:
+        public:
 
             void begin(Board * board)
             {

@@ -21,7 +21,8 @@ namespace rft {
         friend class SerialTask;
         friend class ClosedLoopTask;
 
-        protected:
+        // protected:
+        public:
 
             //------------------------------------ Core functionality ----------------------------------------------------
             virtual float getTime(void) = 0;
