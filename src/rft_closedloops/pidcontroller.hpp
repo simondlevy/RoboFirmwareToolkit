@@ -13,7 +13,6 @@
 
 namespace rft {
 
-    /*
     class PidController : public ClosedLoopController {
 
         friend class PidTask;
@@ -23,7 +22,6 @@ namespace rft {
             static constexpr float STICK_DEADBAND = 0.10;
 
     };  // class PidController
-    */
 
     // PID controller for a single degree of freedom.  Because time differences
     // (dt) appear more-or-less constant, we avoid incoroporating them into the
