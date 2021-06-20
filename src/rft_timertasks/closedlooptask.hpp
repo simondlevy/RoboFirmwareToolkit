@@ -34,8 +34,7 @@ namespace rft {
             Actuator * _actuator = NULL;
             State  * _state    = NULL;
 
-        // XXX protected:
-        public:
+        protected:
 
             ClosedLoopTask(void)
                 : TimerTask(FREQ)

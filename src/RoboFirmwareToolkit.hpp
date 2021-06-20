@@ -22,8 +22,7 @@ namespace rft {
 
     class RFT {
 
-        // XXX private:
-        protected:
+        private:
 
             // Safety
             bool _safeToArm = false;
