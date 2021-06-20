@@ -22,13 +22,14 @@ namespace rft {
 
     class RFT {
 
-        private:
+        // XXX private:
+        protected:
 
             // Safety
             bool _safeToArm = false;
 
             // Sensors 
-            Sensor * _sensors[256] = {NULL};
+            Sensor * _sensors[256] = {};
             uint8_t _sensor_count = 0;
 
             void startSensors(void) 
