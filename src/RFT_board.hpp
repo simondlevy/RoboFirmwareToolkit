@@ -21,7 +21,7 @@ namespace rft {
         friend class SerialTask;
         friend class ClosedLoopTask;
 
-        // protected:
+        // XXX protected:
         public:
 
             //------------------------------------ Core functionality ----------------------------------------------------
