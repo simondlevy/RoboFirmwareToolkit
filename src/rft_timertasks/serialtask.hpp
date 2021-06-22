@@ -52,7 +52,7 @@ namespace rft {
 
                 // Support motor testing from GCS
                 if (!_state->armed) {
-                    //_actuator->runDisarmed();
+                    _actuator->runDisarmed();
                 }
             }
 
