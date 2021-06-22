@@ -16,6 +16,11 @@ namespace rft {
 
         public:
 
+            RotaryMotor(uint8_t pin)
+                : Motor(pin)
+            {
+            }
+
             virtual float constrainValue(float value) override
             {
                 return Filter::constrainMinMax(value, 0, 1);

@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "rft_motors/real.hpp"
 #include "rft_motors/rotary.hpp"
 
 #ifdef ESP32
@@ -17,7 +16,7 @@
 
 namespace rft {
 
-    class BrushlessMotor : public RealMotor, public RotaryMotor {
+    class BrushlessMotor : public RotaryMotor {
 
         private:
 

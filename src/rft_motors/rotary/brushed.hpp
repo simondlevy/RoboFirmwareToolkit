@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "rft_motors/real.hpp"
 #include "rft_motors/rotary.hpp"
 
 #ifdef ESP32
@@ -17,12 +16,12 @@
 
 namespace rft {
 
-    class BrushedMotor : public RealMotor, public RotaryMotor {
+    class BrushedMotor : public RotaryMotor {
 
         public:
 
             BrushedMotor(uint8_t pin)
-                : RealMotor(pin)
+                : RotaryMotor(pin)
             {
             }
 
