@@ -65,8 +65,6 @@ namespace rft {
                 _sensor_count = 0;
             }
 
-            virtual bool safeStateForArming(void) = 0;
-
             void checkSensors(void)
             {
                 // Some sensors may need to know the current time
@@ -104,13 +102,13 @@ namespace rft {
                     _safeToArm = !_olc->inArmedState();
                 }
 
-                // Arm (after lots of safety checks!)
+                // Arm after lots of safety checks
                 if (_safeToArm
                     && !_state->armed
+                    && !_state->failsafe 
+                    && _state->safeToArm()
                     && _olc->inactive()
                     && _olc->inArmedState()
-                    && !_state->failsafe 
-                    && safeStateForArming()
                     ) {
                     _state->armed = true;
                 }
