@@ -33,7 +33,7 @@ namespace rft {
         protected:
 
             BrushlessMotor(uint8_t pin, uint16_t offset)
-                : RealMotor(pin)
+                : RotaryMotor(pin)
             {
                 _offset = offset;
             }
