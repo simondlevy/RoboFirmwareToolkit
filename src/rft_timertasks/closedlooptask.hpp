@@ -20,11 +20,6 @@ namespace rft {
 
         private:
 
-            // For now, we keep all tasks the same.  At some point it might be
-            // useful to investigate, e.g., faster updates for Rate PID than
-            // for Level PID.
-            static constexpr float FREQ = 300;
-
             // PID controllers
             ClosedLoopController * _controllers[256] = {};
             uint8_t _controller_count = 0;
@@ -34,11 +29,13 @@ namespace rft {
             Actuator * _actuator = NULL;
             State  * _state    = NULL;
 
-        // XXX protected:
-        public:
+        protected:
 
-            ClosedLoopTask(void)
-                : TimerTask(FREQ)
+            // For now, we keep all tasks the same.  At some point it might be
+            // useful to investigate, e.g., faster updates for Rate PID than
+            // for Level PID.
+            ClosedLoopTask(float freq=300)
+                : TimerTask(freq)
             {
                 _controller_count = 0;
             }

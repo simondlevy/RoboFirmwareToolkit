@@ -14,9 +14,9 @@ namespace rft {
 
         friend class RFT;
         friend class ClosedLoopTask;
+        friend class SerialTask;
 
-        // XXX protected:
-        public:
+        protected:
 
             virtual void begin(void) { }
 
