@@ -26,7 +26,7 @@ namespace rft {
             static constexpr float FREQ = 300;
 
             // PID controllers
-            ClosedLoopController * _controllers[256] = {NULL};
+            ClosedLoopController * _controllers[256] = {};
             uint8_t _controller_count = 0;
 
             // Other stuff we need
@@ -34,7 +34,8 @@ namespace rft {
             Actuator * _actuator = NULL;
             State  * _state    = NULL;
 
-        protected:
+        // XXX protected:
+        public:
 
             ClosedLoopTask(void)
                 : TimerTask(FREQ)
@@ -92,16 +93,11 @@ namespace rft {
                 _board->flashLed(shouldFlash);
 
                 // Use updated demands to run motors
-                if (_state->armed) {
-                    if (!_state->failsafe) {
-                        _actuator->run(demands);
-                    }
+                if (_state->armed && !_state->failsafe && !_olc->inactive()) {
+                    _actuator->run(demands);
                 }
 
-                else {
-                    _actuator->runDisarmed();
-                }
-            }
+             } // doTask
 
     };  // ClosedLoopTask
 
