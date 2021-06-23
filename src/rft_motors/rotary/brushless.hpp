@@ -10,8 +10,12 @@
 
 #include "rft_motors/rotary.hpp"
 
+static const uint16_t OFFSET = 
 #ifdef ESP32
+25;
 #include <analogWrite.h>
+#else
+0;
 #endif
 
 namespace rft {
@@ -23,25 +27,15 @@ namespace rft {
             static const uint16_t MINVAL = 125;
             static const uint16_t MAXVAL = 250;
 
-            uint16_t _offset = 0;
-
             void writeValue(uint16_t value)
             {
-                analogWrite(_pin, value + _offset);
-            }
-
-        protected:
-
-            BrushlessMotor(uint8_t pin, uint16_t offset)
-                : RotaryMotor(pin)
-            {
-                _offset = offset;
+                analogWrite(_pin, value + OFFSET);
             }
 
         public:
 
             BrushlessMotor(uint8_t pin)
-                : BrushlessMotor(pin, 0)
+                : RotaryMotor(pin)
             {
             }
 
@@ -57,16 +51,5 @@ namespace rft {
             }
 
     }; // class BrushlessMotor
-
-    class BrushlessMotorEsp32 : public BrushlessMotor {
-
-        public:
-
-            BrushlessMotorEsp32(uint8_t pin)
-                : BrushlessMotor(pin, 25)
-            {
-            }
-
-    };  // class BrushlessMotorEsp32
 
 } // namespace rft
