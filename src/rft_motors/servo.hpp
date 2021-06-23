@@ -16,6 +16,11 @@ namespace rft {
 
         public:
 
+            ServoMotor(uint8_t pin)
+                : Motor(pin)
+            {
+            }
+
             virtual float constrainValue(float value) override
             {
                 return Filter::constrainAbs(value, 0.45);

@@ -14,7 +14,16 @@ namespace rft {
 
     class Motor {
 
+        protected:
+
+            uint8_t _pin = 0;
+
         public:
+
+            Motor(uint8_t pin)
+            {
+                _pin = pin;
+            }
 
             virtual void begin(void) { }
             
