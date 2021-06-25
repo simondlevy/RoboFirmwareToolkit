@@ -72,5 +72,5 @@ void loop()
 
     Serial.printf("%3.3f\n", throttle);
 
-    esc.speed(MIN_SPEED + (uint16_t)(700 * throttle));
+    esc.speed(MIN_SPEED + 100 + (uint16_t)(700 * throttle));
 }
