@@ -20,13 +20,6 @@ static const uint16_t MAX_SPEED = 1240; // speed where my motor drew 3.6 amps at
 
 static ESC esc (ESC_PIN, 1000, 2000, 500); // ESC_Name (ESC_PIN, Minimum Value, Maximum Value, Arm Value)
 
-static uint16_t speed = 350;
-
-static void setSpeed(uint16_t value)
-{
-    esc.speed(MIN_SPEED-100+value);
-}
-
 static void rxTask(void * params)
 {
     while (true) {
@@ -37,6 +30,11 @@ static void rxTask(void * params)
 
         delay(1);
     } 
+}
+
+static void setSpeed(float value)
+{
+    esc.speed(MIN_SPEED - 100 + (uint16_t)(350 * value));
 }
 
 void setup()
@@ -56,18 +54,12 @@ void setup()
 
     setSpeed(0);
 
-    speed = 0;
-
     delay(1000); // Wait a while
-
-    speed = 350;
 } 
 
 void loop() 
 {
     static float throttle;
-
-    setSpeed(speed);
 
     if (rx.timedOut(micros())) {
         Serial.println("*** TIMED OUT ***");
@@ -83,7 +75,7 @@ void loop()
 
     }
 
-    Serial.printf("%3.3f\n", throttle);
+    setSpeed(throttle);
 
     delay(10);
 }
