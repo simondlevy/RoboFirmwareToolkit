@@ -9,19 +9,19 @@
  */
 
 #include "RoboFirmwareToolkit.hpp"
-#include "rft_motors/standard.hpp"
+#include "rft_motors/rotary/brushless.hpp"
 
-static uint8_t MOTOR_PIN[1] = {5};
+static uint8_t MOTOR_PIN = 5;
 
 static float  val;
 static int8_t dir;
 
-rft::StandardMotor motors = rft::StandardMotor(MOTOR_PIN, 1);
+rft::BrushlessMotor motor = rft::BrushlessMotor(MOTOR_PIN);
 
 void setup(void)
 {
     // Initialize the motor
-    motors.begin();
+    motor.begin();
 
     // Start with motor off, increasing
     val = 0;
@@ -32,7 +32,7 @@ void setup(void)
 
 void loop(void)
 {
-    motors.write(0, val);
+    motor.write(val);
 
     val += dir * .001;
 
