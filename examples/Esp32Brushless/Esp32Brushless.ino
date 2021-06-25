@@ -32,11 +32,6 @@ static void rxTask(void * params)
     } 
 }
 
-static void setSpeed(float value)
-{
-    esc.speed(MIN_SPEED - 100 + (uint16_t)(350 * value));
-}
-
 void setup()
 {
     Serial.begin(115200);
@@ -52,7 +47,7 @@ void setup()
 
     delay(1000); // Wait a while
 
-    setSpeed(0);
+    esc.speed(MIN_SPEED - 100);
 
     delay(1000); // Wait a while
 } 
@@ -75,7 +70,9 @@ void loop()
 
     }
 
-    setSpeed(throttle);
+    Serial.printf("%3.3f\n", throttle);
+
+    esc.speed(MIN_SPEED - 100 + (uint16_t)(700 * throttle));
 
     delay(10);
 }
