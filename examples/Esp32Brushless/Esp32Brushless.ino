@@ -16,6 +16,11 @@ static ESC esc (PIN, 1000, 2000, 500); // ESC_Name (PIN, Minimum Value, Maximum 
 
 static uint16_t speed = 350;
 
+static void setSpeed(uint16_t value)
+{
+    esc.speed(MIN_SPEED-100+value);
+}
+
 void setup()
 {
     Serial.begin(115200);
@@ -26,9 +31,9 @@ void setup()
 
     delay(1000); // Wait a while
 
-    speed = 0;
+    setSpeed(0);
 
-    esc.speed(MIN_SPEED-100+speed);
+    speed = 0;
 
     delay(1000); // Wait a while
 
@@ -37,10 +42,7 @@ void setup()
 
 void loop() 
 {
-    // the following loop turns on the motor slowly, so get ready
-    //for (int i=0; i<700; i++){ // run speed from 840 to 1190
-        //uint16_t speed = MIN_SPEED-100+i; // motor starts up about half way through loop
-        esc.speed(MIN_SPEED-100+speed);
-        delay(10);
-    //}
+    setSpeed(speed);
+
+    delay(10);
 }
