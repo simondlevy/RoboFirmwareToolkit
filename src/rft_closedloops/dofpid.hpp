@@ -1,5 +1,5 @@
 /*
-   Abstract class for PID controllers, plus helper classes
+   PID controller for a single degree of freedom.
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -13,9 +13,9 @@
 
 namespace rft {
 
-    // PID controller for a single degree of freedom.  Because time differences
-    // (dt) appear more-or-less constant, we avoid incoroporating them into the
-    // code; i.e., they are "absorbed" into tuning constants Ki and Kd.
+    // Because time differences (dt) appear more-or-less constant, we avoid
+    // incoroporating them into the code; i.e., they are "absorbed" into tuning
+    // constants Ki and Kd.
     class DofPid {
 
         private: 

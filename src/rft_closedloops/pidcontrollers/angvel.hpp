@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <rft_closedloops/pidcontroller.hpp>
+#include <rft_closedloops/dofpid.hpp>
 
 namespace rft {
 
