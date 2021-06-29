@@ -94,12 +94,11 @@ class Cpp_Emitter(CodeEmitter):
         output.write('   MIT License\n')
         output.write(' */\n\n')
         output.write('#pragma once\n\n')
-        output.write('#include <RFT_timertask.hpp>\n')
         output.write('#include <RFT_board.hpp>\n')
         output.write('#include <RFT_debugger.hpp>\n')
         output.write('#include <RFT_actuator.hpp>\n')
-        output.write('#include <RFT_serialtask.hpp>\n')
         output.write('#include <RFT_parser.hpp>\n\n')
+        output.write('#include <rft_timertasks/serialtask.hpp>\n')
 
         # Add namespace
         output.write('namespace /* XXX */ {\n\n')
