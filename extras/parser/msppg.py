@@ -98,7 +98,7 @@ class Cpp_Emitter(CodeEmitter):
         output.write('#include <RFT_debugger.hpp>\n')
         output.write('#include <RFT_actuator.hpp>\n')
         output.write('#include <RFT_parser.hpp>\n\n')
-        output.write('#include <rft_timertasks/serialtask.hpp>\n')
+        output.write('#include <rft_timertasks/serialtask.hpp>\n\n')
 
         # Add namespace
         output.write('namespace /* XXX */ {\n\n')
