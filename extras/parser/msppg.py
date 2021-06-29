@@ -2,8 +2,7 @@
 '''
 Multiwii Serial Protocol Parser Generator
 
-Copyright (C) Rob Jones, Alec Singer, Chris Lavin, Blake Liebling,
-Simon D. Levy 2021
+Copyright (C) Rob Jones, Alec Singer, Chris Lavin, Blake Liebling, Simon D. Levy 2021
 
 MIT License
 '''
@@ -199,15 +198,80 @@ class Python_Emitter(CodeEmitter):
         # Open output file
         self.output = self._openw('mspparser.py')
 
-        # Write header
+        # Emit header
         self.output.write('#  MSP Parser subclass and message builders')
+        self.output.write('\n\n#  Copyright (C) 2021 Simon D. Levy')
+        self.output.write('\n\n#  AUTO-GENERATED CODE; DO NOT MODIFY')
         self.output.write('\n\n#  MIT License')
         self._write('\n\nimport struct')
         self._write('\n\nimport abc')
-        self._write('\nfrom msp import Parser')
-        self._write('\n\n\nclass MspParser(Parser, metaclass=abc.ABCMeta):')
-        self._write('\n\n    def dispatchMessage(self):')
+        self._write('\n\n\nclass MspParser(metaclass=abc.ABCMeta):')
 
+        # Emit __init__() method
+        self._write('\n\n    def __init__(self):')
+        self._write('\n        self.state = 0')
+
+        # Emit parse() method
+        self._write('\n\n    def parse(self, char):')
+        self._write('\n        byte = ord(char)\n')
+        self._write('\n        if self.state == 0:  # sync char 1')
+        self._write('\n            if byte == 36:  # $')
+        self._write('\n                self.state += 1\n')
+        self._write('\n        elif self.state == 1:  # sync char 2')
+        self._write('\n            if byte == 77:  # M')
+        self._write('\n                self.state += 1')
+        self._write('\n            else:  # restart and try again')
+        self._write('\n                self.state = 0\n')
+        self._write('\n        elif self.state == 2:  # direction')
+        self._write('\n            if byte == 62:  # >')
+        self._write('\n                self.message_direction = 1')
+        self._write('\n            else:  # <')
+        self._write('\n                self.message_direction = 0')
+        self._write('\n            self.state += 1\n')
+        self._write('\n        elif self.state == 3:')
+        self._write('\n            self.message_length_expected = byte')
+        self._write('\n            self.message_checksum = byte')
+        self._write('\n            # setup arraybuffer')
+        self._write('\n            self.message_buffer = b""')
+        self._write('\n            self.state += 1\n')
+        self._write('\n        elif self.state == 4:')
+        self._write('\n            self.message_id = byte')
+        self._write('\n            self.message_length_received = 0')
+        self._write('\n            self.message_checksum ^= byte')
+        self._write('\n            if self.message_length_expected > 0:')
+        self._write('\n                # process payload')
+        self._write('\n                self.state += 1')
+        self._write('\n            else:')
+        self._write('\n                # no payload')
+        self._write('\n                self.state += 2\n')
+        self._write('\n        elif self.state == 5:  # payload')
+        self._write('\n            self.message_buffer += char')
+        self._write('\n            self.message_checksum ^= byte')
+        self._write('\n            self.message_length_received += 1')
+        self._write('\n            if self.message_length_received >= self.message_length_expected:')
+        self._write('\n                self.state += 1\n')
+        self._write('\n        elif self.state == 6:')
+        self._write('\n            if self.message_checksum == byte:')
+        self._write('\n                # message received, process')
+        self._write('\n                self.dispatchMessage()')
+        self._write('\n            else:')
+        self._write('\n                print("code: " + str(self.message_id) + " - crc failed")')
+        self._write('\n            # Reset variables')
+        self._write('\n            self.message_length_received = 0')
+        self._write('\n            self.state = 0\n')
+        self._write('\n        else:')
+        self._write('\n            print("Unknown state detected: %d" % self.state)')
+
+        # Emit crc8() method
+        self._write('\n\n    @staticmethod')
+        self._write('\n    def crc8(data):')
+        self._write('\n        crc = 0x00')
+        self._write('\n        for c in data:')
+        self._write('\n            crc ^= c')
+        self._write('\n        return crc')
+
+        # Emit dispatchMeessage() method
+        self._write('\n\n    def dispatchMessage(self):')
         for msgtype in self.msgdict.keys():
             msgstuff = self.msgdict[msgtype]
             msgid = msgstuff[0]
@@ -264,7 +328,7 @@ class Python_Emitter(CodeEmitter):
                 self._write(('        msg = [len(message_buffer), %s] + ' +
                             'list(message_buffer)\n') % msgid)
                 self._write('        return bytes([ord(\'$\'), ord(\'M\'), ' +
-                            'ord(\'<\')] + msg + [Parser.crc8(msg)])')
+                            'ord(\'<\')] + msg + [MspParser.crc8(msg)])')
         self._write('\n')
 
     def _write(self, s):
