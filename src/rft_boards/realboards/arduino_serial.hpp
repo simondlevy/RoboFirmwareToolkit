@@ -14,6 +14,10 @@ namespace rft {
 
     class ArduinoSerial : public RealBoard {
 
+        private:
+
+            HardwareSerial * _telemetrySerial = NULL;
+
         protected:
 
             uint8_t serialAvailable(uint8_t uart=0)
@@ -34,10 +38,22 @@ namespace rft {
             void begin(void)
             {
                 // Start serial communcation for GCS/debugging
-                Serial.begin(115200);
+                Serial.begin(SERIAL_BAUD);
+
+                // Optionally start serial communication for telemetry
+                if (_telemetrySerial) {
+                    _telemetrySerial->begin(SERIAL_BAUD);
+                }
 
                 // This will blink the LED
                 RealBoard::begin();
+            }
+
+        public:
+
+            void useTelemetryPort(HardwareSerial * serial)
+            {
+                _telemetrySerial = serial;
             }
 
     }; // class ArduinoSerial
