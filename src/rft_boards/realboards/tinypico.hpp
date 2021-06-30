@@ -11,11 +11,11 @@
 #include <Wire.h>
 #include <TinyPICO.h>
 
-#include "rft_boards/realboards/arduino.hpp"
+#include "rft_boards/realboards/arduino_serial.hpp"
 
 namespace rft {
 
-    class TinyPico : public RealBoard {
+    class TinyPico : public ArduinoSerial {
 
         private:
 
@@ -26,30 +26,6 @@ namespace rft {
             void setLed(bool isOn) 
             { 
                 tp.DotStar_SetPixelColor(0, isOn?255:0, 0);
-            }
-
-            uint8_t serialAvailable(void)
-            {
-                return Serial.available();
-            }
-
-            uint8_t serialRead(void)
-            {
-                return Serial.read();
-            }
-
-            void serialWrite(uint8_t c)
-            {
-                Serial.write(c);
-            }
-
-            void begin(void)
-            {
-                // Start serial communcation for GCS/debugging
-                Serial.begin(115200);
-
-                // This will blink the LED
-                RealBoard::begin();
             }
 
     }; // class TinyPico

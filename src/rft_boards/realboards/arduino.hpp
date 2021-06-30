@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "rft_boards/realboard.hpp"
+#include "rft_boards/realboards/arduino_serial.hpp"
 
 namespace rft {
 
-    class ArduinoBoard : public RealBoard {
+    class ArduinoBoard : public ArduinoSerial {
 
         private:
 
@@ -32,28 +32,12 @@ namespace rft {
                 pinMode(_led_pin, OUTPUT);
                 digitalWrite(_led_pin, _led_inverted ? HIGH : LOW);
 
-                Serial.begin(115200);
-                RealBoard::begin();
+                ArduinoSerial::begin();
             }
 
             void setLed(bool isOn) 
             { 
                 digitalWrite(_led_pin, isOn ?  (_led_inverted?LOW:HIGH) : (_led_inverted?HIGH:LOW));
-            }
-
-            uint8_t serialAvailable(void)
-            {
-                return Serial.available();
-            }
-
-            uint8_t serialRead(void)
-            {
-                return Serial.read();
-            }
-
-            void serialWrite(uint8_t c)
-            {
-                Serial.write(c);
             }
 
         public:
@@ -72,10 +56,5 @@ namespace rft {
             }
 
     }; // class ArduinoBoard
-
-    void Board::outbuf(char * buf)
-    {
-        Serial.print(buf);
-    }
 
 } // namespace rft
