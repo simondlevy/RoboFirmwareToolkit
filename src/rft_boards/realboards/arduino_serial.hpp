@@ -20,17 +20,17 @@ namespace rft {
 
         protected:
 
-            uint8_t serialAvailable(uint8_t uart=0)
+            uint8_t serialAvailable(void)
             {
                 return Serial.available();
             }
 
-            uint8_t serialRead(uint8_t uart=0)
+            uint8_t serialRead(void)
             {
                 return Serial.read();
             }
 
-            void serialWrite(uint8_t c, uint8_t uart=0)
+            void serialWrite(uint8_t c)
             {
                 Serial.write(c);
             }
@@ -51,7 +51,7 @@ namespace rft {
 
         public:
 
-            void useTelemetryPort(HardwareSerial * serial)
+            void setTelemetryPort(HardwareSerial * serial)
             {
                 _telemetrySerial = serial;
             }

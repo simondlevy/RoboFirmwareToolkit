@@ -24,29 +24,27 @@ namespace rft {
 
             State * _state = NULL;
 
-            uint8_t _uart = 0;
-
-            TelemetryTask(uint8_t uart=0)
+            TelemetryTask(void)
                 : TimerTask(FREQ)
             {
-                _uart = uart;
             }
 
             void begin(rft::Board * board, rft::State * state) 
             {
                 TimerTask::begin(board);
+
                 _state = state;
             }
 
             virtual void doTask(void) override
             {
-                while (_board->serialAvailable(_uart) > 0) {
+                while (_board->telemetryAvailable() > 0) {
 
-                    Parser::parse(_board->serialRead(_uart));
+                    Parser::parse(_board->telemetryRead());
                 }
 
                 while (Parser::availableBytes() > 0) {
-                    _board->serialWrite(Parser::readByte());
+                    _board->telemetryWrite(Parser::readByte());
                 }
             }
 
