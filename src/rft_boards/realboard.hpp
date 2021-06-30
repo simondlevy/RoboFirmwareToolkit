@@ -26,8 +26,6 @@ namespace rft {
 
         protected:
 
-            virtual void setLed(bool isOn) = 0;
-
             void begin(void)
             {
                 // Flash LED
@@ -74,12 +72,6 @@ namespace rft {
                 serialWrite(c);
             }
 
-            virtual uint8_t serialAvailable(void) = 0;
-
-            virtual uint8_t serialRead(void) = 0;
-
-            virtual void serialWrite(uint8_t c) = 0;
-
             void showArmedStatus(bool armed)
             {
                 // Set LED to indicate armed
@@ -114,6 +106,14 @@ namespace rft {
                     delaySeconds(0.1);
                 }
             }
+
+            virtual void setLed(bool isOn) = 0;
+
+            virtual uint8_t serialAvailable(void) = 0;
+
+            virtual uint8_t serialRead(void) = 0;
+
+            virtual void serialWrite(uint8_t c) = 0;
 
     }; // class RealBoard
 
