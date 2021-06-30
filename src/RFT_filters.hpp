@@ -43,12 +43,6 @@ namespace rft {
                 return degrees * M_PI / 180;
             }
 
-
-            static float round2(float val)
-            {
-                return int(val*100)/100.f;
-            }
-
     }; // class Filter
 
     class LowPassFilter {
@@ -62,7 +56,7 @@ namespace rft {
 
         public:
 
-            LowPassFilter(uint16_t historySize)
+            LowPassFilter(uint16_t historySize=50)
             {
                 _historySize = historySize;
             }
