@@ -28,17 +28,17 @@ namespace rft {
                 tp.DotStar_SetPixelColor(0, isOn?255:0, 0);
             }
 
-            uint8_t serialNormalAvailable(void)
+            uint8_t serialAvailable(void)
             {
                 return Serial.available();
             }
 
-            uint8_t serialNormalRead(void)
+            uint8_t serialRead(void)
             {
                 return Serial.read();
             }
 
-            void serialNormalWrite(uint8_t c)
+            void serialWrite(uint8_t c)
             {
                 Serial.write(c);
             }

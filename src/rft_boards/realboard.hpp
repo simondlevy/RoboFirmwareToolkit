@@ -24,12 +24,6 @@ namespace rft {
 
             bool _shouldFlash = false;
 
-            // Supports MSP over wireless protcols like Bluetooth
-            bool _useSerialTelemetry = false;
-
-            float _rollAdjustRadians = 0;
-            float _pitchAdjustRadians = 0;
-
         protected:
 
             virtual void setLed(bool isOn) = 0;
@@ -62,16 +56,9 @@ namespace rft {
 
             uint8_t serialAvailableBytes(void)
             {
-                // Attempt to use telemetry first
-                if (serialTelemetryAvailable()) {
-                    _useSerialTelemetry = true;
-                    return serialTelemetryAvailable();
-                }
-
                 // Default to USB
-                if (serialNormalAvailable() > 0) {
-                    _useSerialTelemetry = false;
-                    return serialNormalAvailable();
+                if (serialAvailable() > 0) {
+                    return serialAvailable();
                 }
 
                 return 0;
@@ -79,39 +66,19 @@ namespace rft {
 
             uint8_t serialReadByte(void)
             {
-                return _useSerialTelemetry? serialTelemetryRead() : serialNormalRead();
+                return serialRead();
             }
 
             void serialWriteByte(uint8_t c)
             {
-                if (_useSerialTelemetry) {
-                    serialTelemetryWrite(c);
-                }
-                else {
-                    serialNormalWrite(c);
-                }
+                serialWrite(c);
             }
 
-            virtual uint8_t serialNormalAvailable(void) = 0;
+            virtual uint8_t serialAvailable(void) = 0;
 
-            virtual uint8_t serialNormalRead(void) = 0;
+            virtual uint8_t serialRead(void) = 0;
 
-            virtual void    serialNormalWrite(uint8_t c) = 0;
-
-            virtual uint8_t serialTelemetryAvailable(void)
-            {
-                return 0;
-            }
-
-            virtual uint8_t serialTelemetryRead(void)
-            {
-                return 0;
-            }
-
-            virtual void serialTelemetryWrite(uint8_t c)
-            {
-                (void)c;
-            }
+            virtual void serialWrite(uint8_t c) = 0;
 
             void showArmedStatus(bool armed)
             {
@@ -146,17 +113,6 @@ namespace rft {
                     Debugger::printf("%s\n", errmsg);
                     delaySeconds(0.1);
                 }
-            }
- 
-        public:
-
-            /**
-             * Compensates for poorly-mounted IMU.
-             */
-            void setRollAndPitchOffsets(float rollDegrees, float pitchDegrees)
-            {
-                _rollAdjustRadians  = Filter::deg2rad(rollDegrees);
-                _pitchAdjustRadians = Filter::deg2rad(pitchDegrees);
             }
 
     }; // class RealBoard

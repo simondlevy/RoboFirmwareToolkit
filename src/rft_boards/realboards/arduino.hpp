@@ -41,17 +41,17 @@ namespace rft {
                 digitalWrite(_led_pin, isOn ?  (_led_inverted?LOW:HIGH) : (_led_inverted?HIGH:LOW));
             }
 
-            uint8_t serialNormalAvailable(void)
+            uint8_t serialAvailable(void)
             {
                 return Serial.available();
             }
 
-            uint8_t serialNormalRead(void)
+            uint8_t serialRead(void)
             {
                 return Serial.read();
             }
 
-            void serialNormalWrite(uint8_t c)
+            void serialWrite(uint8_t c)
             {
                 Serial.write(c);
             }
