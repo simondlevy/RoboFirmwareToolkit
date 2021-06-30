@@ -1,5 +1,5 @@
 /*
-   Timer task for serial comms
+   Timer task for telemetry
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -16,46 +16,40 @@
 
 namespace rft {
 
-    class SerialTask : public TimerTask, public Parser {
+    class TelemetryTask : public TimerTask, public Parser {
 
         protected:
 
             static constexpr float FREQ = 66;
 
-            Actuator * _actuator = NULL;
-            OpenLoopController * _olc = NULL;
             State * _state = NULL;
 
-            SerialTask(void)
+            uint8_t _uart = 0;
+
+            TelemetryTask(uint8_t uart=0)
                 : TimerTask(FREQ)
             {
+                _uart = uart;
             }
 
-            void begin(rft::Board * board, rft::State * state, rft::OpenLoopController * olc, rft::Actuator * actuator) 
+            void begin(rft::Board * board, rft::State * state) 
             {
                 TimerTask::begin(board);
                 _state = state;
-                _olc = olc;
-                _actuator = actuator;
             }
 
             virtual void doTask(void) override
             {
-                while (_board->serialAvailable() > 0) {
+                while (_board->serialAvailable(_uart) > 0) {
 
-                    Parser::parse(_board->serialRead());
+                    Parser::parse(_board->serialRead(_uart));
                 }
 
                 while (Parser::availableBytes() > 0) {
                     _board->serialWrite(Parser::readByte());
                 }
-
-                // Support motor testing from GCS
-                if (!_state->armed) {
-                    _actuator->runDisarmed();
-                }
             }
 
-    };  // SerialTask
+    };  // TelemetryTask
 
 } // namespace rft

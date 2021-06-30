@@ -89,11 +89,11 @@ namespace rft {
 
             virtual void setLed(bool isOn) = 0;
 
-            virtual uint8_t serialAvailable(void) = 0;
+            virtual uint8_t serialAvailable(uint8_t uart=0) = 0;
 
-            virtual uint8_t serialRead(void) = 0;
+            virtual uint8_t serialRead(uint8_t uart=0) = 0;
 
-            virtual void serialWrite(uint8_t c) = 0;
+            virtual void serialWrite(uint8_t c, uint8_t uart=0) = 0;
 
     }; // class RealBoard
 

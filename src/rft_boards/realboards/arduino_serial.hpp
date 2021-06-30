@@ -16,17 +16,17 @@ namespace rft {
 
         protected:
 
-            uint8_t serialAvailable(void)
+            uint8_t serialAvailable(uint8_t uart=0)
             {
                 return Serial.available();
             }
 
-            uint8_t serialRead(void)
+            uint8_t serialRead(uint8_t uart=0)
             {
                 return Serial.read();
             }
 
-            void serialWrite(uint8_t c)
+            void serialWrite(uint8_t c, uint8_t uart=0)
             {
                 Serial.write(c);
             }

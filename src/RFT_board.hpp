@@ -18,6 +18,7 @@ namespace rft {
         friend class RFT;
         friend class Debugger;
         friend class TimerTask;
+        friend class TelemetryTask;
         friend class SerialTask;
         friend class ClosedLoopTask;
 
@@ -30,9 +31,9 @@ namespace rft {
             virtual void begin(void) { }
 
             //------------------------------- Serial communications via MSP ----------------------------------------------
-            virtual uint8_t serialAvailable(void) { return 0; }
-            virtual uint8_t serialRead(void)  { return 1; }
-            virtual void    serialWrite(uint8_t c) { (void)c; }
+            virtual uint8_t serialAvailable(uint8_t uart=0) { return 0; }
+            virtual uint8_t serialRead(uint8_t uart=0)  { return 1; }
+            virtual void    serialWrite(uint8_t c, uint8_t uart=0) { (void)c; }
 
             //----------------------------------------- Safety -----------------------------------------------------------
             virtual void showArmedStatus(bool armed) { (void)armed; }
