@@ -33,12 +33,7 @@ of C++ made it straightforward to support other robot types through abstract cla
 
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_board.hpp">Board</a>
 class specifies an abstract (pure virtual) <tt>getTime()</tt> method that you must
-implement for a particular microcontroller or simulator.  As the following class hiearchy shows, 
-several boards are currently supported:
-
-<p align="center"> 
-<img src="extras/media/boards.png" width=650>
-</p>
+implement for a particular microcontroller or simulator.  
 
 * The <a href="https://github.com/simondlevy/RoboFirmwareToolkit/blob/master/src/RFT_openloop.hpp">OpenLoopController</a>
 class performs basic functions associated with open-loop control, and specifies a set of abstract methods that you
