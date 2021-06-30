@@ -30,9 +30,9 @@ namespace rft {
             virtual void begin(void) { }
 
             //------------------------------- Serial communications via MSP ----------------------------------------------
-            virtual uint8_t serialAvailableBytes(void) { return 0; }
-            virtual uint8_t serialReadByte(void)  { return 1; }
-            virtual void    serialWriteByte(uint8_t c) { (void)c; }
+            virtual uint8_t serialAvailable(void) { return 0; }
+            virtual uint8_t serialRead(void)  { return 1; }
+            virtual void    serialWrite(uint8_t c) { (void)c; }
 
             //----------------------------------------- Safety -----------------------------------------------------------
             virtual void showArmedStatus(bool armed) { (void)armed; }

@@ -52,26 +52,6 @@ namespace rft {
                 delay((uint32_t)(1000*sec));
             }
 
-            uint8_t serialAvailableBytes(void)
-            {
-                // Default to USB
-                if (serialAvailable() > 0) {
-                    return serialAvailable();
-                }
-
-                return 0;
-            }
-
-            uint8_t serialReadByte(void)
-            {
-                return serialRead();
-            }
-
-            void serialWriteByte(uint8_t c)
-            {
-                serialWrite(c);
-            }
-
             void showArmedStatus(bool armed)
             {
                 // Set LED to indicate armed

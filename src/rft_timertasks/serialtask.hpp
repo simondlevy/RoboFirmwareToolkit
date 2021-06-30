@@ -41,13 +41,13 @@ namespace rft {
 
             virtual void doTask(void) override
             {
-                while (_board->serialAvailableBytes() > 0) {
+                while (_board->serialAvailable() > 0) {
 
-                    Parser::parse(_board->serialReadByte());
+                    Parser::parse(_board->serialRead());
                 }
 
                 while (Parser::availableBytes() > 0) {
-                    _board->serialWriteByte(Parser::readByte());
+                    _board->serialWrite(Parser::readByte());
                 }
 
                 // Support motor testing from GCS
