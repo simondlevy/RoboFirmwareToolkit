@@ -49,13 +49,6 @@ namespace rft {
                 RealBoard::begin();
             }
 
-        public:
-
-            void setTelemetryPort(HardwareSerial * serial)
-            {
-                _telemetrySerial = serial;
-            }
-
     }; // class ArduinoSerial
 
     void Board::outbuf(char * buf)
