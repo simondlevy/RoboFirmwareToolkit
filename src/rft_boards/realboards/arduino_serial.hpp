@@ -14,36 +14,51 @@ namespace rft {
 
     class ArduinoSerial : public RealBoard {
 
-        private:
-
-            HardwareSerial * _telemetrySerial = NULL;
-
         protected:
 
-            uint8_t serialAvailable(void)
+            virtual HardwareSerial * getSerial(uint8_t port)
             {
+                return NULL;
+            }
+
+            uint8_t serialAvailable(uint8_t port)
+            {
+                if (port > 0) {
+                    HardwareSerial * serial = getSerial(port);
+                    return serial ? serial->available() : 0;
+                }
+
                 return Serial.available();
             }
 
-            uint8_t serialRead(void)
+            uint8_t serialRead(uint8_t port)
             {
+                if (port > 0) {
+                    HardwareSerial * serial = getSerial(port);
+                    return serial ? serial->read() : 0;
+                }
+
                 return Serial.read();
             }
 
-            void serialWrite(uint8_t c)
+            void serialWrite(uint8_t byte, uint8_t port)
             {
-                Serial.write(c);
+                if (port > 0) {
+                    HardwareSerial * serial = getSerial(port);
+                    if (serial) {
+                        serial->write(byte);
+                    }
+                }
+
+                else {
+                    Serial.write(byte);
+                }
             }
 
             void begin(void)
             {
                 // Start serial communcation for GCS/debugging
                 Serial.begin(SERIAL_BAUD);
-
-                // Optionally start serial communication for telemetry
-                if (_telemetrySerial) {
-                    _telemetrySerial->begin(SERIAL_BAUD);
-                }
 
                 // This will blink the LED
                 RealBoard::begin();
