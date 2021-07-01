@@ -40,20 +40,20 @@ namespace rft {
                 digitalWrite(_led_pin, isOn ?  (_led_inverted?LOW:HIGH) : (_led_inverted?HIGH:LOW));
             }
 
+            ArduinoBoard(uint8_t ledPin, bool ledInverted=false, HardwareSerial * telemetryPort=NULL)
+                : ArduinoSerial(telemetryPort)
+            {
+                _led_pin = ledPin;
+                _led_inverted = ledInverted;
+
+            }
+
         public:
 
             static void powerPins(uint8_t pwr, uint8_t gnd)
             {
                 powerPin(pwr, HIGH);
                 powerPin(gnd, LOW);
-            }
-
-            ArduinoBoard(uint8_t ledPin, bool ledInverted=false, HardwareSerial * serial=NULL)
-                : ArduinoSerial(serial)
-            {
-                _led_pin = ledPin;
-                _led_inverted = ledInverted;
-
             }
 
     }; // class ArduinoBoard
