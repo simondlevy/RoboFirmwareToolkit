@@ -1,6 +1,9 @@
 /*
    Class for Arduino-style serial comms
 
+   Support communication over Serial (USB) and
+   telemetry port. 
+
    Copyright (c) 2021 Simon D. Levy
 
    MIT License
@@ -14,37 +17,41 @@ namespace rft {
 
     class ArduinoSerial : public RealBoard {
 
+        private:
+
+            HardwareSerial * _telemetryPort = NULL;
+
         protected:
 
-            virtual HardwareSerial * getSecondarySerial(void)
+            ArduinoSerial(HardwareSerial * telemetryPort=NULL)
             {
-                return NULL;
+                _telemetryPort = telemetryPort;
             }
 
-            uint8_t serialAvailable(bool secondaryPort)
+            uint8_t serialAvailable(bool useTelemetryPort)
             {
-                if (secondaryPort) {
-                    HardwareSerial * serial = getSecondarySerial();
+                if (useTelemetryPort) {
+                    HardwareSerial * serial = _telemetryPort;
                     return serial ? serial->available() : 0;
                 }
 
                 return Serial.available();
             }
 
-            uint8_t serialRead(bool secondaryPort)
+            uint8_t serialRead(bool useTelemetryPort)
             {
-                if (secondaryPort) {
-                    HardwareSerial * serial = getSecondarySerial();
+                if (useTelemetryPort) {
+                    HardwareSerial * serial = _telemetryPort;
                     return serial ? serial->read() : 0;
                 }
 
                 return Serial.read();
             }
 
-            void serialWrite(uint8_t byte, bool secondaryPort)
+            void serialWrite(uint8_t byte, bool useTelemetryPort)
             {
-                if (secondaryPort) {
-                    HardwareSerial * serial = getSecondarySerial();
+                if (useTelemetryPort) {
+                    HardwareSerial * serial = _telemetryPort;
                     if (serial) {
                         serial->write(byte);
                     }
@@ -59,6 +66,11 @@ namespace rft {
             {
                 // Start serial communcation for GCS/debugging
                 Serial.begin(SERIAL_BAUD);
+
+                // Start serial communication for telemetry if provided
+                if (_telemetryPort) {
+                    _telemetryPort->begin(SERIAL_BAUD);
+                }
 
                 // This will blink the LED
                 RealBoard::begin();
