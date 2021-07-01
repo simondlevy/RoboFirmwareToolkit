@@ -31,8 +31,7 @@ namespace rft {
             uint8_t serialAvailable(bool useTelemetryPort)
             {
                 if (useTelemetryPort) {
-                    HardwareSerial * serial = _telemetryPort;
-                    return serial ? serial->available() : 0;
+                    return _telemetryPort ? _telemetryPort->available() : 0;
                 }
 
                 return Serial.available();
@@ -41,8 +40,7 @@ namespace rft {
             uint8_t serialRead(bool useTelemetryPort)
             {
                 if (useTelemetryPort) {
-                    HardwareSerial * serial = _telemetryPort;
-                    return serial ? serial->read() : 0;
+                    return _telemetryPort ? _telemetryPort->read() : 0;
                 }
 
                 return Serial.read();
@@ -51,9 +49,8 @@ namespace rft {
             void serialWrite(uint8_t byte, bool useTelemetryPort)
             {
                 if (useTelemetryPort) {
-                    HardwareSerial * serial = _telemetryPort;
-                    if (serial) {
-                        serial->write(byte);
+                    if (_telemetryPort) {
+                        _telemetryPort->write(byte);
                     }
                 }
 
