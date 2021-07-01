@@ -16,6 +16,8 @@ namespace rft {
 
     class RealBoard : public Board {
 
+        friend class SerialTask;
+
         private:
 
             static constexpr float   LED_STARTUP_FLASH_SECONDS = 1.0;

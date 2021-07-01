@@ -9,10 +9,10 @@
 #pragma once
 
 #include <RFT_timertask.hpp>
-#include <RFT_board.hpp>
 #include <RFT_debugger.hpp>
 #include <RFT_actuator.hpp>
 #include <RFT_parser.hpp>
+#include <RFT_boards/realboard.hpp>
 
 namespace rft {
 
@@ -21,6 +21,8 @@ namespace rft {
         protected:
 
             static constexpr float FREQ = 66;
+
+            RealBoard * _realboard = NULL;
 
             State * _state = NULL;
 
@@ -33,9 +35,11 @@ namespace rft {
             {
             }
 
-            void begin(rft::Board * board, rft::State * state, rft::OpenLoopController * olc, rft::Actuator * actuator) 
+            void begin(Board * board, State * state, OpenLoopController * olc, Actuator * actuator) 
             {
                 TimerTask::begin(board);
+
+                _realboard = (RealBoard *)board;
 
                 _state = state;
                 _olc = olc;
@@ -44,13 +48,13 @@ namespace rft {
 
             virtual void doTask(void) override
             {
-                while (_board->serialAvailable() > 0) {
+                while (_realboard->serialAvailable() > 0) {
 
-                    Parser::parse(_board->serialRead());
+                    Parser::parse(_realboard->serialRead());
                 }
 
                 while (Parser::availableBytes() > 0) {
-                    _board->serialWrite(Parser::readByte());
+                    _realboard->serialWrite(Parser::readByte());
                 }
                  // Support motor testing from GCS
                 if (!_state->armed) {

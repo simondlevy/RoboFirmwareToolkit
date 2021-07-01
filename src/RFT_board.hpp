@@ -30,11 +30,6 @@ namespace rft {
             //-------------------------------------- For real boards -----------------------------------------------------
             virtual void begin(void) { }
 
-            //------------------------------- Serial communications via MSP ----------------------------------------------
-            virtual uint8_t serialAvailable(void) { return 0; }
-            virtual uint8_t serialRead(void)  { return 0; }
-            virtual void    serialWrite(uint8_t c) { (void)c; }
-
             //----------------------------------------- Safety -----------------------------------------------------------
             virtual void showArmedStatus(bool armed) { (void)armed; }
             virtual void flashLed(bool shouldflash) { (void)shouldflash; }
