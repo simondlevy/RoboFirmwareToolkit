@@ -18,8 +18,6 @@ namespace rft {
         friend class RFT;
         friend class Debugger;
         friend class TimerTask;
-        friend class TelemetryTask;
-        friend class SerialTask;
         friend class ClosedLoopTask;
 
         protected:
