@@ -28,7 +28,7 @@ namespace rft {
 
         protected:
 
-            static const uint16_t SERIAL_BAUD = 115200;
+            static const uint32_t SERIAL_BAUD = 115200;
 
             void begin(void)
             {
