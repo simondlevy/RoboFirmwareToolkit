@@ -16,35 +16,35 @@ namespace rft {
 
         protected:
 
-            virtual HardwareSerial * getSerial(uint8_t port)
+            virtual HardwareSerial * getSecondarySerial(void)
             {
                 return NULL;
             }
 
-            uint8_t serialAvailable(uint8_t port)
+            uint8_t serialAvailable(bool secondaryPort)
             {
-                if (port > 0) {
-                    HardwareSerial * serial = getSerial(port);
+                if (secondaryPort) {
+                    HardwareSerial * serial = getSecondarySerial();
                     return serial ? serial->available() : 0;
                 }
 
                 return Serial.available();
             }
 
-            uint8_t serialRead(uint8_t port)
+            uint8_t serialRead(bool secondaryPort)
             {
-                if (port > 0) {
-                    HardwareSerial * serial = getSerial(port);
+                if (secondaryPort) {
+                    HardwareSerial * serial = getSecondarySerial();
                     return serial ? serial->read() : 0;
                 }
 
                 return Serial.read();
             }
 
-            void serialWrite(uint8_t byte, uint8_t port)
+            void serialWrite(uint8_t byte, bool secondaryPort)
             {
-                if (port > 0) {
-                    HardwareSerial * serial = getSerial(port);
+                if (secondaryPort) {
+                    HardwareSerial * serial = getSecondarySerial();
                     if (serial) {
                         serial->write(byte);
                     }

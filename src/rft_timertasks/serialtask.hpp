@@ -30,12 +30,12 @@ namespace rft {
 
             OpenLoopController * _olc = NULL;
 
-            uint8_t _port = 0;
+            bool _secondaryPort = false;
 
-            SerialTask(uint8_t port=0)
+            SerialTask(bool secondaryPort=false)
                 : TimerTask(FREQ)
             {
-                _port = port;
+                _secondaryPort = secondaryPort;
             }
 
             void begin(Board * board, State * state, OpenLoopController * olc, Actuator * actuator) 
@@ -51,13 +51,13 @@ namespace rft {
 
             virtual void doTask(void) override
             {
-                while (_realboard->serialAvailable(_port) > 0) {
+                while (_realboard->serialAvailable(_secondaryPort) > 0) {
 
-                    Parser::parse(_realboard->serialRead(_port));
+                    Parser::parse(_realboard->serialRead(_secondaryPort));
                 }
 
                 while (Parser::availableBytes() > 0) {
-                    _realboard->serialWrite(Parser::readByte(), _port);
+                    _realboard->serialWrite(Parser::readByte(), _secondaryPort);
                 }
                  // Support motor testing from GCS
                 if (!_state->armed) {
