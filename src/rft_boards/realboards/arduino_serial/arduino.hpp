@@ -48,7 +48,8 @@ namespace rft {
                 powerPin(gnd, LOW);
             }
 
-            ArduinoBoard(uint8_t ledPin, bool ledInverted=false)
+            ArduinoBoard(uint8_t ledPin, bool ledInverted=false, HardwareSerial * serial=NULL)
+                : ArduinoSerial(serial)
             {
                 _led_pin = ledPin;
                 _led_inverted = ledInverted;

@@ -28,6 +28,13 @@ namespace rft {
                 tp.DotStar_SetPixelColor(0, isOn?255:0, 0);
             }
 
+        public:
+
+            TinyPico(HardwareSerial * serial = NONE)
+                : ArduinoSerial(serial)
+            {
+            }
+
     }; // class TinyPico
 
 } // namespace rft

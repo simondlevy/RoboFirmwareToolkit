@@ -17,8 +17,8 @@ namespace rft {
 
          public:
 
-            Teensy40(void) 
-                : ArduinoBoard(13)
+            Teensy40(HardwareSerial * serial=NULL) 
+                : ArduinoBoard(13, false, serial) // false = non-inverted LED
             {
             }
 
