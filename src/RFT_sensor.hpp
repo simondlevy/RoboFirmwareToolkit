@@ -18,11 +18,9 @@ namespace rft {
 
         protected:
 
-            virtual void begin(void) { }
-
             virtual void modifyState(State * state, float time) = 0;
 
-            virtual bool ready(float time) = 0;
+            virtual void begin(void) { }
 
     };  // class Sensor
 

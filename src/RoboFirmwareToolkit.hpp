@@ -70,10 +70,7 @@ namespace rft {
                 float time = _board->getTime();
 
                 for (uint8_t k=0; k<_sensor_count; ++k) {
-                    rft::Sensor * sensor = _sensors[k];
-                    if (sensor->ready(time)) {
-                        sensor->modifyState(_state, time);
-                    }
+                    _sensors[k]->modifyState(_state, time);
                 }
             }
 
