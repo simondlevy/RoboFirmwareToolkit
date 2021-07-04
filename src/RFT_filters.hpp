@@ -19,10 +19,21 @@ namespace rft {
 
     class Filter {
 
+        private:
+
+            // y = Ax + b helper for frame-of-reference conversion methods
+            static void dot(float A[3][3], float x[3], float y[3])
+            {
+                for (uint8_t j = 0; j < 3; ++j) {
+                    y[j] = 0;
+                    for (uint8_t k = 0; k < 3; ++k) {
+                        y[j] += A[j][k] * x[k];
+                    }
+                }
+            }
+
         public:
 
-            // Simple static functions
- 
             static float complementary(float a, float b, float c)
             {
                 return a * c + b * (1 - c);
@@ -46,9 +57,71 @@ namespace rft {
                 ez = atan2(2.0f*(qx*qy+qw*qz), qw*qw+qx*qx-qy*qy-qz*qz);
             }
 
+            static void euler2quat(const float eulerAngles[3], float quaternion[4])
+            {
+                // Convenient renaming
+                float phi = eulerAngles[0] / 2;
+                float the = eulerAngles[1] / 2;
+                float psi = eulerAngles[2] / 2;
+
+                // Pre-computation
+                float cph = cos(phi);
+                float cth = cos(the);
+                float cps = cos(psi);
+                float sph = sin(phi);
+                float sth = sin(the);
+                float sps = sin(psi);
+
+                // Conversion
+                quaternion[0] = cph * cth * cps + sph * sth * sps;
+                quaternion[1] = cph * sth * sps - sph * cth * cps;
+                quaternion[2] = -cph * sth * cps - sph * cth * sps;
+                quaternion[3] = cph * cth * sps - sph * sth * cps;
+            }
+
             static float deg2rad(float degrees)
             {
                 return degrees * M_PI / 180;
+            }
+
+            static void inertial2body(float inertial[3], const float rotation[3], float body[3])
+            {
+                float phi = rotation[0];
+                float theta = rotation[1];
+                float psi = rotation[2];
+
+                float cph = cos(phi);
+                float sph = sin(phi);
+                float cth = cos(theta);
+                float sth = sin(theta);
+                float cps = cos(psi);
+                float sps = sin(psi);
+
+                float R[3][3] = { {cps * cth,                cth * sps,                   -sth},
+                    {cps * sph * sth - cph * sps,  cph * cps + sph * sps * sth,  cth * sph},
+                    {sph * sps + cph * cps * sth,  cph * sps * sth - cps * sph,  cph * cth} };
+
+                dot(R, inertial, body);
+            }
+
+            static void body2inertial(float body[3], const float rotation[3], float inertial[3])
+            {
+                float phi = rotation[0];
+                float theta = rotation[1];
+                float psi = rotation[2];
+
+                float cph = cos(phi);
+                float sph = sin(phi);
+                float cth = cos(theta);
+                float sth = sin(theta);
+                float cps = cos(psi);
+                float sps = sin(psi);
+
+                float R[3][3] = { {cps * cth,  cps * sph * sth - cph * sps,  sph * sps + cph * cps * sth},
+                    {cth * sps,  cph * cps + sph * sps * sth,  cph * sps * sth - cps * sph},
+                    {-sth,     cth * sph,                cph * cth} };
+
+                dot(R, body, inertial);
             }
 
     }; // class Filter
