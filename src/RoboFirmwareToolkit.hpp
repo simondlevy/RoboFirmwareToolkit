@@ -23,6 +23,9 @@ namespace rft {
 
         private:
 
+            // Vehicle state (created by subclass)
+            State * _state = NULL;
+
             // Safety
             bool _safeToArm = false;
 
@@ -30,41 +33,17 @@ namespace rft {
             Sensor * _sensors[256] = {};
             uint8_t _sensor_count = 0;
 
+            // Timer task for PID controllers
+            ClosedLoopTask _closedLoopTask;
+
+            // Debugging support
+            Debugger _debugger;
+
             void startSensors(void) 
             {
                 for (uint8_t k=0; k<_sensor_count; ++k) {
                     _sensors[k]->begin();
                 }
-            }
-
-            // Timer task for PID controllers
-            ClosedLoopTask _closedLoopTask;
-
-            Debugger _debugger;
-
-        protected:
-
-            Board * _board = NULL;
-
-            OpenLoopController * _olc = NULL;
-
-            rft::Actuator * _actuator = NULL;
-
-            State * _state = NULL;
-
-            RFT(State * state, Board * board, OpenLoopController * olc, Actuator * actuator)
-            {
-                // Store the essentials
-                _state = state;
-                _board    = board;
-                _olc = olc;
-                _actuator = actuator;
-
-                // Zero-out the state
-                memset(state, 0, sizeof(*state));
-
-                // Support adding new sensors
-                _sensor_count = 0;
             }
 
             void checkSensors(void)
@@ -122,6 +101,41 @@ namespace rft {
 
             } // checkOpenLoopController
 
+        protected:
+
+            Board * _board = NULL;
+
+            OpenLoopController * _olc = NULL;
+
+            rft::Actuator * _actuator = NULL;
+
+            RFT(State * state, Board * board, OpenLoopController * olc, Actuator * actuator)
+            {
+                // Store the essentials
+                _state = state;
+                _board    = board;
+                _olc = olc;
+                _actuator = actuator;
+
+                // Zero-out the state
+                memset(state, 0, sizeof(*state));
+
+                // Support adding new sensors
+                _sensor_count = 0;
+            }
+
+        public:
+
+            void addSensor(Sensor * sensor) 
+            {
+                _sensors[_sensor_count++] = sensor;
+            }
+
+            void addClosedLoopController(rft::ClosedLoopController * controller, uint8_t modeIndex=0) 
+            {
+                _closedLoopTask.addController(controller, modeIndex);
+            }
+
             void begin(bool armed=false)
             {  
                 // Start the board
@@ -149,18 +163,6 @@ namespace rft {
                 _state->armed = armed;
 
             } // begin
-
-        public:
-
-            void addSensor(Sensor * sensor) 
-            {
-                _sensors[_sensor_count++] = sensor;
-            }
-
-            void addClosedLoopController(rft::ClosedLoopController * controller, uint8_t modeIndex=0) 
-            {
-                _closedLoopTask.addController(controller, modeIndex);
-            }
 
             void update(void)
             {
