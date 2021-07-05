@@ -60,6 +60,9 @@ namespace rft {
                 _olc = olc;
                 _actuator = actuator;
 
+                // Zero-out the state
+                memset(state, 0, sizeof(*state));
+
                 // Support adding new sensors
                 _sensor_count = 0;
             }
