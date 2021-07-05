@@ -119,18 +119,6 @@ namespace rft {
 
             } // checkOpenLoopController
 
-            void update(void)
-            {
-                // Grab control signal if available
-                checkOpenLoopController();
-
-                // Update PID controllers task
-                _closedLoopTask.update();
-
-                // Check sensors
-                checkSensors();
-            }
-
             void begin(bool armed=false)
             {  
                 // Start the board
@@ -171,6 +159,17 @@ namespace rft {
                 _closedLoopTask.addController(controller, modeIndex);
             }
 
+            void update(void)
+            {
+                // Grab control signal if available
+                checkOpenLoopController();
+
+                // Update PID controllers task
+                _closedLoopTask.update();
+
+                // Check sensors
+                checkSensors();
+            }
 
     }; // class RFT
 
