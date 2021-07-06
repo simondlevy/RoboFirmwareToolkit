@@ -84,6 +84,11 @@ namespace rft {
                 return degrees * M_PI / 180;
             }
 
+            static float rad2deg(float radians)
+            {
+                return radians * 180 / M_PI;
+            }
+
             static void inertial2body(float inertial[3], const float rotation[3], float body[3])
             {
                 float phi = rotation[0];
