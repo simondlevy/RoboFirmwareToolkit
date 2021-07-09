@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "RFT_debugger.hpp"
 #include "RFT_board.hpp"
 #include "RFT_openloop.hpp"
 #include "RFT_closedloop.hpp"
@@ -35,9 +34,6 @@ namespace rft {
 
             // Timer task for PID controllers
             ClosedLoopTask _closedLoopTask;
-
-            // Debugging support
-            Debugger _debugger;
 
             void startSensors(void) 
             {
@@ -140,9 +136,6 @@ namespace rft {
             {  
                 // Start the board
                 _board->begin();
-
-                // Ad-hoc debugging support
-                _debugger.begin(_board);
 
                 // Initialize the sensors
                 startSensors();

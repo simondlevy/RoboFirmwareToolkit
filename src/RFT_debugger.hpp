@@ -21,26 +21,6 @@ namespace rft {
 
     class Debugger {
 
-        friend class RFT;
-
-        private:
-
-            static constexpr float ADHOC_RATE = 100.f; // Hz
-
-            static constexpr float _adhoc_period = 1.f / ADHOC_RATE;
-
-            Board * _board;
-
-            float _prevTime;
-
-        // protected:
-        public:
-
-            void begin(Board * board)
-            {
-                _board = board;
-            }
-
         public:
 
             static void printf(const char * fmt, ...)
