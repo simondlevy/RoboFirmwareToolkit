@@ -99,13 +99,12 @@ namespace rft {
 
             } // checkOpenLoopController
 
-            void checkSerialTasks(OpenLoopController * olc, Actuator * actuator, State * state)
+            void checkSerialTasks(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
             {
                 for (uint8_t k=0; k<_serial_task_count; ++k) {
-                    _serial_tasks[k]->update(olc, actuator, state);
+                    _serial_tasks[k]->update(board, olc, actuator, state);
                 }
-
-            } // checkSerialTasks
+            }
 
         protected:
 
@@ -129,9 +128,6 @@ namespace rft {
                 // Start the actuator
                 actuator->begin();
 
-                // Initialize timer task for PID controllers
-                _closedLoopTask.begin(board);
-
             } // begin
 
             void update(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
@@ -140,13 +136,13 @@ namespace rft {
                 checkOpenLoopController(board, olc, actuator, state);
 
                 // Update PID controllers task
-                _closedLoopTask.update(olc, actuator, state);
+                _closedLoopTask.update(board, olc, actuator, state);
 
                 // Check sensors
                 checkSensors(board, state);
 
                 // Update serial tasks
-                checkSerialTasks(olc, actuator, state);
+                checkSerialTasks(board, olc, actuator, state);
             }
 
             void addSerialTask(SerialTask * task)

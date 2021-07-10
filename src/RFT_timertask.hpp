@@ -23,30 +23,23 @@ namespace rft {
 
         protected:
 
-            Board * _board = NULL;
-
             TimerTask(float freq)
             {
                 _period = 1 / freq;
                 _time = 0;
             }
 
-            void begin(Board * board)
-            {
-                _board = board;
-            }
-
-            virtual void doTask(OpenLoopController * olc, Actuator * actuator, State * state) = 0;
+            virtual void doTask(Board * board, OpenLoopController * olc, Actuator * actuator, State * state) = 0;
 
         public:
 
-            void update(OpenLoopController * olc, Actuator * actuator, State * state)
+            void update(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
             {
-                float time = _board->getTime();
+                float time = board->getTime();
 
                 if ((time - _time) > _period)
                 {
-                    doTask(olc, actuator, state);
+                    doTask(board, olc, actuator, state);
                     _time = time;
                 }
             }

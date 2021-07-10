@@ -22,8 +22,6 @@ namespace rft {
 
             static constexpr float FREQ = 66;
 
-            RealBoard * _realboard = NULL;
-
             bool _useTelemetryPort = false;
 
             SerialTask(bool secondaryPort=false)
@@ -32,24 +30,19 @@ namespace rft {
                 _useTelemetryPort = secondaryPort;
             }
 
-            void begin(Board * board) 
-            {
-                TimerTask::begin(board);
-
-                _realboard = (RealBoard *)board;
-            }
-
-            virtual void doTask(OpenLoopController * olc, Actuator * actuator, State * state) override
+            virtual void doTask(Board * board, OpenLoopController * olc, Actuator * actuator, State * state) override
             {
                 (void)olc;
                 (void)actuator;
 
-                while (_realboard->serialAvailable(_useTelemetryPort) > 0) {
-                    Parser::parse(_realboard->serialRead(_useTelemetryPort));
+                RealBoard * realboard = (RealBoard *)board;
+
+                while (realboard->serialAvailable(_useTelemetryPort) > 0) {
+                    Parser::parse(realboard->serialRead(_useTelemetryPort));
                 }
 
                 while (Parser::availableBytes() > 0) {
-                    _realboard->serialWrite(Parser::readByte(), _useTelemetryPort);
+                    realboard->serialWrite(Parser::readByte(), _useTelemetryPort);
                 }
 
                 // Support motor testing from GCS
