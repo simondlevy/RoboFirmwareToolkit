@@ -15,6 +15,7 @@
 #include "RFT_actuator.hpp"
 #include "RFT_parser.hpp"
 #include "rft_timertasks/closedlooptask.hpp"
+#include "rft_timertasks/serialtask.hpp"
 
 namespace rft {
 
@@ -28,6 +29,10 @@ namespace rft {
             // Sensors 
             Sensor * _sensors[256] = {};
             uint8_t _sensor_count = 0;
+
+            // Serial tasks
+            SerialTask * _serial_tasks[10] = {};
+            uint8_t serial_task_count = 0;
 
             // Timer task for PID controllers
             ClosedLoopTask _closedLoopTask;
