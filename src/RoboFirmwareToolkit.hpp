@@ -99,6 +99,10 @@ namespace rft {
 
             } // checkOpenLoopController
 
+            void checkSerialTasks(void)
+            {
+            } // checkSerialTasks
+
         protected:
 
             RFT(void)
@@ -136,6 +140,9 @@ namespace rft {
 
                 // Check sensors
                 checkSensors(board, state);
+
+                // Update serial tasks
+                checkSerialTasks();
             }
 
         public:
