@@ -99,8 +99,12 @@ namespace rft {
 
             } // checkOpenLoopController
 
-            void checkSerialTasks(void)
+            void checkSerialTasks(OpenLoopController * olc, Actuator * actuator, State * state)
             {
+                for (uint8_t k=0; k<_serial_task_count; ++k) {
+                    _serial_tasks[k]->update(olc, actuator, state);
+                }
+
             } // checkSerialTasks
 
         protected:
@@ -142,7 +146,12 @@ namespace rft {
                 checkSensors(board, state);
 
                 // Update serial tasks
-                checkSerialTasks();
+                checkSerialTasks(olc, actuator, state);
+            }
+
+            void addSerialTask(SerialTask * task)
+            {
+                _serial_tasks[_serial_task_count++] = task;
             }
 
         public:
@@ -155,11 +164,6 @@ namespace rft {
             void addClosedLoopController(ClosedLoopController * controller, uint8_t modeIndex=0) 
             {
                 _closedLoopTask.addController(controller, modeIndex);
-            }
-
-            void addSerialTask(SerialTask * task)
-            {
-                _serial_tasks[_serial_task_count++] = task;
             }
 
     }; // class RFT
