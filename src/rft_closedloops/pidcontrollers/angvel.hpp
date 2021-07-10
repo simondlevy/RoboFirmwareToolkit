@@ -25,9 +25,9 @@ namespace rft {
 
         public:
 
-            void begin(const float Kp, const float Ki, const float Kd) 
+            void init(const float Kp, const float Ki, const float Kd) 
             {
-                DofPid::begin(Kp, Ki, Kd, WINDUP_MAX);
+                DofPid::init(Kp, Ki, Kd, WINDUP_MAX);
 
                 // Convert degree parameters to radians for use later
                 _bigAngularVelocity =
