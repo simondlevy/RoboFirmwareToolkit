@@ -49,11 +49,11 @@ namespace rft {
                 }
             }
 
-            void checkOpenLoopController(Board * board, OpenLoopController * olc, State * state)
+            void checkOpenLoopController(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
             {
                 // Sync failsafe to open-loop-controller
                 if (olc->lostSignal() && state->armed) {
-                    _actuator->cut();
+                    actuator->cut();
                     state->armed = false;
                     state->failsafe = true;
                     board->showArmedStatus(false);
@@ -86,7 +86,7 @@ namespace rft {
 
                 // Cut motors on inactivity
                 if (state->armed && olc->inactive()) {
-                    _actuator->cut();
+                    actuator->cut();
                 }
 
                 // Set LED based on arming status
@@ -96,18 +96,13 @@ namespace rft {
 
         protected:
 
-            rft::Actuator * _actuator = NULL;
-
-            RFT(Actuator * actuator)
+            RFT(void)
             {
-                // Store the essentials
-                _actuator = actuator;
-
                 // Support adding new sensors
                 _sensor_count = 0;
             }
 
-            void begin(Board * board, OpenLoopController * olc, State * state, bool armed=false)
+            void begin(Board * board, OpenLoopController * olc, Actuator * actuator, State * state, bool armed=false)
             {  
                 // Zero-out the state
                 memset(state, 0, sizeof(*state));
@@ -122,26 +117,26 @@ namespace rft {
                 olc->begin();
 
                 // Start the actuator
-                _actuator->begin();
+                actuator->begin();
 
                 // Initialize failsafe
                 state->failsafe = false;
 
                 // Initialize timer task for PID controllers
-                _closedLoopTask.begin(board, _actuator);
+                _closedLoopTask.begin(board);
 
                 // Support safety override by simulator
                 state->armed = armed;
 
             } // begin
 
-            void update(Board * board, OpenLoopController * olc, State * state)
+            void update(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
             {
                 // Grab control signal if available
-                checkOpenLoopController(board, olc, state);
+                checkOpenLoopController(board, olc, actuator, state);
 
                 // Update PID controllers task
-                _closedLoopTask.update(olc, state);
+                _closedLoopTask.update(olc, actuator, state);
 
                 // Check sensors
                 checkSensors(board, state);

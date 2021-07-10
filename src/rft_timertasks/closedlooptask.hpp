@@ -24,9 +24,6 @@ namespace rft {
             ClosedLoopController * _controllers[256] = {};
             uint8_t _controller_count = 0;
 
-            // Other stuff we need
-            Actuator * _actuator = NULL;
-
         protected:
 
             // For now, we keep all tasks the same.  At some point it might be
@@ -38,11 +35,9 @@ namespace rft {
                 _controller_count = 0;
             }
 
-            void begin(Board * board, Actuator * actuator)
+            void begin(Board * board)
             {
                 TimerTask::begin(board);
-
-                _actuator = actuator;
             }
 
             void addController(ClosedLoopController * controller, uint8_t modeIndex) 
@@ -52,7 +47,7 @@ namespace rft {
                 _controllers[_controller_count++] = controller;
             }
 
-            virtual void doTask(OpenLoopController * olc, State * state) override
+            virtual void doTask(OpenLoopController * olc, Actuator * actuator, State * state) override
             {
                 // Start with demands from open-loop controller
                 float demands[OpenLoopController::MAX_DEMANDS] = {};
@@ -87,7 +82,7 @@ namespace rft {
 
                 // Use updated demands to run motors
                 if (state->armed && !state->failsafe && !olc->inactive()) {
-                    _actuator->run(demands);
+                    actuator->run(demands);
                 }
 
              } // doTask
