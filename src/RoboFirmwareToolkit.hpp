@@ -32,7 +32,7 @@ namespace rft {
 
             // Serial tasks
             SerialTask * _serial_tasks[10] = {};
-            uint8_t serial_task_count = 0;
+            uint8_t _serial_task_count = 0;
 
             // Timer task for PID controllers
             ClosedLoopTask _closedLoopTask;
@@ -145,9 +145,14 @@ namespace rft {
                 _sensors[_sensor_count++] = sensor;
             }
 
-            void addClosedLoopController(rft::ClosedLoopController * controller, uint8_t modeIndex=0) 
+            void addClosedLoopController(ClosedLoopController * controller, uint8_t modeIndex=0) 
             {
                 _closedLoopTask.addController(controller, modeIndex);
+            }
+
+            void addSerialTask(SerialTask * task)
+            {
+                _serial_tasks[_serial_task_count++] = task;
             }
 
     }; // class RFT
