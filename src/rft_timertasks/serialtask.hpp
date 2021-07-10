@@ -26,8 +26,6 @@ namespace rft {
 
             Actuator * _actuator = NULL;
 
-            OpenLoopController * _olc = NULL;
-
             bool _useTelemetryPort = false;
 
             SerialTask(bool secondaryPort=false)
@@ -45,8 +43,10 @@ namespace rft {
                 _actuator = actuator;
             }
 
-            virtual void doTask(State * state) override
+            virtual void doTask(OpenLoopController * olc, State * state) override
             {
+                (void)olc;
+
                 while (_realboard->serialAvailable(_useTelemetryPort) > 0) {
                     Parser::parse(_realboard->serialRead(_useTelemetryPort));
                 }

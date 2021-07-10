@@ -25,7 +25,6 @@ namespace rft {
             uint8_t _controller_count = 0;
 
             // Other stuff we need
-            OpenLoopController * _olc = NULL;
             Actuator * _actuator = NULL;
 
         protected:
@@ -39,11 +38,10 @@ namespace rft {
                 _controller_count = 0;
             }
 
-            void begin(Board * board, OpenLoopController * olc, Actuator * actuator)
+            void begin(Board * board, Actuator * actuator)
             {
                 TimerTask::begin(board);
 
-                _olc = olc;
                 _actuator = actuator;
             }
 
@@ -54,14 +52,14 @@ namespace rft {
                 _controllers[_controller_count++] = controller;
             }
 
-            virtual void doTask(State * state) override
+            virtual void doTask(OpenLoopController * olc, State * state) override
             {
                 // Start with demands from open-loop controller
                 float demands[OpenLoopController::MAX_DEMANDS] = {};
-                _olc->getDemands(demands);
+                olc->getDemands(demands);
 
                 // Each controller is associated with at least one auxiliary switch state
-                uint8_t modeIndex = _olc->getModeIndex();
+                uint8_t modeIndex = olc->getModeIndex();
 
                 // Some controllers should cause LED to flash when they're active
                 bool shouldFlash = false;
@@ -72,7 +70,7 @@ namespace rft {
 
                     // Some controllers need to be reset based on inactivty
                     // (e.g., throttle down resets PID controller integral)
-                    controller->resetOnInactivity(_olc->inactive());
+                    controller->resetOnInactivity(olc->inactive());
 
                     if (controller->modeIndex <= modeIndex) {
 
@@ -88,7 +86,7 @@ namespace rft {
                 _board->flashLed(shouldFlash);
 
                 // Use updated demands to run motors
-                if (state->armed && !state->failsafe && !_olc->inactive()) {
+                if (state->armed && !state->failsafe && !olc->inactive()) {
                     _actuator->run(demands);
                 }
 

@@ -33,9 +33,10 @@ namespace rft {
                 TimerTask::begin(board);
             }
 
-            virtual void doTask(State * state) override
+            virtual void doTask(OpenLoopController * olc, State * state) override
             {
                 (void)state;
+                (void)olc;
 
                 while (_board->telemetryAvailable() > 0) {
 

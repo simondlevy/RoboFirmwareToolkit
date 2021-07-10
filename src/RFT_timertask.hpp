@@ -36,17 +36,17 @@ namespace rft {
                 _board = board;
             }
 
-            virtual void doTask(State * state) = 0;
+            virtual void doTask(OpenLoopController * olc, State * state) = 0;
 
         public:
 
-            void update(State * state)
+            void update(OpenLoopController * olc, State * state)
             {
                 float time = _board->getTime();
 
                 if ((time - _time) > _period)
                 {
-                    doTask(state);
+                    doTask(olc, state);
                     _time = time;
                 }
             }
