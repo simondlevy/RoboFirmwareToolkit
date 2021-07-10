@@ -16,7 +16,7 @@ namespace rft {
 
     class Parser {
 
-        public:
+        private:
 
             static const uint8_t MAXMSG = 255;
 
@@ -32,24 +32,16 @@ namespace rft {
                 HEADER_CMD
             } serialState_t;
 
-            uint8_t _checksum;
-            uint8_t _inBuf[INBUF_SIZE];
+
             uint8_t _inBufIndex;
             uint8_t _outBuf[OUTBUF_SIZE];
             uint8_t _outBufIndex;
             uint8_t _outBufSize;
-            uint8_t _command;
             uint8_t _offset;
             uint8_t _dataSize;
             uint8_t _direction;
 
             serialState_t  _parser_state;
-
-            void serialize8(uint8_t a)
-            {
-                _outBuf[_outBufSize++] = a;
-                _checksum ^= a;
-            }
 
             void serialize16(int16_t a)
             {
@@ -85,6 +77,30 @@ namespace rft {
                 _outBufSize = 0;
                 _outBufIndex = 0;
                 headSerialReply(count*size);
+            }
+
+            static uint8_t CRC8(uint8_t * data, int n) 
+            {
+                uint8_t crc = 0x00;
+
+                for (int k=0; k<n; ++k) {
+
+                    crc ^= data[k];
+                }
+
+                return crc;
+            }
+
+        protected:
+
+            uint8_t _checksum;
+            uint8_t _inBuf[INBUF_SIZE];
+            uint8_t _command;
+
+            void serialize8(uint8_t a)
+            {
+                _outBuf[_outBufSize++] = a;
+                _checksum ^= a;
             }
 
             void prepareToSendBytes(uint8_t count)
@@ -132,20 +148,6 @@ namespace rft {
                 memcpy(&a, &src, 4);
                 serialize32(a);
             }
-
-            static uint8_t CRC8(uint8_t * data, int n) 
-            {
-                uint8_t crc = 0x00;
-
-                for (int k=0; k<n; ++k) {
-
-                    crc ^= data[k];
-                }
-
-                return crc;
-            }
-
-        protected:
 
             virtual void dispatchMessage(void) = 0;
 
