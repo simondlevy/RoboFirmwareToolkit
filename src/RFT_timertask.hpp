@@ -29,11 +29,17 @@ namespace rft {
                 _time = 0;
             }
 
-            virtual void doTask(Board * board, OpenLoopController * olc, Actuator * actuator, State * state) = 0;
+            virtual void doTask(Board * board,
+                                OpenLoopController * olc,
+                                Actuator * actuator,
+                                State * state) = 0;
 
         public:
 
-            void update(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
+            void update(Board * board,
+                        OpenLoopController * olc,
+                        Actuator * actuator,
+                        State * state)
             {
                 float time = board->getTime();
 

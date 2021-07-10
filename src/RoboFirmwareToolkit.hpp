@@ -54,7 +54,10 @@ namespace rft {
                 }
             }
 
-            void checkOpenLoopController(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
+            void checkOpenLoopController(Board * board,
+                                         OpenLoopController * olc,
+                                         Actuator * actuator,
+                                         State * state)
             {
                 // Sync failsafe to open-loop-controller
                 if (olc->lostSignal() && state->armed) {
@@ -99,7 +102,10 @@ namespace rft {
 
             } // checkOpenLoopController
 
-            void checkSerialTasks(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
+            void checkSerialTasks(Board * board,
+                                  OpenLoopController * olc,
+                                  Actuator * actuator,
+                                  State * state)
             {
                 for (uint8_t k=0; k<_serial_task_count; ++k) {
                     _serial_tasks[k]->update(board, olc, actuator, state);
@@ -114,7 +120,9 @@ namespace rft {
                 _sensor_count = 0;
             }
 
-            void begin(Board * board, OpenLoopController * olc, Actuator * actuator)
+            void begin(Board * board,
+                       OpenLoopController * olc,
+                       Actuator * actuator)
             {  
                 // Start the board
                 board->begin();
@@ -130,7 +138,10 @@ namespace rft {
 
             } // begin
 
-            void update(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
+            void update(Board * board,
+                        OpenLoopController * olc,
+                        Actuator * actuator,
+                        State * state)
             {
                 // Grab control signal if available
                 checkOpenLoopController(board, olc, actuator, state);
@@ -157,7 +168,8 @@ namespace rft {
                 _sensors[_sensor_count++] = sensor;
             }
 
-            void addClosedLoopController(ClosedLoopController * controller, uint8_t modeIndex=0) 
+            void addClosedLoopController(ClosedLoopController * controller,
+                                         uint8_t modeIndex=0) 
             {
                 _closedLoopTask.addController(controller, modeIndex);
             }

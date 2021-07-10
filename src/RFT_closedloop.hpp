@@ -16,8 +16,7 @@ namespace rft {
 
         friend class ClosedLoopTask;
 
-        // protected:
-        public:
+        protected:
 
             uint8_t modeIndex = 0;
 
