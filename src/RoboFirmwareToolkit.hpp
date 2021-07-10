@@ -102,11 +102,8 @@ namespace rft {
                 _sensor_count = 0;
             }
 
-            void begin(Board * board, OpenLoopController * olc, Actuator * actuator, State * state, bool armed=false)
+            void begin(Board * board, OpenLoopController * olc, Actuator * actuator)
             {  
-                // Zero-out the state
-                memset(state, 0, sizeof(*state));
-
                 // Start the board
                 board->begin();
 
@@ -119,14 +116,8 @@ namespace rft {
                 // Start the actuator
                 actuator->begin();
 
-                // Initialize failsafe
-                state->failsafe = false;
-
                 // Initialize timer task for PID controllers
                 _closedLoopTask.begin(board);
-
-                // Support safety override by simulator
-                state->armed = armed;
 
             } // begin
 
