@@ -33,7 +33,8 @@ namespace rft {
             void begin(void)
             {
                 // Flash LED
-                float pauseSeconds = LED_STARTUP_FLASH_SECONDS / LED_STARTUP_FLASH_COUNT;
+                float pauseSeconds = LED_STARTUP_FLASH_SECONDS /
+                                     LED_STARTUP_FLASH_COUNT;
                 setLed(false);
                 for (uint8_t i = 0; i < LED_STARTUP_FLASH_COUNT; i++) {
                     setLed(true);

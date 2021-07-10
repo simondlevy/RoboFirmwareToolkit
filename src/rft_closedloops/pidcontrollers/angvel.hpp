@@ -30,7 +30,8 @@ namespace rft {
                 DofPid::begin(Kp, Ki, Kd, WINDUP_MAX);
 
                 // Convert degree parameters to radians for use later
-                _bigAngularVelocity = rft::Filter::deg2rad(BIG_DEGREES_PER_SECOND);
+                _bigAngularVelocity =
+                    rft::Filter::deg2rad(BIG_DEGREES_PER_SECOND);
             }
 
             float compute(float demand, float angularVelocity)

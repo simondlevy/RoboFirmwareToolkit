@@ -33,7 +33,9 @@ namespace rft {
                 TimerTask::begin(board);
             }
 
-            virtual void doTask(OpenLoopController * olc, Actuator * actuator, State * state) override
+            virtual void doTask(OpenLoopController * olc,
+                                Actuator * actuator,
+                                State * state) override
             {
                 (void)actuator;
                 (void)state;

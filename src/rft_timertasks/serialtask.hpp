@@ -30,7 +30,10 @@ namespace rft {
                 _useTelemetryPort = secondaryPort;
             }
 
-            virtual void doTask(Board * board, OpenLoopController * olc, Actuator * actuator, State * state) override
+            virtual void doTask(Board * board,
+                                OpenLoopController * olc,
+                                Actuator * actuator,
+                                State * state) override
             {
                 (void)olc;
                 (void)actuator;
@@ -42,7 +45,8 @@ namespace rft {
                 }
 
                 while (Parser::availableBytes() > 0) {
-                    realboard->serialWrite(Parser::readByte(), _useTelemetryPort);
+                    realboard->serialWrite(Parser::readByte(),
+                                           _useTelemetryPort);
                 }
 
                 // Support motor testing from GCS

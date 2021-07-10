@@ -18,7 +18,9 @@ namespace rft {
          public:
 
             Teensy40(HardwareSerial * telemetryPort=NULL) 
-                : ArduinoBoard(13, false, telemetryPort) // false = non-inverted LED
+
+                  // false = non-inverted LED
+                : ArduinoBoard(13, false, telemetryPort) 
             {
             }
 

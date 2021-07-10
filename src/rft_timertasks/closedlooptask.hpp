@@ -35,23 +35,29 @@ namespace rft {
                 _controller_count = 0;
             }
 
-            void addController(ClosedLoopController * controller, uint8_t modeIndex) 
+            void addController(ClosedLoopController * controller,
+                               uint8_t modeIndex) 
             {
                 controller->modeIndex = modeIndex;
 
                 _controllers[_controller_count++] = controller;
             }
 
-            virtual void doTask(Board * board, OpenLoopController * olc, Actuator * actuator, State * state) override
+            virtual void doTask(Board * board,
+                                OpenLoopController * olc,
+                                Actuator * actuator,
+                                State * state) override
             {
                 // Start with demands from open-loop controller
                 float demands[OpenLoopController::MAX_DEMANDS] = {};
                 olc->getDemands(demands);
 
-                // Each controller is associated with at least one auxiliary switch state
+                // Each controller is associated with at least one auxiliary
+                // switch state
                 uint8_t modeIndex = olc->getModeIndex();
 
-                // Some controllers should cause LED to flash when they're active
+                // Some controllers should cause LED to flash when they're
+                // active
                 bool shouldFlash = false;
 
                 for (uint8_t k=0; k<_controller_count; ++k) {
