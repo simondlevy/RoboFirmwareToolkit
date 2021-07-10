@@ -27,7 +27,6 @@ namespace rft {
             // Other stuff we need
             OpenLoopController * _olc = NULL;
             Actuator * _actuator = NULL;
-            State  * _state    = NULL;
 
         protected:
 
@@ -40,13 +39,12 @@ namespace rft {
                 _controller_count = 0;
             }
 
-            void begin(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
+            void begin(Board * board, OpenLoopController * olc, Actuator * actuator)
             {
                 TimerTask::begin(board);
 
                 _olc = olc;
                 _actuator = actuator;
-                _state = state;
             }
 
             void addController(ClosedLoopController * controller, uint8_t modeIndex) 
@@ -56,7 +54,7 @@ namespace rft {
                 _controllers[_controller_count++] = controller;
             }
 
-            virtual void doTask(void) override
+            virtual void doTask(State * state) override
             {
                 // Start with demands from open-loop controller
                 float demands[OpenLoopController::MAX_DEMANDS] = {};
@@ -78,7 +76,7 @@ namespace rft {
 
                     if (controller->modeIndex <= modeIndex) {
 
-                        controller->modifyDemands(_state, demands); 
+                        controller->modifyDemands(state, demands); 
 
                         if (controller->shouldFlashLed()) {
                             shouldFlash = true;
@@ -90,7 +88,7 @@ namespace rft {
                 _board->flashLed(shouldFlash);
 
                 // Use updated demands to run motors
-                if (_state->armed && !_state->failsafe && !_olc->inactive()) {
+                if (state->armed && !state->failsafe && !_olc->inactive()) {
                     _actuator->run(demands);
                 }
 

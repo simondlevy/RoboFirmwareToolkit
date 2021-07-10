@@ -10,6 +10,7 @@
 
 #include "RFT_board.hpp"
 #include "RFT_debugger.hpp"
+#include "RFT_state.hpp"
 
 namespace rft {
 
@@ -35,17 +36,17 @@ namespace rft {
                 _board = board;
             }
 
-            virtual void doTask(void) = 0;
+            virtual void doTask(State * state) = 0;
 
         public:
 
-            void update(void)
+            void update(State * state)
             {
                 float time = _board->getTime();
 
                 if ((time - _time) > _period)
                 {
-                    doTask();
+                    doTask(state);
                     _time = time;
                 }
             }

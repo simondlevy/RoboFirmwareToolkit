@@ -13,6 +13,7 @@
 #include <RFT_debugger.hpp>
 #include <RFT_actuator.hpp>
 #include <RFT_parser.hpp>
+#include <RFT_state.hpp>
 
 namespace rft {
 
@@ -22,8 +23,6 @@ namespace rft {
 
             static constexpr float FREQ = 66;
 
-            State * _state = NULL;
-
             TelemetryTask(void)
                 : TimerTask(FREQ)
             {
@@ -32,12 +31,12 @@ namespace rft {
             void begin(rft::Board * board, rft::State * state) 
             {
                 TimerTask::begin(board);
-
-                _state = state;
             }
 
-            virtual void doTask(void) override
+            virtual void doTask(State * state) override
             {
+                (void)state;
+
                 while (_board->telemetryAvailable() > 0) {
 
                     Parser::parse(_board->telemetryRead());

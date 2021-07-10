@@ -22,9 +22,6 @@ namespace rft {
 
         private:
 
-            // Vehicle state (created by subclass)
-            State * _state = NULL;
-
             // Safety
             bool _safeToArm = false;
 
@@ -42,23 +39,23 @@ namespace rft {
                 }
             }
 
-            void checkSensors(void)
+            void checkSensors(State * state)
             {
                 // Some sensors may need to know the current time
                 float time = _board->getTime();
 
                 for (uint8_t k=0; k<_sensor_count; ++k) {
-                    _sensors[k]->modifyState(_state, time);
+                    _sensors[k]->modifyState(state, time);
                 }
             }
 
-            void checkOpenLoopController(void)
+            void checkOpenLoopController(State * state)
             {
                 // Sync failsafe to open-loop-controller
-                if (_olc->lostSignal() && _state->armed) {
+                if (_olc->lostSignal() && state->armed) {
                     _actuator->cut();
-                    _state->armed = false;
-                    _state->failsafe = true;
+                    state->armed = false;
+                    state->failsafe = true;
                     _board->showArmedStatus(false);
                     return;
                 }
@@ -67,8 +64,8 @@ namespace rft {
                 if (!_olc->ready()) return;
 
                 // Disarm
-                if (_state->armed && !_olc->inArmedState()) {
-                    _state->armed = false;
+                if (state->armed && !_olc->inArmedState()) {
+                    state->armed = false;
                 } 
 
                 // Avoid arming when controller is in armed state
@@ -78,22 +75,22 @@ namespace rft {
 
                 // Arm after lots of safety checks
                 if (_safeToArm
-                    && !_state->armed
-                    && !_state->failsafe 
-                    && _state->safeToArm()
+                    && !state->armed
+                    && !state->failsafe 
+                    && state->safeToArm()
                     && _olc->inactive()
                     && _olc->inArmedState()
                     ) {
-                    _state->armed = true;
+                    state->armed = true;
                 }
 
                 // Cut motors on inactivity
-                if (_state->armed && _olc->inactive()) {
+                if (state->armed && _olc->inactive()) {
                     _actuator->cut();
                 }
 
                 // Set LED based on arming status
-                _board->showArmedStatus(_state->armed);
+                _board->showArmedStatus(state->armed);
 
             } // checkOpenLoopController
 
@@ -105,35 +102,22 @@ namespace rft {
 
             rft::Actuator * _actuator = NULL;
 
-            RFT(State * state, Board * board, OpenLoopController * olc, Actuator * actuator)
+            RFT(Board * board, OpenLoopController * olc, Actuator * actuator)
             {
                 // Store the essentials
-                _state = state;
                 _board    = board;
                 _olc = olc;
                 _actuator = actuator;
-
-                // Zero-out the state
-                memset(state, 0, sizeof(*state));
 
                 // Support adding new sensors
                 _sensor_count = 0;
             }
 
-        public:
-
-            void addSensor(Sensor * sensor) 
-            {
-                _sensors[_sensor_count++] = sensor;
-            }
-
-            void addClosedLoopController(rft::ClosedLoopController * controller, uint8_t modeIndex=0) 
-            {
-                _closedLoopTask.addController(controller, modeIndex);
-            }
-
-            void begin(bool armed=false)
+            void begin(State * state, bool armed=false)
             {  
+                // Zero-out the state
+                memset(state, 0, sizeof(*state));
+
                 // Start the board
                 _board->begin();
 
@@ -147,26 +131,38 @@ namespace rft {
                 _actuator->begin();
 
                 // Initialize failsafe
-                _state->failsafe = false;
+                state->failsafe = false;
 
                 // Initialize timer task for PID controllers
-                _closedLoopTask.begin(_board, _olc, _actuator, _state);
+                _closedLoopTask.begin(_board, _olc, _actuator);
 
                 // Support safety override by simulator
-                _state->armed = armed;
+                state->armed = armed;
 
             } // begin
 
-            void update(void)
+            void update(State * state)
             {
                 // Grab control signal if available
-                checkOpenLoopController();
+                checkOpenLoopController(state);
 
                 // Update PID controllers task
-                _closedLoopTask.update();
+                _closedLoopTask.update(state);
 
                 // Check sensors
-                checkSensors();
+                checkSensors(state);
+            }
+
+        public:
+
+            void addSensor(Sensor * sensor) 
+            {
+                _sensors[_sensor_count++] = sensor;
+            }
+
+            void addClosedLoopController(rft::ClosedLoopController * controller, uint8_t modeIndex=0) 
+            {
+                _closedLoopTask.addController(controller, modeIndex);
             }
 
     }; // class RFT
