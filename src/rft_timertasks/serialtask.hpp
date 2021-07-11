@@ -12,7 +12,7 @@
 #include <RFT_debugger.hpp>
 #include <RFT_actuator.hpp>
 #include <RFT_parser.hpp>
-#include <RFT_boards/realboard.hpp>
+#include <rft_boards/realboard.hpp>
 
 namespace rft {
 
@@ -22,14 +22,6 @@ namespace rft {
 
             static constexpr float FREQ = 66;
 
-            RealBoard * _realboard = NULL;
-
-            State * _state = NULL;
-
-            Actuator * _actuator = NULL;
-
-            OpenLoopController * _olc = NULL;
-
             bool _useTelemetryPort = false;
 
             SerialTask(bool secondaryPort=false)
@@ -38,30 +30,28 @@ namespace rft {
                 _useTelemetryPort = secondaryPort;
             }
 
-            void begin(Board * board, State * state, OpenLoopController * olc, Actuator * actuator) 
+            virtual void doTask(Board * board,
+                                OpenLoopController * olc,
+                                Actuator * actuator,
+                                State * state) override
             {
-                TimerTask::begin(board);
+                (void)olc;
+                (void)actuator;
 
-                _realboard = (RealBoard *)board;
+                RealBoard * realboard = (RealBoard *)board;
 
-                _state = state;
-                _olc = olc;
-                _actuator = actuator;
-            }
-
-            virtual void doTask(void) override
-            {
-                while (_realboard->serialAvailable(_useTelemetryPort) > 0) {
-                    Parser::parse(_realboard->serialRead(_useTelemetryPort));
+                while (realboard->serialAvailable(_useTelemetryPort) > 0) {
+                    Parser::parse(realboard->serialRead(_useTelemetryPort));
                 }
 
                 while (Parser::availableBytes() > 0) {
-                    _realboard->serialWrite(Parser::readByte(), _useTelemetryPort);
+                    realboard->serialWrite(Parser::readByte(),
+                                           _useTelemetryPort);
                 }
 
                 // Support motor testing from GCS
-                if (!_state->armed) {
-                    _actuator->runDisarmed();
+                if (!state->armed) {
+                    actuator->runDisarmed();
                 }
             }
 

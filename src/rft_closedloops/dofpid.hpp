@@ -39,7 +39,10 @@ namespace rft {
 
         public:
 
-            void begin(const float Kp, const float Ki, const float Kd, const float windupMax=0.4) 
+            void init(const float Kp,
+                       const float Ki,
+                       const float Kd,
+                       const float windupMax=0.4) 
             {
                 // Set constants
                 _Kp = Kp;

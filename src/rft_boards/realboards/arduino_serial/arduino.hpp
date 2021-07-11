@@ -17,7 +17,7 @@ namespace rft {
         private:
 
             uint8_t _led_pin = 0;
-            bool    _led_inverted = false;
+            bool _led_inverted = false;
 
             static void powerPin(uint8_t id, uint8_t value)
             {
@@ -37,10 +37,14 @@ namespace rft {
 
             void setLed(bool isOn) 
             { 
-                digitalWrite(_led_pin, isOn ?  (_led_inverted?LOW:HIGH) : (_led_inverted?HIGH:LOW));
+                digitalWrite(_led_pin, isOn ?
+                             (_led_inverted?LOW:HIGH) :
+                             (_led_inverted?HIGH:LOW));
             }
 
-            ArduinoBoard(uint8_t ledPin, bool ledInverted=false, HardwareSerial * telemetryPort=NULL)
+            ArduinoBoard(uint8_t ledPin,
+                         bool ledInverted=false,
+                         HardwareSerial * telemetryPort=NULL)
                 : ArduinoSerial(telemetryPort)
             {
                 _led_pin = ledPin;

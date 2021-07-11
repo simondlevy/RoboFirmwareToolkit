@@ -16,18 +16,13 @@ namespace rft {
 
     class ClosedLoopTask : public TimerTask {
 
-        friend class RFT;
+        friend class RFTPure;
 
         private:
 
             // PID controllers
             ClosedLoopController * _controllers[256] = {};
             uint8_t _controller_count = 0;
-
-            // Other stuff we need
-            OpenLoopController * _olc = NULL;
-            Actuator * _actuator = NULL;
-            State  * _state    = NULL;
 
         protected:
 
@@ -40,32 +35,29 @@ namespace rft {
                 _controller_count = 0;
             }
 
-            void begin(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
-            {
-                TimerTask::begin(board);
-
-                _olc = olc;
-                _actuator = actuator;
-                _state = state;
-            }
-
-            void addController(ClosedLoopController * controller, uint8_t modeIndex) 
+            void addController(ClosedLoopController * controller,
+                               uint8_t modeIndex) 
             {
                 controller->modeIndex = modeIndex;
 
                 _controllers[_controller_count++] = controller;
             }
 
-            virtual void doTask(void) override
+            virtual void doTask(Board * board,
+                                OpenLoopController * olc,
+                                Actuator * actuator,
+                                State * state) override
             {
                 // Start with demands from open-loop controller
                 float demands[OpenLoopController::MAX_DEMANDS] = {};
-                _olc->getDemands(demands);
+                olc->getDemands(demands);
 
-                // Each controller is associated with at least one auxiliary switch state
-                uint8_t modeIndex = _olc->getModeIndex();
+                // Each controller is associated with at least one auxiliary
+                // switch state
+                uint8_t modeIndex = olc->getModeIndex();
 
-                // Some controllers should cause LED to flash when they're active
+                // Some controllers should cause LED to flash when they're
+                // active
                 bool shouldFlash = false;
 
                 for (uint8_t k=0; k<_controller_count; ++k) {
@@ -74,11 +66,11 @@ namespace rft {
 
                     // Some controllers need to be reset based on inactivty
                     // (e.g., throttle down resets PID controller integral)
-                    controller->resetOnInactivity(_olc->inactive());
+                    controller->resetOnInactivity(olc->inactive());
 
                     if (controller->modeIndex <= modeIndex) {
 
-                        controller->modifyDemands(_state, demands); 
+                        controller->modifyDemands(state, demands); 
 
                         if (controller->shouldFlashLed()) {
                             shouldFlash = true;
@@ -87,11 +79,11 @@ namespace rft {
                 }
 
                 // Flash LED for certain controllers
-                _board->flashLed(shouldFlash);
+                board->flashLed(shouldFlash);
 
                 // Use updated demands to run motors
-                if (_state->armed && !_state->failsafe && !_olc->inactive()) {
-                    _actuator->run(demands);
+                if (state->armed && !state->failsafe && !olc->inactive()) {
+                    actuator->run(demands);
                 }
 
              } // doTask

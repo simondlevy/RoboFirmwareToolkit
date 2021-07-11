@@ -15,24 +15,24 @@ namespace rft {
 
     class Board {
 
-        friend class RFT;
+        friend class RFTPure;
         friend class Debugger;
         friend class TimerTask;
         friend class ClosedLoopTask;
 
         protected:
 
-            //------------------------------------ Core functionality ----------------------------------------------------
+            // --------------- Core functionality ------------------------------
             virtual float getTime(void) = 0;
 
-            //-------------------------------------- For real boards -----------------------------------------------------
+            // ----------------- For real boards -------------------------------
             virtual void begin(void) { }
 
-            //----------------------------------------- Safety -----------------------------------------------------------
+            // ------------------- Safety --------------------------------------
             virtual void showArmedStatus(bool armed) { (void)armed; }
             virtual void flashLed(bool shouldflash) { (void)shouldflash; }
 
-            //--------------------------------------- Debugging ----------------------------------------------------------
+            // ------------------ Debugging ------------------------------------
             static  void outbuf(char * buf);
 
     }; // class Board

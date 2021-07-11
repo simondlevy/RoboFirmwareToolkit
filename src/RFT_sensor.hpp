@@ -14,7 +14,7 @@ namespace rft {
 
     class Sensor {
 
-        friend class RFT;
+        friend class RFTPure;
 
         protected:
 
