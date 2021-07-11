@@ -36,7 +36,6 @@ namespace rft {
                                 State * state) override
             {
                 (void)olc;
-                (void)actuator;
 
                 RealBoard * realboard = (RealBoard *)board;
 
