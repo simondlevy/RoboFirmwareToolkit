@@ -173,15 +173,11 @@ namespace rft {
                 return _outBuf[_outBufIndex++];
             }
 
-            // returns true if reboot request, false otherwise
-            bool parse(uint8_t c)
+            void parse(uint8_t c)
             {
                 switch (_parser_state) {
 
                     case IDLE:
-                        if (c == 'R') {
-                            return true; // got reboot command
-                        }
                         _parser_state = (c == '$') ? HEADER_START : IDLE;
                         break;
 
@@ -207,7 +203,7 @@ namespace rft {
                     case HEADER_ARROW:
                         if (c > INBUF_SIZE) {       // now we are expecting the payload size
                             _parser_state = IDLE;
-                            return false;
+                            break;
                         }
                         _dataSize = c;
                         _offset = 0;
@@ -235,8 +231,6 @@ namespace rft {
                         }
 
                 } // switch (_parser_state)
-
-                return false; // no reboot 
 
             } // parse
 
