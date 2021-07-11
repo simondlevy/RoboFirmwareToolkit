@@ -18,6 +18,8 @@ namespace rft {
 
     class SerialTask : public TimerTask, public Parser {
 
+        friend class RFT;
+
         protected:
 
             static constexpr float FREQ = 66;
@@ -30,12 +32,11 @@ namespace rft {
                 _useTelemetryPort = secondaryPort;
             }
 
-            virtual void doTask(Board * board,
-                                OpenLoopController * olc,
-                                Actuator * actuator,
-                                State * state) override
+            void update(Board * board, Actuator * actuator, State * state)
             {
-                (void)olc;
+                if (!TimerTask::ready(board)) {
+                    return;
+                }
 
                 RealBoard * realboard = (RealBoard *)board;
 

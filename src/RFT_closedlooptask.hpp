@@ -43,11 +43,12 @@ namespace rft {
                 _controllers[_controller_count++] = controller;
             }
 
-            virtual void doTask(Board * board,
-                                OpenLoopController * olc,
-                                Actuator * actuator,
-                                State * state) override
+            void update(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
             {
+                if (!TimerTask::ready(board)) {
+                    return;
+                }
+
                 // Start with demands from open-loop controller
                 float demands[OpenLoopController::MAX_DEMANDS] = {};
                 olc->getDemands(demands);

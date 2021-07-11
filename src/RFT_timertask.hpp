@@ -29,26 +29,18 @@ namespace rft {
                 _time = 0;
             }
 
-            virtual void doTask(Board * board,
-                                OpenLoopController * olc,
-                                Actuator * actuator,
-                                State * state) = 0;
-
-        public:
-
-            void update(Board * board,
-                        OpenLoopController * olc,
-                        Actuator * actuator,
-                        State * state)
+            bool ready(Board * board)
             {
                 float time = board->getTime();
 
                 if ((time - _time) > _period)
                 {
-                    doTask(board, olc, actuator, state);
                     _time = time;
+                    return true;
                 }
-            }
+
+                return false;
+             }
 
     };  // TimerTask
 

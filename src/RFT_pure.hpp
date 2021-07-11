@@ -1,5 +1,5 @@
 /*
-   RFT class for RoboFirmwareToolkit
+   Core class for RoboFirmwareToolkit
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -14,7 +14,7 @@
 #include "RFT_sensor.hpp"
 #include "RFT_actuator.hpp"
 #include "RFT_parser.hpp"
-#include "rft_timertasks/closedlooptask.hpp"
+#include "RFT_closedlooptask.hpp"
 
 namespace rft {
 
