@@ -12,7 +12,7 @@ namespace rft {
 
     class Actuator {
 
-        friend class RFT;
+        friend class RFTPure;
         friend class ClosedLoopTask;
         friend class SerialTask;
 

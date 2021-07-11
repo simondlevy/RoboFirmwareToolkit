@@ -15,7 +15,7 @@ namespace rft {
 
     class OpenLoopController {
 
-        friend class RFT;
+        friend class RFTPure;
         friend class SerialTask;
         friend class ClosedLoopTask;
 

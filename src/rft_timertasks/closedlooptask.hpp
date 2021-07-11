@@ -16,7 +16,7 @@ namespace rft {
 
     class ClosedLoopTask : public TimerTask {
 
-        friend class RFT;
+        friend class RFTPure;
 
         private:
 

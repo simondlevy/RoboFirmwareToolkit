@@ -15,7 +15,7 @@ namespace rft {
 
     class Board {
 
-        friend class RFT;
+        friend class RFTPure;
         friend class Debugger;
         friend class TimerTask;
         friend class ClosedLoopTask;
