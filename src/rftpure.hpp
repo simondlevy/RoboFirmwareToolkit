@@ -153,4 +153,4 @@ namespace rft {
 
     }; // class RFTPure
 
-} // namespace
+} // namespace rft
