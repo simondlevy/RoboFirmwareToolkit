@@ -37,12 +37,12 @@ namespace rft {
             // Prevents integral windup
             float _windupMax = 0;
 
-        public:
+        protected:
 
-            void init(const float Kp,
-                       const float Ki,
-                       const float Kd,
-                       const float windupMax=0.4) 
+            DofPid(const float Kp,
+                   const float Ki,
+                   const float Kd,
+                   const float windupMax=0.4) 
             {
                 // Set constants
                 _Kp = Kp;
