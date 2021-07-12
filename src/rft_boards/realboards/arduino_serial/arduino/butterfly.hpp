@@ -17,7 +17,7 @@ namespace rft {
 
          public:
 
-            Butterfly(HardwareSerial * telemetryPort = NONE) 
+            Butterfly(HardwareSerial * telemetryPort = NULL) 
                 : ArduinoBoard(13, true, telemetryPort) // red LED, active low
             {
             }
