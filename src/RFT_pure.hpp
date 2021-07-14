@@ -123,6 +123,29 @@ namespace rft {
 
             } // begin
 
+            static void begin(
+                    Board * board,
+                    OpenLoopController * olc,
+                    Actuator * actuator,
+                    Sensor ** sensors,
+                    uint8_t sensor_count)
+            {  
+                // Start the board
+                board->begin();
+
+                // Initialize the sensors
+                for (uint8_t k=0; k<sensor_count; ++k) {
+                    sensors[k]->begin();
+                }
+
+                // Initialize the open-loop controller
+                olc->begin();
+
+                // Start the actuator
+                actuator->begin();
+
+            } // begin
+
             void update(Board * board,
                         OpenLoopController * olc,
                         Actuator * actuator,
