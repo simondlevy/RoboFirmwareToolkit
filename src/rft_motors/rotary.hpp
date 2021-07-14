@@ -1,5 +1,5 @@
 /*
-   A class for rotary motors
+   Abstract class for rotary motors
 
    Copyright (c) 2021 Simon D. Levy
 

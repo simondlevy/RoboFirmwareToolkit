@@ -10,17 +10,13 @@
 
 #include "rft_motors/rotary.hpp"
 
-#ifdef ESP32
-#include <analogWrite.h>
-#endif
-
 namespace rft {
 
-    class BrushedMotor : public RotaryMotor {
+    class ArduinoBrushedMotor : public RotaryMotor {
 
         public:
 
-            BrushedMotor(uint8_t pin)
+            ArduinoBrushedMotor(uint8_t pin)
                 : RotaryMotor(pin)
             {
             }

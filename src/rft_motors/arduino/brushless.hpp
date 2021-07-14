@@ -10,17 +10,9 @@
 
 #include "rft_motors/rotary.hpp"
 
-static const uint16_t OFFSET = 
-#ifdef ESP32
-25;
-#include <analogWrite.h>
-#else
-0;
-#endif
-
 namespace rft {
 
-    class BrushlessMotor : public RotaryMotor {
+    class ArduinoBrushlessMotor : public RotaryMotor {
 
         private:
 
@@ -34,7 +26,7 @@ namespace rft {
 
         public:
 
-            BrushlessMotor(uint8_t pin)
+            ArduinoBrushlessMotor(uint8_t pin)
                 : RotaryMotor(pin)
             {
             }

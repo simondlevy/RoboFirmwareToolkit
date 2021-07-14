@@ -1,5 +1,5 @@
 /*
-   A class for servo motors
+   Abstract class for servo motors
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -10,20 +10,9 @@
 
 #include "RFT_motor.hpp"
 
-#include <Servo.h>
-
 namespace rft {
 
-    void Board::outbuf(char * s)
-    {
-        Serial.print(s);
-    }
-
     class ServoMotor : public Motor {
-
-        private:
-
-            Servo _servo;
 
         public:
 
@@ -32,15 +21,11 @@ namespace rft {
             {
             }
 
-            virtual void begin(void) override
+            virtual float constrainValue(float value) override
             {
-                _servo.attach(_pin);
+                return Filter::constrainMinMax(value, -1, +1);
             }
 
-            virtual void write(float value) override
-            {
-                _servo.write((uint8_t)((value + 1) * 90));
-            }
 
     }; // class ServoMotor
 
