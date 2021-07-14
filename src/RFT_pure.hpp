@@ -161,6 +161,28 @@ namespace rft {
                 checkSensors(board, state);
             }
 
+            void update(Board * board,
+                        OpenLoopController * olc,
+                        Actuator * actuator,
+                        State * state,
+                        Sensor ** sensors,
+                        uint8_t sensor_count)
+            {
+                // Grab control signal if available
+                checkOpenLoopController(board, olc, actuator, state);
+
+                // Update PID controllers task
+                _closedLoopTask.update(board, olc, actuator, state);
+
+                // Some sensors may need to know the current time
+                float time = board->getTime();
+
+                // Check sensors
+                for (uint8_t k=0; k<sensor_count; ++k) {
+                    sensors[k]->modifyState(state, time);
+                }
+            }
+
         public:
 
             void addSensor(Sensor * sensor) 
