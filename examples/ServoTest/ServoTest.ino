@@ -6,22 +6,23 @@
    MIT License
  */
 
-#include <Servo.h>
+#include "RFT_full.hpp"
+#include "rft_motors/servo.hpp"
 
 static uint8_t PIN = 5;
 
-static uint8_t  val;
+static float  val;
 static int8_t dir;
 
-static Servo servo;
+static rft::ServoMotor motor = rft::ServoMotor(PIN);
 
 void setup(void)
 {
-    servo.attach(PIN);
-
     // Start with motor off, increasing
-    val = 90;
+    val = 0;
     dir = +1;
+
+    motor.begin();
 
     // Necessary for some servos
     delay(4000);
@@ -29,15 +30,15 @@ void setup(void)
 
 void loop(void)
 {
-    servo.write(val);
+    motor.write(val);
 
-    val += dir;
+    val += dir * .1;
 
-    if (val == 180) {
+    if (val >= +1) {
         dir = -1;
     }
 
-    if (val == 0) {
+    if (val <= -1) {
         dir = +1;
     }
 

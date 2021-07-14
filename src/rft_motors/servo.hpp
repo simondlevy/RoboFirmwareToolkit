@@ -14,6 +14,11 @@
 
 namespace rft {
 
+    void Board::outbuf(char * s)
+    {
+        Serial.print(s);
+    }
+
     class ServoMotor : public Motor {
 
         private:
@@ -32,14 +37,9 @@ namespace rft {
                 _servo.attach(_pin);
             }
 
-            virtual float constrainValue(float value) override
-            {
-                return Filter::constrainAbs(value, 0.45);
-            }
-
             virtual void write(float value) override
             {
-                _servo.write((uint8_t)(90 + value * 45));
+                _servo.write((uint8_t)((value + 1) * 90));
             }
 
     }; // class ServoMotor
