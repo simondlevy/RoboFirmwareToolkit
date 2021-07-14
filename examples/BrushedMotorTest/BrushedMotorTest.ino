@@ -1,5 +1,5 @@
 /*
-   Arduino sketch to test brushless motor with standard ESC
+   Arduino sketch to test brushed motor
 
    DID YOU REMEMOVE THE ROTORS FIRST?
 
@@ -9,14 +9,14 @@
  */
 
 #include "RFT_full.hpp"
-#include "rft_motors/rotary/brushless.hpp"
+#include "rft_motors/rotary/brushed.hpp"
 
-static uint8_t PIN = 5;
+static uint8_t PIN = 3;
 
 static float  val;
 static int8_t dir;
 
-static rft::BrushlessMotor motor = rft::BrushlessMotor(PIN);
+static rft::BrushedMotor motor = rft::BrushedMotor(PIN);
 
 void setup(void)
 {
