@@ -7,14 +7,14 @@
  */
 
 #include "RFT_full.hpp"
-#include "rft_motors/servo.hpp"
+#include "rft_motors/arduino/servo.hpp"
 
-static uint8_t PIN = 5;
+static uint8_t PIN = 9; // 3, 4, 5, 6, 8, 9
 
 static float  val;
 static int8_t dir;
 
-static rft::ServoMotor motor = rft::ServoMotor(PIN);
+static rft::ArduinoServoMotor motor = rft::ArduinoServoMotor(PIN);
 
 void setup(void)
 {
