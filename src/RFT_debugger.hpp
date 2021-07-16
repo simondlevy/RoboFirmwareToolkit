@@ -15,8 +15,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include "RFT_board.hpp"
-
 namespace rft {
 
     class Debugger {
@@ -29,7 +27,7 @@ namespace rft {
                 va_start(ap, fmt);
                 char buf[200];
                 vsnprintf(buf, 200, fmt, ap); 
-                Board::outbuf(buf);
+                outbuf(buf);
                 va_end(ap);
             }
 
@@ -54,6 +52,10 @@ namespace rft {
                 printfloat(val, prec);
                 printf("\n");
             }
+
+        protected:
+
+            static void outbuf(char * buf);
 
         }; // class Debugger
 

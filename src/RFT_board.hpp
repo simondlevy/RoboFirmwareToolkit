@@ -22,18 +22,13 @@ namespace rft {
 
         protected:
 
-            // --------------- Core functionality ------------------------------
+            // --------------- Pure functionality ------------------------------
             virtual float getTime(void) = 0;
 
             // ----------------- For real boards -------------------------------
             virtual void begin(void) { }
-
-            // ------------------- Safety --------------------------------------
             virtual void showArmedStatus(bool armed) { (void)armed; }
             virtual void flashLed(bool shouldflash) { (void)shouldflash; }
-
-            // ------------------ Debugging ------------------------------------
-            static  void outbuf(char * buf);
 
     }; // class Board
 

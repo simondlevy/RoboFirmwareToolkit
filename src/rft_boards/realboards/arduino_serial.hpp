@@ -75,9 +75,4 @@ namespace rft {
 
     }; // class ArduinoSerial
 
-    void Board::outbuf(char * buf)
-    {
-        Serial.print(buf);
-    }
-
 } // namespace rft
