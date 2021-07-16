@@ -9,14 +9,14 @@
  */
 
 #include "RFT_full.hpp"
-#include "rft_motors/rotary/brushless.hpp"
+#include "rft_motors/arduino/brushless.hpp"
 
 static uint8_t PIN = 5;
 
 static float  val;
 static int8_t dir;
 
-static rft::BrushlessMotor motor = rft::BrushlessMotor(PIN);
+static rft::ArduinoBrushlessMotor motor = rft::ArduinoBrushlessMotor(PIN);
 
 void setup(void)
 {
