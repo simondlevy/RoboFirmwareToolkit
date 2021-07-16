@@ -23,19 +23,19 @@ namespace rft {
 
         protected:
 
-            RFT(void)
-                : RFTPure()
+            RFT(Board * board, OpenLoopController * olc, Actuator * actuator)
+                : RFTPure(board, olc, actuator)
             {
                 _serial_task_count = 0;
             }
 
-            void update(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
+            void update(State * state)
             {
-                RFTPure::update(board, olc, actuator, state);
+                RFTPure::update(state);
 
                 // Update serial tasks
                 for (uint8_t k=0; k<_serial_task_count; ++k) {
-                    _serial_tasks[k]->update(board, actuator, state);
+                    _serial_tasks[k]->update(_board, _actuator, state);
                 }
             }
 

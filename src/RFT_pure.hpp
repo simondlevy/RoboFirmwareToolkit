@@ -39,41 +39,38 @@ namespace rft {
                 }
             }
 
-            void checkSensors(Board * board, State * state)
+            void checkSensors(State * state)
             {
                 // Some sensors may need to know the current time
-                float time = board->getTime();
+                float time = _board->getTime();
 
                 for (uint8_t k=0; k<_sensor_count; ++k) {
                     _sensors[k]->modifyState(state, time);
                 }
             }
 
-            void checkOpenLoopController(Board * board,
-                                         OpenLoopController * olc,
-                                         Actuator * actuator,
-                                         State * state)
+            void checkOpenLoopController(State * state)
             {
                 // Sync failsafe to open-loop-controller
-                if (olc->lostSignal() && state->armed) {
-                    actuator->cut();
+                if (_olc->lostSignal() && state->armed) {
+                    _actuator->cut();
                     state->armed = false;
                     state->failsafe = true;
-                    board->showArmedStatus(false);
+                    _board->showArmedStatus(false);
                     return;
                 }
 
                 // Check whether controller data is available
-                if (!olc->ready()) return;
+                if (!_olc->ready()) return;
 
                 // Disarm
-                if (state->armed && !olc->inArmedState()) {
+                if (state->armed && !_olc->inArmedState()) {
                     state->armed = false;
                 } 
 
                 // Avoid arming when controller is in armed state
                 if (!_safeToArm) {
-                    _safeToArm = !olc->inArmedState();
+                    _safeToArm = !_olc->inArmedState();
                 }
 
                 // Arm after lots of safety checks
@@ -81,61 +78,64 @@ namespace rft {
                     && !state->armed
                     && !state->failsafe 
                     && state->safeToArm()
-                    && olc->inactive()
-                    && olc->inArmedState()
+                    && _olc->inactive()
+                    && _olc->inArmedState()
                     ) {
                     state->armed = true;
                 }
 
                 // Cut motors on inactivity
-                if (state->armed && olc->inactive()) {
-                    actuator->cut();
+                if (state->armed && _olc->inactive()) {
+                    _actuator->cut();
                 }
 
                 // Set LED based on arming status
-                board->showArmedStatus(state->armed);
+                _board->showArmedStatus(state->armed);
 
             } // checkOpenLoopController
 
         protected:
 
-            RFTPure(void)
+            // Essentials
+            Board * _board = NULL;
+            OpenLoopController * _olc = NULL;
+            Actuator * _actuator = NULL;
+
+            RFTPure(Board * board, OpenLoopController * olc, Actuator * actuator)
             {
-                // Support adding new sensors
+                _board = board;
+                _olc = olc;
+                _actuator = actuator;
+
                 _sensor_count = 0;
             }
 
-            void begin(Board * board,
-                       OpenLoopController * olc,
-                       Actuator * actuator)
+            void begin(void)
             {  
                 // Start the board
-                board->begin();
+                _board->begin();
 
                 // Initialize the sensors
                 startSensors();
 
                 // Initialize the open-loop controller
-                olc->begin();
+                _olc->begin();
 
                 // Start the actuator
-                actuator->begin();
+                _actuator->begin();
 
             } // begin
 
-            void update(Board * board,
-                        OpenLoopController * olc,
-                        Actuator * actuator,
-                        State * state)
+            void update(State * state)
             {
                 // Grab control signal if available
-                checkOpenLoopController(board, olc, actuator, state);
+                checkOpenLoopController(state);
 
                 // Update PID controllers task
-                _closedLoopTask.update(board, olc, actuator, state);
+                _closedLoopTask.update(_board, _olc, _actuator, state);
 
                 // Check sensors
-                checkSensors(board, state);
+                checkSensors(state);
             }
 
         public:
