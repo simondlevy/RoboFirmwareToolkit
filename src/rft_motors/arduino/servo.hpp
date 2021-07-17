@@ -34,7 +34,9 @@ namespace rft {
 
             virtual void write(float value) override
             {
-                _servo.write((uint8_t)((value + 1) * 90));
+                uint8_t usec = (uint8_t)((value + 1) * 90);
+                // Debugger::printf("%+3.3f  =>  %d\n", value, usec);
+                _servo.write(usec);
             }
 
     }; // class ArduinoServoMotor

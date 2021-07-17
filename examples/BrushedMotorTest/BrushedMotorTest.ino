@@ -11,7 +11,7 @@
 #include "RFT_full.hpp"
 #include "rft_motors/arduino/brushed.hpp"
 
-static uint8_t PIN = 13;
+static uint8_t PIN = 11;
 
 static float  val;
 static int8_t dir;
@@ -37,7 +37,7 @@ void loop(void)
     val += dir * .001;
 
     // stop halfway
-    if (val >= 0.5) {
+    if (val >= 0.25) {
         dir = -1;
     }
 
