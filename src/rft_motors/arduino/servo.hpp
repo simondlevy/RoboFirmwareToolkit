@@ -35,7 +35,6 @@ namespace rft {
             virtual void write(float value) override
             {
                 uint8_t usec = (uint8_t)((value + 1) * 90);
-                // Debugger::printf("%+3.3f  =>  %d\n", value, usec);
                 _servo.write(usec);
             }
 
