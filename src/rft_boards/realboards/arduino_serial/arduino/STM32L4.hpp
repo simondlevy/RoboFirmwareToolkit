@@ -1,5 +1,5 @@
 /*
-   Tlera Butterfly implementation of Board routines
+   Tlera STM32L4 implementation of Board routines
 
    Copyright (c) 2021 Simon D. Levy
 
@@ -13,15 +13,15 @@
 
 namespace rft {
 
-    class Butterfly : public ArduinoBoard {
+    class STM32L4 : public ArduinoBoard {
 
          public:
 
-            Butterfly(HardwareSerial * telemetryPort = NULL) 
+            STM32L4(HardwareSerial * telemetryPort = NULL) 
                 : ArduinoBoard(13, true, telemetryPort) // red LED, active low
             {
             }
 
-    }; // class Butterfly
+    }; // class STM32L4
 
 } // namespace rft

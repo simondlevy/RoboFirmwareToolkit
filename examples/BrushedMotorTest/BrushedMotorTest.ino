@@ -11,7 +11,7 @@
 #include "RFT_full.hpp"
 #include "rft_motors/arduino/brushed.hpp"
 
-static uint8_t PIN = 11;
+static uint8_t PIN = 9;
 
 static float  val;
 static int8_t dir;
