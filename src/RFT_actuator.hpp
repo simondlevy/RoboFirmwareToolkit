@@ -28,7 +28,7 @@ namespace rft {
 
             virtual uint8_t getType(void) { return 0; }
 
-            virtual void run(float * demands) = 0;
+            virtual void run(float * demands, bool olcInactive) = 0;
 
             virtual void setMotorDisarmed(uint8_t index, float value)
             {

@@ -85,9 +85,12 @@ namespace rft {
                 // Flash LED for certain controllers
                 board->flashLed(shouldFlash);
 
-                // Use updated demands to run motors
-                if (state->armed && !state->failsafe && !olc->inactive()) {
-                    actuator->run(demands);
+                // Use updated demands to run motors, allowing
+                // actuator to choose whether it cares about
+                // open-loop controller being inactive (e.g.,
+                // throttle down)
+                if (state->armed && !state->failsafe) {
+                    actuator->run(demands, olc->inactive());
                 }
 
              } // doTask
