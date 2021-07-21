@@ -101,7 +101,9 @@ namespace rft {
             OpenLoopController * _olc = NULL;
             Actuator * _actuator = NULL;
 
-            RFTPure(Board * board, OpenLoopController * olc, Actuator * actuator)
+            RFTPure(Board * board,
+                    OpenLoopController * olc,
+                    Actuator * actuator)
             {
                 _board = board;
                 _olc = olc;
