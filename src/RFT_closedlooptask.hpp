@@ -43,7 +43,10 @@ namespace rft {
                 _controllers[_controller_count++] = controller;
             }
 
-            void update(Board * board, OpenLoopController * olc, Actuator * actuator, State * state)
+            void update(Board * board,
+                        OpenLoopController * olc,
+                        Actuator * actuator,
+                        State * state)
             {
                 if (!TimerTask::ready(board)) {
                     return;
