@@ -9,7 +9,7 @@
 #include "RFT_full.hpp"
 #include "rft_motors/arduino/servo.hpp"
 
-static uint8_t PIN = 9; // 3, 4, 5, 6, 8, 9
+static uint8_t PIN = 13;
 
 static float  val;
 static int8_t dir;

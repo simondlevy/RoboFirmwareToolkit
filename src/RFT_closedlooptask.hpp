@@ -89,8 +89,8 @@ namespace rft {
                 // actuator to choose whether it cares about
                 // open-loop controller being inactive (e.g.,
                 // throttle down)
-                if (state->armed && !state->failsafe) {
-                    actuator->run(demands, olc->inactive());
+                if (!state->failsafe) {
+                    actuator->run(demands, state->armed && !olc->inactive());
                 }
 
              } // doTask
