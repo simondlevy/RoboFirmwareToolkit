@@ -27,29 +27,32 @@ namespace rft {
 
         protected:
 
+            ArduinoBoard(int8_t ledPin=13,
+                         HardwareSerial * telemetryPort=NULL)
+                : ArduinoSerial(telemetryPort)
+            {
+                _led_pin = abs(ledPin);
+                _led_inverted = ledPin < 0;
+
+            }
+
             void begin(void)
             {
-                pinMode(_led_pin, OUTPUT);
-                digitalWrite(_led_pin, _led_inverted ? HIGH : LOW);
+                if (_led_pin) {
+                    pinMode(_led_pin, OUTPUT);
+                    digitalWrite(_led_pin, _led_inverted ? HIGH : LOW);
+                }
 
                 ArduinoSerial::begin();
             }
 
             void setLed(bool isOn) 
             { 
-                digitalWrite(_led_pin, isOn ?
-                             (_led_inverted?LOW:HIGH) :
-                             (_led_inverted?HIGH:LOW));
-            }
-
-            ArduinoBoard(uint8_t ledPin,
-                         bool ledInverted=false,
-                         HardwareSerial * telemetryPort=NULL)
-                : ArduinoSerial(telemetryPort)
-            {
-                _led_pin = ledPin;
-                _led_inverted = ledInverted;
-
+                if (_led_pin) {
+                    digitalWrite(_led_pin, isOn ?
+                            (_led_inverted?LOW:HIGH) :
+                            (_led_inverted?HIGH:LOW));
+                }
             }
 
         public:

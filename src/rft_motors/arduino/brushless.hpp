@@ -21,7 +21,7 @@ namespace rft {
 
             void writeValue(uint16_t value)
             {
-                analogWrite(_pin, value + OFFSET);
+                analogWrite(_pin, value);
             }
 
         public:

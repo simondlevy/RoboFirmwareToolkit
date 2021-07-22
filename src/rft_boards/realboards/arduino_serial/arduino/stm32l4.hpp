@@ -17,8 +17,9 @@ namespace rft {
 
          public:
 
-            STM32L4(HardwareSerial * telemetryPort = NULL) 
-                : ArduinoBoard(13, true, telemetryPort) // red LED, active low
+            STM32L4(int8_t ledPin = -13, // inverted
+                    HardwareSerial * telemetryPort = NULL) 
+                : ArduinoBoard(ledPin, telemetryPort) 
             {
             }
 
