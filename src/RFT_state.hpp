@@ -18,8 +18,8 @@ namespace rft {
 
         protected:
 
-            bool armed;
-            bool failsafe;
+            bool armed = false;
+            bool failsafe = false;
 
             State(bool start_armed=false)
             {
