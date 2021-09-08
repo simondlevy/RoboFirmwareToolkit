@@ -33,13 +33,11 @@ namespace rft {
             } serialState_t;
 
 
-            uint8_t _inBufIndex;
             uint8_t _outBuf[OUTBUF_SIZE];
             uint8_t _outBufIndex;
             uint8_t _outBufSize;
             uint8_t _offset;
             uint8_t _dataSize;
-            uint8_t _direction;
 
             serialState_t  _parser_state;
 
@@ -188,11 +186,9 @@ namespace rft {
                     case HEADER_M:
                         switch (c) {
                            case '>':
-                                _direction = 1;
                                 _parser_state = HEADER_ARROW;
                                 break;
                             case '<':
-                                _direction = 0;
                                 _parser_state = HEADER_ARROW;
                                 break;
                              default:
@@ -206,10 +202,8 @@ namespace rft {
                             break;
                         }
                         _dataSize = c;
+                        _checksum = c;
                         _offset = 0;
-                        _checksum = 0;
-                        _inBufIndex = 0;
-                        _checksum ^= c;
                         _parser_state = HEADER_SIZE;      // the command is to follow
                         break;
 
