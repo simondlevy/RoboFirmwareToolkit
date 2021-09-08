@@ -8,6 +8,10 @@
 
 #pragma once
 
+#ifdef ESP32
+#include <analogWrite.h>
+#endif
+
 #include "rft_motors/rotary.hpp"
 
 namespace rft {

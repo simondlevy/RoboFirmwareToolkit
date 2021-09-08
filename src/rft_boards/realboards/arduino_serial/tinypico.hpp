@@ -30,7 +30,7 @@ namespace rft {
 
         public:
 
-            TinyPico(HardwareSerial * serial = NONE)
+            TinyPico(HardwareSerial * serial = NULL)
                 : ArduinoSerial(serial)
             {
             }
