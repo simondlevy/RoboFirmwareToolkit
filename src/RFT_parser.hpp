@@ -202,9 +202,8 @@ namespace rft {
                             break;
                         }
                         _dataSize = c;
+                        _checksum = c;
                         _offset = 0;
-                        _checksum = 0;
-                        _checksum ^= c;
                         _parser_state = HEADER_SIZE;      // the command is to follow
                         break;
 
