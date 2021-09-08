@@ -38,7 +38,6 @@ namespace rft {
             uint8_t _outBufSize;
             uint8_t _offset;
             uint8_t _dataSize;
-            uint8_t _direction;
 
             serialState_t  _parser_state;
 
@@ -187,11 +186,9 @@ namespace rft {
                     case HEADER_M:
                         switch (c) {
                            case '>':
-                                _direction = 1;
                                 _parser_state = HEADER_ARROW;
                                 break;
                             case '<':
-                                _direction = 0;
                                 _parser_state = HEADER_ARROW;
                                 break;
                              default:
