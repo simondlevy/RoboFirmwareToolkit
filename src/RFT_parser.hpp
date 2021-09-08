@@ -33,7 +33,6 @@ namespace rft {
             } serialState_t;
 
 
-            uint8_t _inBufIndex;
             uint8_t _outBuf[OUTBUF_SIZE];
             uint8_t _outBufIndex;
             uint8_t _outBufSize;
@@ -208,7 +207,6 @@ namespace rft {
                         _dataSize = c;
                         _offset = 0;
                         _checksum = 0;
-                        _inBufIndex = 0;
                         _checksum ^= c;
                         _parser_state = HEADER_SIZE;      // the command is to follow
                         break;
