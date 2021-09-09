@@ -173,6 +173,26 @@ namespace rft {
 
             void parse(uint8_t c)
             {
+
+                // Checksum transition function
+                switch (_parser_state) {
+
+                    case HEADER_ARROW:
+                        _checksum = c;
+                        break;
+
+                    case HEADER_SIZE:
+                        _checksum ^= c;
+                        break;
+
+                    case HEADER_CMD:
+                        if (_offset < _dataSize) {
+                            _checksum ^= c;
+                        }
+
+                } // switch (_parser_state)
+
+                // Parser state transition function
                 switch (_parser_state) {
 
                     case IDLE:
@@ -200,20 +220,17 @@ namespace rft {
                             break;
                         }
                         _dataSize = c;
-                        _checksum = c;
                         _offset = 0;
                         _parser_state = HEADER_SIZE;      // the command is to follow
                         break;
 
                     case HEADER_SIZE:
                         _command = c;
-                        _checksum ^= c;
                         _parser_state = HEADER_CMD;
                         break;
 
                     case HEADER_CMD:
                         if (_offset < _dataSize) {
-                            _checksum ^= c;
                             _inBuf[_offset++] = c;
                         } else  {
                             if (_checksum == c) {        // compare calculated and transferred _checksum
