@@ -60,7 +60,7 @@ namespace rft {
                 serialize8('$');
                 serialize8('M');
                 serialize8(err ? '!' : '>');
-                _checksum = 0;               // start calculating a new _checksum
+                _checksum_out = 0;               // start calculating a new _checksum_out
                 serialize8(s);
                 serialize8(_command);
             }
@@ -91,14 +91,14 @@ namespace rft {
 
         protected:
 
-            uint8_t _checksum;
+            uint8_t _checksum_out;
             uint8_t _inBuf[INBUF_SIZE];
             uint8_t _command;
 
             void serialize8(uint8_t a)
             {
                 _outBuf[_outBufSize++] = a;
-                _checksum ^= a;
+                _checksum_out ^= a;
             }
 
             void prepareToSendBytes(uint8_t count)
@@ -151,7 +151,7 @@ namespace rft {
 
             void begin(void)
             {
-                _checksum = 0;
+                _checksum_out = 0;
                 _outBufIndex = 0;
                 _outBufSize = 0;
                 _command = 0;
@@ -173,21 +173,22 @@ namespace rft {
 
             void parse(uint8_t c)
             {
+                static uint8_t checksum_in;
 
                 // Checksum transition function
                 switch (_parser_state) {
 
                     case HEADER_ARROW:
-                        _checksum = c;
+                        checksum_in = c;
                         break;
 
                     case HEADER_SIZE:
-                        _checksum ^= c;
+                        checksum_in ^= c;
                         break;
 
                     case HEADER_CMD:
                         if (_offset < _dataSize) {
-                            _checksum ^= c;
+                            checksum_in ^= c;
                         }
 
                 } // switch (_parser_state)
@@ -233,7 +234,7 @@ namespace rft {
                         if (_offset < _dataSize) {
                             _inBuf[_offset++] = c;
                         } else  {
-                            if (_checksum == c) {        // compare calculated and transferred _checksum
+                            if (checksum_in == c) {        // compare calculated and transferred checksum_in
                                 dispatchMessage();
                             }
                             _parser_state = IDLE;
