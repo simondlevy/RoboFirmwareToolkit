@@ -60,7 +60,7 @@ namespace rft {
                 serialize8('$');
                 serialize8('M');
                 serialize8(err ? '!' : '>');
-                _checksum_out = 0;               // start calculating a new _checksum_out
+                _checksum_out = 0;
                 serialize8(s);
                 serialize8(_command);
             }
@@ -147,7 +147,7 @@ namespace rft {
                 serialize32(a);
             }
 
-            virtual void dispatchMessage(void) = 0;
+            virtual void dispatchMessage(uint8_t command) = 0;
 
             void begin(void)
             {
@@ -216,13 +216,16 @@ namespace rft {
                         break;
 
                     case HEADER_ARROW:
-                        if (c > INBUF_SIZE) {       // now we are expecting the payload size
+                        // now we are expecting the payload size
+                        if (c > INBUF_SIZE) {       
                             _parser_state = IDLE;
                             break;
                         }
                         _dataSize = c;
                         _offset = 0;
-                        _parser_state = HEADER_SIZE;      // the command is to follow
+
+                        // the command is to follow
+                        _parser_state = HEADER_SIZE;      
                         break;
 
                     case HEADER_SIZE:
@@ -234,8 +237,10 @@ namespace rft {
                         if (_offset < _dataSize) {
                             _inBuf[_offset++] = c;
                         } else  {
-                            if (checksum_in == c) {        // compare calculated and transferred checksum_in
-                                dispatchMessage();
+
+                            // compare calculated and transferred checksum_in
+                            if (checksum_in == c) {        
+                                dispatchMessage(_command);
                             }
                             _parser_state = IDLE;
                         }
