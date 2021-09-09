@@ -51,22 +51,16 @@ namespace rft {
                 serialize8((a >> 24) & 0xFF);
             }
 
-
-            void headSerialReply(uint8_t s)
-            {
-                serialize8('$');
-                serialize8('M');
-                serialize8('>');
-                _checksum_out = 0;
-                serialize8(s);
-                serialize8(_command);
-            }
-
             void prepareToSend(uint8_t count, uint8_t size)
             {
                 _outBufSize = 0;
                 _outBufIndex = 0;
-                headSerialReply(count*size);
+                serialize8('$');
+                serialize8('M');
+                serialize8('>');
+                _checksum_out = 0;
+                serialize8(count*size);
+                serialize8(_command);
             }
 
             static uint8_t CRC8(uint8_t * data, int n) 
