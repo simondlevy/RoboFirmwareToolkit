@@ -33,6 +33,7 @@ namespace rft {
             } serialState_t;
 
 
+            uint8_t _outBufChecksum;
             uint8_t _outBuf[OUTBUF_SIZE];
             uint8_t _outBufIndex;
             uint8_t _outBufSize;
@@ -55,10 +56,11 @@ namespace rft {
             {
                 _outBufSize = 0;
                 _outBufIndex = 0;
+                _outBufChecksum = 0;
+
                 addToOutBuf('$');
                 addToOutBuf('M');
                 addToOutBuf('>');
-                _checksum_out = 0;
                 serialize8(count*size);
                 serialize8(command);
             }
@@ -82,12 +84,15 @@ namespace rft {
 
         protected:
 
-            uint8_t _checksum_out;
+            void completeSend(void)
+            {
+                serialize8(_outBufChecksum);
+            }
 
             void serialize8(uint8_t a)
             {
                 addToOutBuf(a);
-                _checksum_out ^= a;
+                _outBufChecksum ^= a;
             }
 
             void prepareToSendBytes(uint8_t command, uint8_t count)
@@ -140,7 +145,7 @@ namespace rft {
 
             void begin(void)
             {
-                _checksum_out = 0;
+                _outBufChecksum = 0;
                 _outBufIndex = 0;
                 _outBufSize = 0;
             }
