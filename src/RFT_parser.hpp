@@ -214,7 +214,6 @@ namespace rft {
                             parser_state = IDLE;
                             break;
                         }
-                        inBufOffset = 0;
 
                         // the command is to follow
                         parser_state = HEADER_SIZE;      
@@ -222,6 +221,7 @@ namespace rft {
 
                     case HEADER_SIZE:
                         parser_state = HEADER_CMD;
+                        inBufOffset = 0;
                         break;
 
                     case HEADER_CMD:
