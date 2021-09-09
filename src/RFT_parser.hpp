@@ -173,14 +173,10 @@ namespace rft {
                 static uint8_t inBufOffset;
 
                 // Data size acquisition function
-                if (parser_state == HEADER_ARROW) {
-                    dataSize = c;
-                }
+                dataSize = parser_state == HEADER_ARROW ? c : dataSize;
 
                 // Command acquisition function
-                if (parser_state == HEADER_SIZE) {
-                    command = c;
-                }
+                command = parser_state == HEADER_SIZE ? c : command;
 
                 // Checksum transition function
                 checksum_in = parser_state == HEADER_ARROW ? c
