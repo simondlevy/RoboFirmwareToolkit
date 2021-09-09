@@ -51,7 +51,7 @@ namespace rft {
                 serialize8((a >> 24) & 0xFF);
             }
 
-            void prepareToSend(uint8_t count, uint8_t size)
+            void prepareToSend(uint8_t command, uint8_t count, uint8_t size)
             {
                 _outBufSize = 0;
                 _outBufIndex = 0;
@@ -60,7 +60,7 @@ namespace rft {
                 serialize8('>');
                 _checksum_out = 0;
                 serialize8(count*size);
-                serialize8(_command);
+                serialize8(command);
             }
 
             static uint8_t CRC8(uint8_t * data, int n) 
@@ -78,7 +78,6 @@ namespace rft {
         protected:
 
             uint8_t _checksum_out;
-            uint8_t _command;
 
             void serialize8(uint8_t a)
             {
@@ -86,9 +85,9 @@ namespace rft {
                 _checksum_out ^= a;
             }
 
-            void prepareToSendBytes(uint8_t count)
+            void prepareToSendBytes(uint8_t command, uint8_t count)
             {
-                prepareToSend(count, 1);
+                prepareToSend(command, count, 1);
             }
 
             void sendByte(uint8_t src)
@@ -96,9 +95,9 @@ namespace rft {
                 serialize8(src);
             }
 
-            void prepareToSendShorts(uint8_t count)
+            void prepareToSendShorts(uint8_t command, uint8_t count)
             {
-                prepareToSend(count, 2);
+                prepareToSend(command, count, 2);
             }
 
             void sendShort(short src)
@@ -108,9 +107,9 @@ namespace rft {
                 serialize16(a);
             }
 
-            void prepareToSendInts(uint8_t count)
+            void prepareToSendInts(uint8_t command, uint8_t count)
             {
-                prepareToSend(count, 4);
+                prepareToSend(command, count, 4);
             }
 
             void sendInt(int32_t src)
@@ -120,9 +119,9 @@ namespace rft {
                 serialize32(a);
             }
 
-            void prepareToSendFloats(uint8_t count)
+            void prepareToSendFloats(uint8_t command, uint8_t count)
             {
-                prepareToSend(count, 4);
+                prepareToSend(command, count, 4);
             }
 
             void sendFloat(float src)
@@ -139,7 +138,6 @@ namespace rft {
                 _checksum_out = 0;
                 _outBufIndex = 0;
                 _outBufSize = 0;
-                _command = 0;
             }
 
             uint8_t availableBytes(void)
@@ -156,6 +154,7 @@ namespace rft {
             void parse(uint8_t c)
             {
                 static serialState_t parser_state;
+                static uint8_t command;
                 static uint8_t checksum_in;
                 static uint8_t offset;
                 static uint8_t dataSize;
@@ -215,7 +214,7 @@ namespace rft {
                         break;
 
                     case HEADER_SIZE:
-                        _command = c;
+                        command = c;
                         parser_state = HEADER_CMD;
                         break;
 
@@ -226,7 +225,7 @@ namespace rft {
 
                             // compare calculated and transferred checksum_in
                             if (checksum_in == c) {        
-                                dispatchMessage(_command, inBuf);
+                                dispatchMessage(command, inBuf);
                             }
                             parser_state = IDLE;
                         }
