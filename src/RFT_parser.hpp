@@ -170,6 +170,11 @@ namespace rft {
                 static uint8_t dataSize;
                 static uint8_t inBuf[INBUF_SIZE];
 
+                // Data size acquisition function
+                if (parser_state == HEADER_ARROW) {
+                    dataSize = c;
+                }
+
                 // Checksum transition function
                 switch (parser_state) {
 
@@ -216,7 +221,6 @@ namespace rft {
                             parser_state = IDLE;
                             break;
                         }
-                        dataSize = c;
                         offset = 0;
 
                         // the command is to follow
