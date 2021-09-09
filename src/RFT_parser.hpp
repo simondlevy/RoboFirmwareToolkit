@@ -164,11 +164,13 @@ namespace rft {
             void parse(uint8_t c)
             {
                 static serialState_t parser_state;
+
                 static uint8_t command;
                 static uint8_t checksum_in;
-                static uint8_t offset;
                 static uint8_t dataSize;
+
                 static uint8_t inBuf[INBUF_SIZE];
+                static uint8_t inBufOffset;
 
                 // Data size acquisition function
                 if (parser_state == HEADER_ARROW) {
@@ -181,22 +183,9 @@ namespace rft {
                 }
 
                 // Checksum transition function
-                switch (parser_state) {
-
-                    case HEADER_ARROW:
-                        checksum_in = c;
-                        break;
-
-                    case HEADER_SIZE:
-                        checksum_in ^= c;
-                        break;
-
-                    case HEADER_CMD:
-                        if (offset < dataSize) {
-                            checksum_in ^= c;
-                        }
-
-                } // switch (parser_state)
+                checksum_in = parser_state == HEADER_ARROW ? c
+                    : parser_state == HEADER_SIZE ? checksum_in ^ c 
+                    : parser_state == HEADER_CMD && inBufOffset < dataSize ? checksum_in ^ c : checksum_in;
 
                 // Parser state transition function
                 switch (parser_state) {
@@ -226,7 +215,7 @@ namespace rft {
                             parser_state = IDLE;
                             break;
                         }
-                        offset = 0;
+                        inBufOffset = 0;
 
                         // the command is to follow
                         parser_state = HEADER_SIZE;      
@@ -237,10 +226,12 @@ namespace rft {
                         break;
 
                     case HEADER_CMD:
-                        if (offset < dataSize) {
-                            inBuf[offset++] = c;
-                        } else  {
 
+                        if (inBufOffset < dataSize) {
+                            inBuf[inBufOffset++] = c;
+                        }
+
+                        else  {
                             // compare calculated and transferred checksum_in
                             if (checksum_in == c) {        
                                 dispatchMessage(command, inBuf);
