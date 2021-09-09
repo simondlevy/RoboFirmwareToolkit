@@ -172,6 +172,9 @@ namespace rft {
                 static uint8_t inBuf[INBUF_SIZE];
                 static uint8_t inBufOffset;
 
+                // Input buffer transition function
+                inBufOffset = parser_state == IDLE ? 0 : inBufOffset;
+
                 // Data size acquisition function
                 dataSize = parser_state == HEADER_ARROW ? c : dataSize;
 
@@ -182,9 +185,6 @@ namespace rft {
                 checksum_in = parser_state == HEADER_ARROW ? c
                     : parser_state == HEADER_SIZE ? checksum_in ^ c 
                     : parser_state == HEADER_CMD && inBufOffset < dataSize ? checksum_in ^ c : checksum_in;
-
-                // Input buffer transition function
-
 
                 // Parser state transition function
                 switch (parser_state) {
@@ -221,7 +221,6 @@ namespace rft {
 
                     case HEADER_SIZE:
                         parser_state = HEADER_CMD;
-                        inBufOffset = 0;
                         break;
 
                     case HEADER_CMD:
