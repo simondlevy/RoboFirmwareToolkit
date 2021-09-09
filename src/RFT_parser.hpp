@@ -175,6 +175,11 @@ namespace rft {
                     dataSize = c;
                 }
 
+                // Command acquisition function
+                if (parser_state == HEADER_SIZE) {
+                    command = c;
+                }
+
                 // Checksum transition function
                 switch (parser_state) {
 
@@ -228,7 +233,6 @@ namespace rft {
                         break;
 
                     case HEADER_SIZE:
-                        command = c;
                         parser_state = HEADER_CMD;
                         break;
 
