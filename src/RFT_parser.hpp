@@ -88,7 +88,6 @@ namespace rft {
         protected:
 
             uint8_t _checksum_out;
-            uint8_t _inBuf[INBUF_SIZE];
             uint8_t _command;
 
             void serialize8(uint8_t a)
@@ -143,7 +142,7 @@ namespace rft {
                 serialize32(a);
             }
 
-            virtual void dispatchMessage(uint8_t command) = 0;
+            virtual void dispatchMessage(uint8_t command, uint8_t * inBuf) = 0;
 
             void begin(void)
             {
@@ -170,6 +169,7 @@ namespace rft {
                 static uint8_t checksum_in;
                 static uint8_t offset;
                 static uint8_t dataSize;
+                static uint8_t inBuf[INBUF_SIZE];
 
                 // Checksum transition function
                 switch (parser_state) {
@@ -231,12 +231,12 @@ namespace rft {
 
                     case HEADER_CMD:
                         if (offset < dataSize) {
-                            _inBuf[offset++] = c;
+                            inBuf[offset++] = c;
                         } else  {
 
                             // compare calculated and transferred checksum_in
                             if (checksum_in == c) {        
-                                dispatchMessage(_command);
+                                dispatchMessage(_command, inBuf);
                             }
                             parser_state = IDLE;
                         }
