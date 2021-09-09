@@ -36,7 +36,6 @@ namespace rft {
             uint8_t _outBuf[OUTBUF_SIZE];
             uint8_t _outBufIndex;
             uint8_t _outBufSize;
-            uint8_t _offset;
             uint8_t _dataSize;
 
             serialState_t  _parser_state;
@@ -155,7 +154,6 @@ namespace rft {
                 _outBufIndex = 0;
                 _outBufSize = 0;
                 _command = 0;
-                _offset = 0;
                 _dataSize = 0;
                 _parser_state = IDLE;
             }
@@ -174,6 +172,7 @@ namespace rft {
             void parse(uint8_t c)
             {
                 static uint8_t checksum_in;
+                static uint8_t offset;
 
                 // Checksum transition function
                 switch (_parser_state) {
@@ -187,7 +186,7 @@ namespace rft {
                         break;
 
                     case HEADER_CMD:
-                        if (_offset < _dataSize) {
+                        if (offset < _dataSize) {
                             checksum_in ^= c;
                         }
 
@@ -222,7 +221,7 @@ namespace rft {
                             break;
                         }
                         _dataSize = c;
-                        _offset = 0;
+                        offset = 0;
 
                         // the command is to follow
                         _parser_state = HEADER_SIZE;      
@@ -234,8 +233,8 @@ namespace rft {
                         break;
 
                     case HEADER_CMD:
-                        if (_offset < _dataSize) {
-                            _inBuf[_offset++] = c;
+                        if (offset < _dataSize) {
+                            _inBuf[offset++] = c;
                         } else  {
 
                             // compare calculated and transferred checksum_in
