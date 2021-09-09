@@ -185,13 +185,11 @@ namespace rft {
 
                     case HEADER_M:
                         switch (c) {
-                           case '>':
-                                _parser_state = HEADER_ARROW;
-                                break;
+                            case '>':
                             case '<':
                                 _parser_state = HEADER_ARROW;
                                 break;
-                             default:
+                            default:
                                 _parser_state = IDLE;
                         }
                         break;
