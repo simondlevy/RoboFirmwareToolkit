@@ -37,8 +37,6 @@ namespace rft {
             uint8_t _outBufIndex;
             uint8_t _outBufSize;
 
-            serialState_t  _parser_state;
-
             void serialize16(int16_t a)
             {
                 serialize8(a & 0xFF);
@@ -153,7 +151,6 @@ namespace rft {
                 _outBufIndex = 0;
                 _outBufSize = 0;
                 _command = 0;
-                _parser_state = IDLE;
             }
             
             uint8_t availableBytes(void)
@@ -169,12 +166,13 @@ namespace rft {
 
             void parse(uint8_t c)
             {
+                static serialState_t parser_state;
                 static uint8_t checksum_in;
                 static uint8_t offset;
                 static uint8_t dataSize;
 
                 // Checksum transition function
-                switch (_parser_state) {
+                switch (parser_state) {
 
                     case HEADER_ARROW:
                         checksum_in = c;
@@ -189,46 +187,46 @@ namespace rft {
                             checksum_in ^= c;
                         }
 
-                } // switch (_parser_state)
+                } // switch (parser_state)
 
                 // Parser state transition function
-                switch (_parser_state) {
+                switch (parser_state) {
 
                     case IDLE:
-                        _parser_state = (c == '$') ? HEADER_START : IDLE;
+                        parser_state = (c == '$') ? HEADER_START : IDLE;
                         break;
 
                     case HEADER_START:
-                        _parser_state = (c == 'M') ? HEADER_M : IDLE;
+                        parser_state = (c == 'M') ? HEADER_M : IDLE;
                         break;
 
                     case HEADER_M:
                         switch (c) {
                             case '>':
                             case '<':
-                                _parser_state = HEADER_ARROW;
+                                parser_state = HEADER_ARROW;
                                 break;
                             default:
-                                _parser_state = IDLE;
+                                parser_state = IDLE;
                         }
                         break;
 
                     case HEADER_ARROW:
                         // now we are expecting the payload size
                         if (c > INBUF_SIZE) {       
-                            _parser_state = IDLE;
+                            parser_state = IDLE;
                             break;
                         }
                         dataSize = c;
                         offset = 0;
 
                         // the command is to follow
-                        _parser_state = HEADER_SIZE;      
+                        parser_state = HEADER_SIZE;      
                         break;
 
                     case HEADER_SIZE:
                         _command = c;
-                        _parser_state = HEADER_CMD;
+                        parser_state = HEADER_CMD;
                         break;
 
                     case HEADER_CMD:
@@ -240,10 +238,10 @@ namespace rft {
                             if (checksum_in == c) {        
                                 dispatchMessage(_command);
                             }
-                            _parser_state = IDLE;
+                            parser_state = IDLE;
                         }
 
-                } // switch (_parser_state)
+                } // switch (parser_state)
 
             } // parse
 
