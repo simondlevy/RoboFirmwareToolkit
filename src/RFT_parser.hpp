@@ -55,9 +55,9 @@ namespace rft {
             {
                 _outBufSize = 0;
                 _outBufIndex = 0;
-                serialize8('$');
-                serialize8('M');
-                serialize8('>');
+                addToOutBuf('$');
+                addToOutBuf('M');
+                addToOutBuf('>');
                 _checksum_out = 0;
                 serialize8(count*size);
                 serialize8(command);
@@ -75,13 +75,18 @@ namespace rft {
                 return crc;
             }
 
+            void addToOutBuf(uint8_t a)
+            {
+                _outBuf[_outBufSize++] = a;
+            }
+
         protected:
 
             uint8_t _checksum_out;
 
             void serialize8(uint8_t a)
             {
-                _outBuf[_outBufSize++] = a;
+                addToOutBuf(a);
                 _checksum_out ^= a;
             }
 
