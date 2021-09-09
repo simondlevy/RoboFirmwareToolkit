@@ -51,19 +51,15 @@ namespace rft {
                 serialize8((a >> 24) & 0xFF);
             }
 
-            void headSerialResponse(uint8_t err, uint8_t s)
-            {
-                serialize8('$');
-                serialize8('M');
-                serialize8(err ? '!' : '>');
-                _checksum_out = 0;
-                serialize8(s);
-                serialize8(_command);
-            }
 
             void headSerialReply(uint8_t s)
             {
-                headSerialResponse(0, s);
+                serialize8('$');
+                serialize8('M');
+                serialize8('>');
+                _checksum_out = 0;
+                serialize8(s);
+                serialize8(_command);
             }
 
             void prepareToSend(uint8_t count, uint8_t size)
@@ -151,7 +147,7 @@ namespace rft {
                 _outBufSize = 0;
                 _command = 0;
             }
-            
+
             uint8_t availableBytes(void)
             {
                 return _outBufSize;
