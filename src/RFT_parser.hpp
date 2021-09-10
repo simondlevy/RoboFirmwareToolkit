@@ -141,9 +141,8 @@ namespace rft {
                 serialize32(a);
             }
 
-            virtual void dispatchSetMessage(uint8_t command, uint8_t * inBuf) = 0;
-
-            virtual void dispatchGetMessage(uint8_t command) = 0;
+            virtual void setInputBuffer(uint8_t index, uint8_t value) = 0;
+            virtual void dispatchMessage(uint8_t command) = 0;
 
             void begin(void)
             {
@@ -170,7 +169,6 @@ namespace rft {
                 static uint8_t command;
                 static uint8_t checksum_in;
                 static uint8_t dataSize;
-                static uint8_t inBuf[INBUF_SIZE];
                 static uint8_t inBufOffset;
 
                 // Input buffer transition function
@@ -190,7 +188,7 @@ namespace rft {
                 // Message dispatch
                 if (parser_state == HEADER_CMD && command < 200) {
                     if (checksum_in == c) {
-                       dispatchGetMessage(command);
+                       dispatchMessage(command);
                     }
                 }
 
@@ -237,12 +235,12 @@ namespace rft {
                         if (command >= 200) {
 
                             if (inBufOffset < dataSize) {
-                                inBuf[inBufOffset++] = c;
+                                setInputBuffer(inBufOffset++, c);
                             }
 
                             else {
                                 if (checksum_in == c) {
-                                    dispatchSetMessage(command, inBuf);
+                                    dispatchMessage(command);
                                 }
                                 parser_state = IDLE;
                             }
