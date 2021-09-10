@@ -170,7 +170,6 @@ namespace rft {
                 static uint8_t command;
                 static uint8_t checksum_in;
                 static uint8_t dataSize;
-                static bool incoming;
                 static uint8_t inBuf[INBUF_SIZE];
                 static uint8_t inBufOffset;
 
@@ -180,9 +179,6 @@ namespace rft {
                 // Data size acquisition function
                 dataSize = parser_state == HEADER_ARROW ? c : dataSize;
 
-                // Incoming data transition function
-                incoming = 
-
                 // Command acquisition function
                 command = parser_state == HEADER_SIZE ? c : command;
 
@@ -190,6 +186,13 @@ namespace rft {
                 checksum_in = parser_state == HEADER_ARROW ? c
                     : parser_state == HEADER_SIZE ? checksum_in ^ c 
                     : parser_state == HEADER_CMD && inBufOffset < dataSize ? checksum_in ^ c : checksum_in;
+
+                // Message dispatch
+                if (parser_state == HEADER_CMD && command < 200) {
+                    if (checksum_in == c) {
+                       dispatchGetMessage(command);
+                    }
+                }
 
                 // Parser state transition function
                 switch (parser_state) {
@@ -245,13 +248,9 @@ namespace rft {
                             }
                         }
 
-                        // a request for values like vehicle state
                         else {
-                            if (checksum_in == c) {
-                                dispatchGetMessage(command);
-                            }
                             parser_state = IDLE;
-                         }
+                        }
 
                 } // switch (parser_state)
 
