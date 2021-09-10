@@ -141,7 +141,9 @@ namespace rft {
                 serialize32(a);
             }
 
-            virtual void dispatchMessage(uint8_t command, uint8_t * inBuf) = 0;
+            virtual void dispatchSetMessage(uint8_t command, uint8_t * inBuf) = 0;
+
+            virtual void dispatchGetMessage(uint8_t command) = 0;
 
             void begin(void)
             {
@@ -168,7 +170,7 @@ namespace rft {
                 static uint8_t command;
                 static uint8_t checksum_in;
                 static uint8_t dataSize;
-
+                static bool incoming;
                 static uint8_t inBuf[INBUF_SIZE];
                 static uint8_t inBufOffset;
 
@@ -177,6 +179,9 @@ namespace rft {
 
                 // Data size acquisition function
                 dataSize = parser_state == HEADER_ARROW ? c : dataSize;
+
+                // Incoming data transition function
+                incoming = 
 
                 // Command acquisition function
                 command = parser_state == HEADER_SIZE ? c : command;
@@ -225,14 +230,26 @@ namespace rft {
 
                     case HEADER_CMD:
 
-                        if (inBufOffset < dataSize) {
-                            inBuf[inBufOffset++] = c;
+                        // a command to set something like motors
+                        if (command >= 200) {
+
+                            if (inBufOffset < dataSize) {
+                                inBuf[inBufOffset++] = c;
+                            }
+
+                            else if (inBufOffset == dataSize && checksum_in == c) {
+                                dispatchSetMessage(command, inBuf);
+                                parser_state = IDLE;
+                            }
                         }
 
-                        else if (inBufOffset == dataSize && checksum_in == c) {
-                            dispatchMessage(command, inBuf);
+                        // a request for values like vehicle state
+                        else {
+                            if (checksum_in == c) {
+                                dispatchGetMessage(command);
+                            }
                             parser_state = IDLE;
-                        }
+                         }
 
                 } // switch (parser_state)
 
