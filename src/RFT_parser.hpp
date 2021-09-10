@@ -183,7 +183,8 @@ namespace rft {
                 // Checksum transition function
                 checksum_in = parser_state == HEADER_ARROW ? c
                     : parser_state == HEADER_SIZE ? checksum_in ^ c 
-                    : parser_state == HEADER_CMD && inBufOffset < dataSize ? checksum_in ^ c : checksum_in;
+                    : parser_state == HEADER_CMD && inBufOffset < dataSize ? checksum_in ^ c 
+                    : checksum_in;
 
                 // Message dispatch
                 if (parser_state == HEADER_CMD && command < 200) {
@@ -241,7 +242,7 @@ namespace rft {
                                 inBufOffset++;
                             }
 
-                            else {
+                            else if (inBufOffset == dataSize) {
                                 if (checksum_in == c) {
                                     dispatchMessage(command);
                                 }
