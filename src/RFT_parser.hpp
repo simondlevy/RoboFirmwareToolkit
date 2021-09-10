@@ -237,8 +237,10 @@ namespace rft {
                                 inBuf[inBufOffset++] = c;
                             }
 
-                            else if (checksum_in == c) {
-                                dispatchSetMessage(command, inBuf);
+                            else {
+                                if (checksum_in == c) {
+                                    dispatchSetMessage(command, inBuf);
+                                }
                                 parser_state = IDLE;
                             }
                         }
