@@ -237,7 +237,7 @@ namespace rft {
                                 inBuf[inBufOffset++] = c;
                             }
 
-                            else if (inBufOffset == dataSize && checksum_in == c) {
+                            else if (checksum_in == c) {
                                 dispatchSetMessage(command, inBuf);
                                 parser_state = IDLE;
                             }
