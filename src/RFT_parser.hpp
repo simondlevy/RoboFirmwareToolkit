@@ -192,6 +192,9 @@ namespace rft {
                     }
                 }
 
+                // Always set the input buffer
+                setInputBuffer(inBufOffset, c);
+
                 // Parser state transition function
                 switch (parser_state) {
 
@@ -235,7 +238,7 @@ namespace rft {
                         if (command >= 200) {
 
                             if (inBufOffset < dataSize) {
-                                setInputBuffer(inBufOffset++, c);
+                                inBufOffset++;
                             }
 
                             else {
