@@ -52,7 +52,7 @@ namespace rft {
                 serialize8((a >> 24) & 0xFF);
             }
 
-            void prepareToSend(uint8_t command, uint8_t count, uint8_t size)
+            void prepareToSend(uint8_t type, uint8_t count, uint8_t size)
             {
                 _outBufSize = 0;
                 _outBufIndex = 0;
@@ -62,7 +62,7 @@ namespace rft {
                 addToOutBuf('M');
                 addToOutBuf('>');
                 serialize8(count*size);
-                serialize8(command);
+                serialize8(type);
             }
 
             static uint8_t CRC8(uint8_t * data, int n) 
@@ -95,9 +95,9 @@ namespace rft {
                 _outBufChecksum ^= a;
             }
 
-            void prepareToSendBytes(uint8_t command, uint8_t count)
+            void prepareToSendBytes(uint8_t type, uint8_t count)
             {
-                prepareToSend(command, count, 1);
+                prepareToSend(type, count, 1);
             }
 
             void sendByte(uint8_t src)
@@ -105,9 +105,9 @@ namespace rft {
                 serialize8(src);
             }
 
-            void prepareToSendShorts(uint8_t command, uint8_t count)
+            void prepareToSendShorts(uint8_t type, uint8_t count)
             {
-                prepareToSend(command, count, 2);
+                prepareToSend(type, count, 2);
             }
 
             void sendShort(short src)
@@ -117,9 +117,9 @@ namespace rft {
                 serialize16(a);
             }
 
-            void prepareToSendInts(uint8_t command, uint8_t count)
+            void prepareToSendInts(uint8_t type, uint8_t count)
             {
-                prepareToSend(command, count, 4);
+                prepareToSend(type, count, 4);
             }
 
             void sendInt(int32_t src)
@@ -129,9 +129,9 @@ namespace rft {
                 serialize32(a);
             }
 
-            void prepareToSendFloats(uint8_t command, uint8_t count)
+            void prepareToSendFloats(uint8_t type, uint8_t count)
             {
-                prepareToSend(command, count, 4);
+                prepareToSend(type, count, 4);
             }
 
             void sendFloat(float src)
@@ -142,7 +142,7 @@ namespace rft {
             }
 
             virtual void collectPayload(uint8_t index, uint8_t value) = 0;
-            virtual void dispatchMessage(uint8_t command) = 0;
+            virtual void dispatchMessage(uint8_t type) = 0;
 
             void begin(void)
             {
@@ -165,7 +165,7 @@ namespace rft {
             void parse(uint8_t c)
             {
                 static serialState_t parser_state;
-                static uint8_t command;
+                static uint8_t type;
                 static uint8_t checksum;
                 static uint8_t payload_size;
                 static uint8_t payload_index;
@@ -173,10 +173,10 @@ namespace rft {
                 // Payload functions
                 payload_size = parser_state == HDR_ARROW ? c : payload_size;
                 payload_index = parser_state == PAYLOAD ? payload_index + 1 : 0;
-                bool payload_flag = command >= 200 && parser_state == PAYLOAD;
+                bool payload_flag = type >= 200 && parser_state == PAYLOAD;
 
                 // Command acquisition function
-                command = parser_state == HDR_SIZE ? c : command;
+                type = parser_state == HDR_SIZE ? c : type;
 
                 // Checksum transition function
                 checksum = parser_state == HDR_ARROW ? c
@@ -201,7 +201,7 @@ namespace rft {
 
                 // Message dispatch
                 if (parser_state == IDLE && checksum == c) {
-                    dispatchMessage(command);
+                    dispatchMessage(type);
                 }
 
             } // parse
