@@ -20,7 +20,6 @@ namespace rft {
 
             static const uint8_t MAXMSG = 255;
 
-            static const int INBUF_SIZE  = 128;
             static const int OUTBUF_SIZE = 128;
 
             uint8_t _outBufChecksum;
@@ -188,7 +187,7 @@ namespace rft {
                     = parser_state == IDLE && c == '$' ? GOT_START
                     : parser_state == GOT_START && c == 'M' ? GOT_M
                     : parser_state == GOT_M && (c == '<' || c == '>') ? GOT_ARROW
-                    : parser_state == GOT_ARROW && c <= INBUF_SIZE ? GOT_SIZE
+                    : parser_state == GOT_ARROW ? GOT_SIZE
                     : parser_state == GOT_SIZE ? IN_PAYLOAD
                     : parser_state == IN_PAYLOAD && index < size ? IN_PAYLOAD
                     : parser_state == IN_PAYLOAD ? IDLE
