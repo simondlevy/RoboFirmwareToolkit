@@ -170,17 +170,10 @@ namespace rft {
                 static uint8_t payload_size;
                 static uint8_t payload_index;
 
-                // Payload size function
+                // Payload functions
                 payload_size = parser_state == HDR_ARROW ? c : payload_size;
-
-                // Payload index function
                 payload_index = parser_state == PAYLOAD ? payload_index + 1 : 0;
-
-                if (parser_state == PAYLOAD) {
-                    Serial2.print(payload_index);
-                    Serial2.print("\t/\t0x");
-                    Serial2.println(c, HEX);
-                }
+                bool payload_flag = parser_state == PAYLOAD;
 
                 // Command acquisition function
                 command = parser_state == HDR_SIZE ? c : command;
@@ -200,6 +193,12 @@ namespace rft {
                     : parser_state == PAYLOAD && payload_index < payload_size ? PAYLOAD
                     : parser_state == PAYLOAD ? IDLE
                     : parser_state;
+
+                if (payload_flag) {
+                    Serial2.print(payload_index);
+                    Serial2.print("\t/\t0x");
+                    Serial2.println(c, HEX);
+                }
 
                 // Message dispatch
                 if (parser_state == IDLE && checksum == c) {
