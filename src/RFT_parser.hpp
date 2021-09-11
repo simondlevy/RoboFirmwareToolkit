@@ -156,10 +156,10 @@ namespace rft {
             {
                 typedef enum serialState_t {
                     IDLE,
-                    HDR_START,
-                    HDR_M,
-                    HDR_ARROW,
-                    HDR_SIZE,
+                    GOT_START,
+                    GOT_M,
+                    GOT_ARROW,
+                    GOT_SIZE,
                     PAYLOAD
                 } serialState_t;
 
@@ -171,25 +171,25 @@ namespace rft {
                 static uint8_t payload_index;
 
                 // Payload functions
-                payload_size = parser_state == HDR_ARROW ? c : payload_size;
+                payload_size = parser_state == GOT_ARROW ? c : payload_size;
                 payload_index = parser_state == PAYLOAD ? payload_index + 1 : 0;
                 bool payload_flag = type >= 200 && parser_state == PAYLOAD;
 
                 // Command acquisition function
-                type = parser_state == HDR_SIZE ? c : type;
+                type = parser_state == GOT_SIZE ? c : type;
 
                 // Checksum transition function
-                checksum = parser_state == HDR_ARROW ? c
+                checksum = parser_state == GOT_ARROW ? c
                     : parser_state == PAYLOAD  ?  checksum ^ c 
                     : 0;
 
                 // Parser state transition function
                 parser_state
-                    = parser_state == IDLE && c == '$' ? HDR_START
-                    : parser_state == HDR_START && c == 'M' ? HDR_M
-                    : parser_state == HDR_M && (c == '<' || c == '>') ? HDR_ARROW
-                    : parser_state == HDR_ARROW && c <= INBUF_SIZE ? HDR_SIZE
-                    : parser_state == HDR_SIZE ? PAYLOAD
+                    = parser_state == IDLE && c == '$' ? GOT_START
+                    : parser_state == GOT_START && c == 'M' ? GOT_M
+                    : parser_state == GOT_M && (c == '<' || c == '>') ? GOT_ARROW
+                    : parser_state == GOT_ARROW && c <= INBUF_SIZE ? GOT_SIZE
+                    : parser_state == GOT_SIZE ? PAYLOAD
                     : parser_state == PAYLOAD && payload_index < payload_size ? PAYLOAD
                     : parser_state == PAYLOAD ? IDLE
                     : parser_state;
