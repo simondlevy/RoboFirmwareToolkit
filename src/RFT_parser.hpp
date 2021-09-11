@@ -165,15 +165,17 @@ namespace rft {
             void parse(uint8_t c)
             {
                 static serialState_t parser_state;
-
                 static uint8_t command;
                 static uint8_t checksum;
-                static uint8_t payload;
+                static uint8_t payload_index;
 
-                // Payload size acquisition function
-                payload = parser_state == HEADER_ARROW ? c : payload;
+                // Payload index function
+                payload_index
+                    = parser_state == HEADER_ARROW ? c
+                    : payload_index > 0 ? payload_index - 1
+                    : payload_index;
 
-                Serial2.println(payload);
+                Serial2.println(payload_index);
 
                 // Command acquisition function
                 command = parser_state == HEADER_SIZE ? c : command;
