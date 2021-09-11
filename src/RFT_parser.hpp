@@ -181,7 +181,7 @@ namespace rft {
                 // Checksum transition function
                 checksum = parser_state == HDR_ARROW ? c
                     : parser_state == PAYLOAD  ?  checksum ^ c 
-                    : checksum;
+                    : 0;
 
                 // Parser state transition function
                 parser_state
