@@ -186,11 +186,7 @@ namespace rft {
                     : parser_state == HEADER_CMD && inBufOffset < dataSize ? checksum_in ^ c 
                     : checksum_in;
 
-                // Message dispatch
-                if (parser_state == HEADER_CMD && checksum_in == c) {
-                    dispatchMessage(command);
-                }
-
+                // Parser state transition function
                 parser_state
                     = parser_state == IDLE && c == '$' ? HEADER_START
                     : parser_state == HEADER_START && c == 'M' ? HEADER_M
@@ -199,6 +195,11 @@ namespace rft {
                     : parser_state == HEADER_SIZE ? HEADER_CMD
                     : parser_state == HEADER_CMD ? IDLE
                     : parser_state;
+
+                // Message dispatch
+                if (parser_state == IDLE && checksum_in == c) {
+                    dispatchMessage(command);
+                }
 
             } // parse
 
