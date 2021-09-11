@@ -154,16 +154,16 @@ namespace rft {
 
             void parse(uint8_t c)
             {
-                typedef enum serialState_t {
+                enum {
                     IDLE,
                     GOT_START,
                     GOT_M,
                     GOT_ARROW,
                     GOT_SIZE,
                     IN_PAYLOAD
-                } serialState_t;
+                }; 
 
-                static serialState_t parser_state;
+                static uint8_t parser_state;
 
                 static uint8_t type;
                 static uint8_t crc;
