@@ -29,7 +29,7 @@ namespace rft {
                 HDR_M,
                 HDR_ARROW,
                 HDR_SIZE,
-                HDR_PAYLOAD
+                PAYLOAD
             } serialState_t;
 
 
@@ -167,22 +167,27 @@ namespace rft {
                 static serialState_t parser_state;
                 static uint8_t command;
                 static uint8_t checksum;
+                static uint8_t payload_size;
                 static uint8_t payload_index;
 
-                // Payload index function
-                payload_index
-                    = parser_state == HDR_ARROW ? c
-                    : payload_index > 0 ? payload_index - 1
-                    : payload_index;
+                // Payload size function
+                payload_size = parser_state == HDR_ARROW ? c : payload_size;
 
-                Serial2.println(payload_index);
+                // Payload index function
+                payload_index = parser_state == PAYLOAD ? payload_index + 1 : 0;
+
+                if (parser_state == PAYLOAD) {
+                    Serial2.print(payload_index);
+                    Serial2.print("\t/\t0x");
+                    Serial2.println(c, HEX);
+                }
 
                 // Command acquisition function
                 command = parser_state == HDR_SIZE ? c : command;
 
                 // Checksum transition function
                 checksum = parser_state == HDR_ARROW ? c
-                    : parser_state == HDR_PAYLOAD  ?  checksum ^ c 
+                    : parser_state == PAYLOAD  ?  checksum ^ c 
                     : checksum;
 
                 // Parser state transition function
@@ -191,8 +196,9 @@ namespace rft {
                     : parser_state == HDR_START && c == 'M' ? HDR_M
                     : parser_state == HDR_M && (c == '<' || c == '>') ? HDR_ARROW
                     : parser_state == HDR_ARROW && c <= INBUF_SIZE ? HDR_SIZE
-                    : parser_state == HDR_SIZE ? HDR_PAYLOAD
-                    : parser_state == HDR_PAYLOAD ? IDLE
+                    : parser_state == HDR_SIZE ? PAYLOAD
+                    : parser_state == PAYLOAD && payload_index < payload_size ? PAYLOAD
+                    : parser_state == PAYLOAD ? IDLE
                     : parser_state;
 
                 // Message dispatch
