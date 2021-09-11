@@ -167,7 +167,7 @@ namespace rft {
                 static serialState_t parser_state;
 
                 static uint8_t command;
-                static uint8_t checksum_in;
+                static uint8_t checksum;
                 static uint8_t dataSize;
                 static uint8_t inBufOffset;
 
@@ -181,10 +181,10 @@ namespace rft {
                 command = parser_state == HEADER_SIZE ? c : command;
 
                 // Checksum transition function
-                checksum_in = parser_state == HEADER_ARROW ? c
-                    : parser_state == HEADER_SIZE ? checksum_in ^ c 
-                    : parser_state == HEADER_CMD && inBufOffset < dataSize ? checksum_in ^ c 
-                    : checksum_in;
+                checksum = parser_state == HEADER_ARROW ? c
+                    : parser_state == HEADER_SIZE ? checksum ^ c 
+                    : parser_state == HEADER_CMD && inBufOffset < dataSize ?  checksum ^ c 
+                    : checksum;
 
                 // Parser state transition function
                 parser_state
@@ -197,7 +197,7 @@ namespace rft {
                     : parser_state;
 
                 // Message dispatch
-                if (parser_state == IDLE && checksum_in == c) {
+                if (parser_state == IDLE && checksum == c) {
                     dispatchMessage(command);
                 }
 
