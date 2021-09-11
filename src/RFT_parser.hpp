@@ -160,27 +160,27 @@ namespace rft {
                     GOT_M,
                     GOT_ARROW,
                     GOT_SIZE,
-                    PAYLOAD
+                    IN_PAYLOAD
                 } serialState_t;
 
                 static serialState_t parser_state;
 
                 static uint8_t type;
-                static uint8_t checksum;
-                static uint8_t payload_size;
-                static uint8_t payload_index;
+                static uint8_t crc;
+                static uint8_t size;
+                static uint8_t index;
 
                 // Payload functions
-                payload_size = parser_state == GOT_ARROW ? c : payload_size;
-                payload_index = parser_state == PAYLOAD ? payload_index + 1 : 0;
-                bool payload_flag = type >= 200 && parser_state == PAYLOAD;
+                size = parser_state == GOT_ARROW ? c : size;
+                index = parser_state == IN_PAYLOAD ? index + 1 : 0;
+                bool payload_flag = type >= 200 && parser_state == IN_PAYLOAD;
 
                 // Command acquisition function
                 type = parser_state == GOT_SIZE ? c : type;
 
                 // Checksum transition function
-                checksum = parser_state == GOT_ARROW ? c
-                    : parser_state == PAYLOAD  ?  checksum ^ c 
+                crc = parser_state == GOT_ARROW ? c
+                    : parser_state == IN_PAYLOAD  ?  crc ^ c 
                     : 0;
 
                 // Parser state transition function
@@ -189,18 +189,18 @@ namespace rft {
                     : parser_state == GOT_START && c == 'M' ? GOT_M
                     : parser_state == GOT_M && (c == '<' || c == '>') ? GOT_ARROW
                     : parser_state == GOT_ARROW && c <= INBUF_SIZE ? GOT_SIZE
-                    : parser_state == GOT_SIZE ? PAYLOAD
-                    : parser_state == PAYLOAD && payload_index < payload_size ? PAYLOAD
-                    : parser_state == PAYLOAD ? IDLE
+                    : parser_state == GOT_SIZE ? IN_PAYLOAD
+                    : parser_state == IN_PAYLOAD && index < size ? IN_PAYLOAD
+                    : parser_state == IN_PAYLOAD ? IDLE
                     : parser_state;
 
                 // Payload accumulation
                 if (payload_flag) {
-                    collectPayload(payload_index-1, c);
+                    collectPayload(index-1, c);
                 }
 
                 // Message dispatch
-                if (parser_state == IDLE && checksum == c) {
+                if (parser_state == IDLE && crc == c) {
                     dispatchMessage(type);
                 }
 
