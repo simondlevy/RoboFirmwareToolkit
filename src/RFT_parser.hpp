@@ -25,11 +25,11 @@ namespace rft {
 
             typedef enum serialState_t {
                 IDLE,
-                HEADER_START,
-                HEADER_M,
-                HEADER_ARROW,
-                HEADER_SIZE,
-                HEADER_CMD
+                HDR_START,
+                HDR_M,
+                HDR_ARROW,
+                HDR_SIZE,
+                HDR_PAYLOAD
             } serialState_t;
 
 
@@ -141,7 +141,7 @@ namespace rft {
                 serialize32(a);
             }
 
-            virtual void setInputBuffer(uint8_t index, uint8_t value) = 0;
+            virtual void collectInput(uint8_t index, uint8_t value) = 0;
             virtual void dispatchMessage(uint8_t command) = 0;
 
             void begin(void)
@@ -171,28 +171,28 @@ namespace rft {
 
                 // Payload index function
                 payload_index
-                    = parser_state == HEADER_ARROW ? c
+                    = parser_state == HDR_ARROW ? c
                     : payload_index > 0 ? payload_index - 1
                     : payload_index;
 
                 Serial2.println(payload_index);
 
                 // Command acquisition function
-                command = parser_state == HEADER_SIZE ? c : command;
+                command = parser_state == HDR_SIZE ? c : command;
 
                 // Checksum transition function
-                checksum = parser_state == HEADER_ARROW ? c
-                    : parser_state == HEADER_CMD  ?  checksum ^ c 
+                checksum = parser_state == HDR_ARROW ? c
+                    : parser_state == HDR_PAYLOAD  ?  checksum ^ c 
                     : checksum;
 
                 // Parser state transition function
                 parser_state
-                    = parser_state == IDLE && c == '$' ? HEADER_START
-                    : parser_state == HEADER_START && c == 'M' ? HEADER_M
-                    : parser_state == HEADER_M && (c == '<' || c == '>') ? HEADER_ARROW
-                    : parser_state == HEADER_ARROW && c <= INBUF_SIZE ? HEADER_SIZE
-                    : parser_state == HEADER_SIZE ? HEADER_CMD
-                    : parser_state == HEADER_CMD ? IDLE
+                    = parser_state == IDLE && c == '$' ? HDR_START
+                    : parser_state == HDR_START && c == 'M' ? HDR_M
+                    : parser_state == HDR_M && (c == '<' || c == '>') ? HDR_ARROW
+                    : parser_state == HDR_ARROW && c <= INBUF_SIZE ? HDR_SIZE
+                    : parser_state == HDR_SIZE ? HDR_PAYLOAD
+                    : parser_state == HDR_PAYLOAD ? IDLE
                     : parser_state;
 
                 // Message dispatch
