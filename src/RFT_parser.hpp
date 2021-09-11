@@ -187,12 +187,9 @@ namespace rft {
                     : checksum_in;
 
                 // Message dispatch
-                if (parser_state == HEADER_CMD && checksum_in == c && inBufOffset == dataSize) {
+                if (parser_state == HEADER_CMD && checksum_in == c) {
                     dispatchMessage(command);
                 }
-
-                // Always set the input buffer
-                setInputBuffer(inBufOffset, c);
 
                 parser_state
                     = parser_state == IDLE && c == '$' ? HEADER_START
