@@ -194,62 +194,14 @@ namespace rft {
                 // Always set the input buffer
                 setInputBuffer(inBufOffset, c);
 
-                // Parser state transition function
-                switch (parser_state) {
-
-                    case IDLE:
-                        parser_state = (c == '$') ? HEADER_START : IDLE;
-                        break;
-
-                    case HEADER_START:
-                        parser_state = (c == 'M') ? HEADER_M : IDLE;
-                        break;
-
-                    case HEADER_M:
-                        switch (c) {
-                            case '>':
-                            case '<':
-                                parser_state = HEADER_ARROW;
-                                break;
-                            default:
-                                parser_state = IDLE;
-                        }
-                        break;
-
-                    case HEADER_ARROW:
-                        // now we are expecting the payload size
-                        if (c > INBUF_SIZE) {       
-                            parser_state = IDLE;
-                            break;
-                        }
-
-                        // the command is to follow
-                        parser_state = HEADER_SIZE;      
-                        break;
-
-                    case HEADER_SIZE:
-                        parser_state = HEADER_CMD;
-                        break;
-
-                    case HEADER_CMD:
-
-                        // a command to set something like motors
-                        if (command >= 200) {
-
-                            if (inBufOffset < dataSize) {
-                                inBufOffset++;
-                            }
-
-                            else if (inBufOffset == dataSize) {
-                                parser_state = IDLE;
-                            }
-                        }
-
-                        else {
-                            parser_state = IDLE;
-                        }
-
-                } // switch (parser_state)
+                parser_state
+                    = parser_state == IDLE && c == '$' ? HEADER_START
+                    : parser_state == HEADER_START && c == 'M' ? HEADER_M
+                    : parser_state == HEADER_M && (c == '<' || c == '>') ? HEADER_ARROW
+                    : parser_state == HEADER_ARROW && c <= INBUF_SIZE ? HEADER_SIZE
+                    : parser_state == HEADER_SIZE ? HEADER_CMD
+                    : parser_state == HEADER_CMD ? IDLE
+                    : parser_state;
 
             } // parse
 
