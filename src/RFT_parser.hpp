@@ -168,16 +168,12 @@ namespace rft {
 
                 static uint8_t command;
                 static uint8_t checksum;
-                static uint8_t dataSize;
-                static uint8_t inBufOffset;
+                static uint8_t payload;
 
-                // Input buffer transition function
-                inBufOffset = parser_state == IDLE ? 0 : inBufOffset;
+                // Payload size acquisition function
+                payload = parser_state == HEADER_ARROW ? c : payload;
 
-                // Data size acquisition function
-                dataSize = parser_state == HEADER_ARROW ? c : dataSize;
-
-                Serial2.println(dataSize);
+                Serial2.println(payload);
 
                 // Command acquisition function
                 command = parser_state == HEADER_SIZE ? c : command;
