@@ -173,7 +173,7 @@ namespace rft {
                 // Payload functions
                 payload_size = parser_state == HDR_ARROW ? c : payload_size;
                 payload_index = parser_state == PAYLOAD ? payload_index + 1 : 0;
-                bool payload_flag = parser_state == PAYLOAD;
+                bool payload_flag = command >= 200 && parser_state == PAYLOAD;
 
                 // Command acquisition function
                 command = parser_state == HDR_SIZE ? c : command;
@@ -196,7 +196,7 @@ namespace rft {
 
                 if (payload_flag) {
                     Serial2.print(payload_index);
-                    Serial2.print("\t/\t0x");
+                    Serial2.print(":\t0x");
                     Serial2.println(c, HEX);
                 }
 
