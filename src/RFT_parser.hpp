@@ -160,7 +160,8 @@ namespace rft {
                 // Payload functions
                 size = parser_state == GOT_ARROW ? c : size;
                 index = parser_state == IN_PAYLOAD ? index + 1 : 0;
-                bool payload_flag = type >= 200 && parser_state == IN_PAYLOAD;
+                bool incoming = type >= 200;
+                bool in_payload = incoming && parser_state == IN_PAYLOAD;
 
                 // Command acquisition function
                 type = parser_state == GOT_SIZE ? c : type;
@@ -182,7 +183,7 @@ namespace rft {
                     : parser_state;
 
                 // Payload accumulation
-                if (payload_flag) {
+                if (in_payload) {
                     collectPayload(index-1, c);
                 }
 
