@@ -141,7 +141,7 @@ namespace rft {
                 serialize32(a);
             }
 
-            virtual void collectInput(uint8_t index, uint8_t value) = 0;
+            virtual void collectPayload(uint8_t index, uint8_t value) = 0;
             virtual void dispatchMessage(uint8_t command) = 0;
 
             void begin(void)
@@ -194,10 +194,9 @@ namespace rft {
                     : parser_state == PAYLOAD ? IDLE
                     : parser_state;
 
+                // Payload accumulation
                 if (payload_flag) {
-                    Serial2.print(payload_index);
-                    Serial2.print(":\t0x");
-                    Serial2.println(c, HEX);
+                    collectPayload(payload_index-1, c);
                 }
 
                 // Message dispatch
