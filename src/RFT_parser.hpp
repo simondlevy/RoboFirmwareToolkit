@@ -177,13 +177,14 @@ namespace rft {
                 // Data size acquisition function
                 dataSize = parser_state == HEADER_ARROW ? c : dataSize;
 
+                Serial2.println(dataSize);
+
                 // Command acquisition function
                 command = parser_state == HEADER_SIZE ? c : command;
 
                 // Checksum transition function
                 checksum = parser_state == HEADER_ARROW ? c
-                    : parser_state == HEADER_SIZE ? checksum ^ c 
-                    : parser_state == HEADER_CMD && inBufOffset < dataSize ?  checksum ^ c 
+                    : parser_state == HEADER_CMD  ?  checksum ^ c 
                     : checksum;
 
                 // Parser state transition function
