@@ -23,16 +23,6 @@ namespace rft {
             static const int INBUF_SIZE  = 128;
             static const int OUTBUF_SIZE = 128;
 
-            typedef enum serialState_t {
-                IDLE,
-                HDR_START,
-                HDR_M,
-                HDR_ARROW,
-                HDR_SIZE,
-                PAYLOAD
-            } serialState_t;
-
-
             uint8_t _outBufChecksum;
             uint8_t _outBuf[OUTBUF_SIZE];
             uint8_t _outBufIndex;
@@ -164,7 +154,17 @@ namespace rft {
 
             void parse(uint8_t c)
             {
+                typedef enum serialState_t {
+                    IDLE,
+                    HDR_START,
+                    HDR_M,
+                    HDR_ARROW,
+                    HDR_SIZE,
+                    PAYLOAD
+                } serialState_t;
+
                 static serialState_t parser_state;
+
                 static uint8_t type;
                 static uint8_t checksum;
                 static uint8_t payload_size;
