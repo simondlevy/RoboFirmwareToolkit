@@ -132,9 +132,9 @@ class Cpp_Emitter(CodeEmitter):
         # Add dispatchMessage() method
 
         output.write('\n        protected:\n\n')
-        output.write('            void dispatchMessage(void) override\n')
+        output.write('            void dispatchMessage(uint8_t command) override\n')
         output.write('            {\n')
-        output.write('                switch (_command) {\n\n')
+        output.write('                switch (command) {\n\n')
 
         for msgtype in self.msgdict.keys():
 
