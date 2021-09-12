@@ -96,8 +96,8 @@ class Cpp_Emitter(CodeEmitter):
         output.write('#include <RFT_board.hpp>\n')
         output.write('#include <RFT_debugger.hpp>\n')
         output.write('#include <RFT_actuator.hpp>\n')
-        output.write('#include <RFT_parser.hpp>\n\n')
-        output.write('#include <rft_timertasks/serialtask.hpp>\n\n')
+        output.write('#include <RFT_parser.hpp>\n')
+        output.write('#include <RFT_serialtask.hpp>\n\n')
 
         # Add namespace
         output.write('namespace /* XXX */ {\n\n')
@@ -129,10 +129,17 @@ class Cpp_Emitter(CodeEmitter):
             output.write('\n                // XXX')
             output.write('\n            }\n')
 
+        output.write('\n        protected:\n\n')
+
+        # Add collectPayload() method
+        output.write('            virtual void collectPayload(uint8_t index, uint8_t value) override\n')
+        output.write('            {\n')
+        output.write('                _payload[index] = value;\n')
+        output.write('            }\n\n')
+
         # Add dispatchMessage() method
 
-        output.write('\n        protected:\n\n')
-        output.write('            void dispatchMessage(uint8_t command) override\n')
+        output.write('            virtual void dispatchMessage(uint8_t command) override\n')
         output.write('            {\n')
         output.write('                switch (command) {\n\n')
 
@@ -156,7 +163,7 @@ class Cpp_Emitter(CodeEmitter):
                 output.write('\n                            ' + 
                              decl + ' ' + argname + ' = 0;')
                 if msgid >= 200:
-                    fmt = 'memcpy(&%s,  &_inBuf[%d], sizeof(%s));\n'
+                    fmt = 'memcpy(&%s,  &_payload[%d], sizeof(%s));\n'
                     output.write('\n                            ')
                     output.write(fmt % (argname, offset, decl))
                 offset += self.sizedict[argtype]
@@ -171,7 +178,7 @@ class Cpp_Emitter(CodeEmitter):
                 # XXX enforce uniform type for now
                 argtype = argtypes[0].capitalize()
                 output.write('                            ')
-                output.write('prepareToSend%ss(%d);\n' % (argtype, nargs))
+                output.write('prepareToSend%ss(command, %d);\n' % (argtype, nargs))
                 for argname in argnames:
                     output.write('                            send%s(%s);\n' %
                                  (argtype, argname))
