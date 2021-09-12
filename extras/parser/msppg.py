@@ -176,7 +176,7 @@ class Cpp_Emitter(CodeEmitter):
                     output.write('                            send%s(%s);\n' %
                                  (argtype, argname))
                 output.write('                            ')
-                output.write('serialize8(_checksum);\n')
+                output.write('completeSend();\n')
             output.write('                        } break;\n\n')
 
         output.write('                } // switch (_command)\n\n')
