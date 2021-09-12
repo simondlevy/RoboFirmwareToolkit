@@ -111,6 +111,7 @@ class Cpp_Emitter(CodeEmitter):
         # Add stubbed declarations for handler methods
 
         output.write('\n\n        private:\n')
+        output.write('\n            uint8_t _payload[128] = {};\n')
 
         for msgtype in self.msgdict.keys():
 
