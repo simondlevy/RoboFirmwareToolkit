@@ -7,7 +7,6 @@ Copyright (C) Rob Jones, Alec Singer, Chris Lavin, Blake Liebling, Simon D. Levy
 MIT License
 '''
 
-import os
 import json
 import argparse
 
@@ -35,7 +34,6 @@ class CodeEmitter(object):
 
     def _openw(self, fname):
 
-        fname = 'output/' + fname
         print('Creating file ' + fname)
         return open(fname, 'w')
 
@@ -160,7 +158,7 @@ class Cpp_Emitter(CodeEmitter):
                 argname = argnames[k]
                 argtype = argtypes[k]
                 decl = self.typedict[argtype]
-                output.write('\n                            ' + 
+                output.write('\n                            ' +
                              decl + ' ' + argname + ' = 0;')
                 if msgid >= 200:
                     fmt = 'memcpy(&%s,  &_payload[%d], sizeof(%s));\n'
@@ -291,6 +289,7 @@ class Python_Emitter(CodeEmitter):
                 for argtype in self._getargtypes(msgstuff):
                     self._write('%s' % self.typedict[argtype])
                 self._write("\'" + ', self.message_buffer))')
+        self._write('\n\n        return')
 
         # Emit handler methods for parser
         for msgtype in self.msgdict.keys():
@@ -481,16 +480,13 @@ def main():
         argument_types.append(argtypes)
         msgdict[msgtype] = (msgid, argnames, argtypes)
 
-    # Create output directory
-    os.makedirs('output/', exist_ok=True)
+    # Emit Python
+    Python_Emitter(msgdict).emit()
 
     # Emit C++
     Cpp_Emitter(msgdict).emit()
 
-    # Emit Python
-    Python_Emitter(msgdict).emit()
-
-    # Emite Java
+    # Emit Java
     Java_Emitter(msgdict).emit()
 
 
