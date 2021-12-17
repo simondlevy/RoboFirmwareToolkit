@@ -442,6 +442,9 @@ def main():
     parser.add_argument('--infile', type=str, required=False,
                         default='messages.json',
                         help='Random seed for reproducibility')
+    parser.add_argument('--language', type=str, required=False,
+                        default='all',
+                        help='Language to emit (java, python, cpp, or all)')
     args = parser.parse_args()
 
     data = json.load(open(args.infile, 'r'))
@@ -481,13 +484,16 @@ def main():
         msgdict[msgtype] = (msgid, argnames, argtypes)
 
     # Emit Python
-    Python_Emitter(msgdict).emit()
+    if args.language in ('python', 'all'):
+        Python_Emitter(msgdict).emit()
 
     # Emit C++
-    Cpp_Emitter(msgdict).emit()
+    if args.language in ('cpp', 'all'):
+        Cpp_Emitter(msgdict).emit()
 
     # Emit Java
-    Java_Emitter(msgdict).emit()
+    if args.language in ('java', 'all'):
+        Java_Emitter(msgdict).emit()
 
 
 if __name__ == '__main__':
