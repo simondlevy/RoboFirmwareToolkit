@@ -9,6 +9,7 @@ MIT License
 
 import json
 import argparse
+from argparse import ArgumentDefaultsHelpFormatter
 
 
 # Code-emitter classes ========================================================
@@ -438,14 +439,15 @@ class Java_Emitter(CodeEmitter):
 def main():
 
     # parse file name from command line
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--infile', type=str, required=False,
+    argparser = argparse.ArgumentParser(
+            formatter_class=ArgumentDefaultsHelpFormatter)
+    argparser.add_argument('--infile', type=str, required=False,
                         default='messages.json',
-                        help='Random seed for reproducibility')
-    parser.add_argument('--language', type=str, required=False,
+                        help='Input file')
+    argparser.add_argument('--language', type=str, required=False,
                         default='all',
                         help='Language to emit (java, python, cpp, or all)')
-    args = parser.parse_args()
+    args = argparser.parse_args()
 
     data = json.load(open(args.infile, 'r'))
 
